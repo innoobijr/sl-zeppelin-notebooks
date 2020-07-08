@@ -1,0 +1,231 @@
+{
+  "paragraphs": [
+    {
+      "text": "/**\n * title: od_matrix_directed_all_pairs_per_day\n * author: Innocent Obi Jr\n * description: \n */\n \n//Default configurations (Remove in production)\nsc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))\n\nval path_to_cdrs : String \u003d \"s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\"\nval path_to_towers : String \u003d \"s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\"\nval path_to_ouput : String \u003d  \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/od_matrix_directed_all_pairs_per_day\"\nval cutoff : Int \u003d 15",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-06 03:01:47.568",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "path_to_cdrs: String \u003d s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\npath_to_towers: String \u003d s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\npath_to_ouput: String \u003d s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/od_matrix_directed_all_pairs_per_day\ncutoff: Int \u003d 15\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1593997131578_656153152",
+      "id": "20200706-005851_206717772",
+      "dateCreated": "2020-07-06 00:58:51.578",
+      "dateStarted": "2020-07-06 03:01:47.578",
+      "dateFinished": "2020-07-06 03:01:47.817",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "/**\n * \n */\n\nimport org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\n//import org.apache.spark.sql._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\n\n val calls \u003d spark.read.format(\"csv\")\n    .option(\"header\",\"false\")\n    .option(\"inferSchema\", \"true\")\n    .load(path_to_cdrs)\n    .withColumnRenamed(\"_c0\", \"antenna_id\")\n    .withColumnRenamed(\"_c1\", \"time\")\n    .withColumnRenamed(\"_c2\", \"direction\")\n    .withColumnRenamed(\"_c3\", \"source\")\n    .withColumn(\"msisdn\", col(\"source\"))\n    .withColumnRenamed(\"_c4\", \"target\")\n    .withColumnRenamed(\"_c5\", \"duration\")\n    .withColumn(\"site_id\", substring(col(\"antenna_id\"), 0, 4))\n    .withColumn(\"call_datetime\", to_timestamp($\"time\"))\n    .withColumn(\"call_date\", to_date($\"call_datetime\"))\n    .withColumn(\"end_time\",  to_timestamp(unix_timestamp($\"call_datetime\") + ($\"duration\")))\n    \n\nval cells \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(path_to_towers)\n  .withColumnRenamed(\"New_Dist\", \"locality\")\n  .withColumnRenamed(\"CI\", \"cell_id\")\n\ncells.persist(StorageLevel.MEMORY_AND_DISK)\ncells.createOrReplaceTempView(\"cells\")\n\ncalls.persist(StorageLevel.MEMORY_AND_DISK)\ncalls.createOrReplaceTempView(\"calls\")\n    ",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-06 02:47:33.094",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\ncalls: org.apache.spark.sql.DataFrame \u003d [antenna_id: int, time: timestamp ... 9 more fields]\ncells: org.apache.spark.sql.DataFrame \u003d [site_id: string, cell_id: int ... 8 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1593997552649_1223090469",
+      "id": "20200706-010552_1094959392",
+      "dateCreated": "2020-07-06 01:05:52.649",
+      "dateStarted": "2020-07-06 02:47:33.102",
+      "dateFinished": "2020-07-06 02:48:20.634",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val odMatrixDirectedAllPairsPerDay \u003d spark.sql(s\"\"\"\n    SELECT * FROM (\n        SELECT connection_date,\n            locality_from,\n            locality_to,\n            count(*) AS subscriber_count\n        FROM (\n\n            SELECT t1.call_date AS connection_date,\n                t1.msisdn AS msisdn,\n                t1.locality AS locality_from,\n                t2.locality AS locality_to\n            FROM (\n                SELECT calls.msisdn,\n                    calls.call_date,\n                    cells.locality,\n                    min(calls.call_datetime) AS earliest_visit,\n                    max(calls.call_datetime) AS latest_visit\n                FROM calls\n                INNER JOIN cells\n                    ON calls.site_id \u003d cells.site_id\n                WHERE calls.call_date \u003e\u003d \u00272020-02-01\u0027\n                    AND calls.call_date \u003c\u003d CURRENT_DATE\n                GROUP BY msisdn, call_date, locality\n            ) t1\n            FULL OUTER JOIN (\n                SELECT calls.msisdn,\n                    calls.call_date,\n                    cells.locality,\n                    min(calls.call_datetime) AS earliest_visit,\n                    max(calls.call_datetime) AS latest_visit\n                FROM calls\n                INNER JOIN cells\n                    ON calls.site_id \u003d cells.site_id\n                WHERE calls.call_date \u003e\u003d \u00272020-02-01\u0027\n                    AND calls.call_date \u003c\u003d CURRENT_DATE\n                GROUP BY msisdn, call_date, locality\n            ) t2\n            ON t1.msisdn \u003d t2.msisdn\n                AND t1.call_date \u003d t2.call_date\n            WHERE t1.earliest_visit \u003c t2.latest_visit\n\n        ) AS pair_connections\n        GROUP BY 1, 2, 3\n    ) AS grouped\n    WHERE grouped.subscriber_count \u003e ${cutoff}\n\"\"\")\n\nodMatrixDirectedAllPairsPerDay.createOrReplaceTempView(\"od_matrix_directed_all_pairs_per_day\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-06 03:01:50.873",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "odMatrixDirectedAllPairsPerDay: org.apache.spark.sql.DataFrame \u003d [connection_date: date, locality_from: string ... 2 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594003096214_-1660137086",
+      "id": "20200706-023816_1473159979",
+      "dateCreated": "2020-07-06 02:38:16.214",
+      "dateStarted": "2020-07-06 03:01:50.892",
+      "dateFinished": "2020-07-06 03:01:51.336",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\nselect * from od_matrix_directed_all_pairs_per_day",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-06 03:02:27.835",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "connection_date": "string",
+                      "locality_from": "string",
+                      "locality_to": "string",
+                      "subscriber_count": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "java.net.SocketException: Broken pipe (Write failed)\n\tat java.net.SocketOutputStream.socketWrite0(Native Method)\n\tat java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:111)\n\tat java.net.SocketOutputStream.write(SocketOutputStream.java:155)\n\tat java.io.BufferedOutputStream.write(BufferedOutputStream.java:122)\n\tat org.apache.thrift.transport.TIOStreamTransport.write(TIOStreamTransport.java:145)\n\tat org.apache.thrift.protocol.TBinaryProtocol.writeString(TBinaryProtocol.java:202)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext$RemoteInterpreterContextStandardScheme.write(RemoteInterpreterContext.java:1213)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext$RemoteInterpreterContextStandardScheme.write(RemoteInterpreterContext.java:1074)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext.write(RemoteInterpreterContext.java:956)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args$interpret_argsStandardScheme.write(RemoteInterpreterService.java:6781)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args$interpret_argsStandardScheme.write(RemoteInterpreterService.java:6704)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args.write(RemoteInterpreterService.java:6631)\n\tat org.apache.thrift.TServiceClient.sendBase(TServiceClient.java:63)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.send_interpret(RemoteInterpreterService.java:268)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.interpret(RemoteInterpreterService.java:257)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:233)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:229)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:135)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:228)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:449)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:315)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594003728107_35177568",
+      "id": "20200706-024848_266901746",
+      "dateCreated": "2020-07-06 02:48:48.107",
+      "dateStarted": "2020-07-06 03:02:27.855",
+      "dateFinished": "2020-07-06 03:02:27.860",
+      "status": "ERROR",
+      "errorMessage": "java.net.SocketException: Broken pipe (Write failed)\n\tat java.net.SocketOutputStream.socketWrite0(Native Method)\n\tat java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:111)\n\tat java.net.SocketOutputStream.write(SocketOutputStream.java:155)\n\tat java.io.BufferedOutputStream.write(BufferedOutputStream.java:122)\n\tat org.apache.thrift.transport.TIOStreamTransport.write(TIOStreamTransport.java:145)\n\tat org.apache.thrift.protocol.TBinaryProtocol.writeString(TBinaryProtocol.java:202)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext$RemoteInterpreterContextStandardScheme.write(RemoteInterpreterContext.java:1213)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext$RemoteInterpreterContextStandardScheme.write(RemoteInterpreterContext.java:1074)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext.write(RemoteInterpreterContext.java:956)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args$interpret_argsStandardScheme.write(RemoteInterpreterService.java:6781)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args$interpret_argsStandardScheme.write(RemoteInterpreterService.java:6704)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args.write(RemoteInterpreterService.java:6631)\n\tat org.apache.thrift.TServiceClient.sendBase(TServiceClient.java:63)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.send_interpret(RemoteInterpreterService.java:268)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.interpret(RemoteInterpreterService.java:257)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:233)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:229)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:135)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:228)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:449)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:315)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "odMatrixDirectedAllPairsPerDay.coalesce(5).write.format(\"csv\").option(\"header\" \"true\").save(path_to_output)",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-06 02:54:42.956",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594003745113_713416815",
+      "id": "20200706-024905_728820264",
+      "dateCreated": "2020-07-06 02:49:05.113",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Flowminder/od_matrix_directed_all_pairs_per_day",
+  "id": "2FCT84N7T",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

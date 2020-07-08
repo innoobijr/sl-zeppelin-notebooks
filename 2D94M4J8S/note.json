@@ -1,0 +1,961 @@
+{
+  "paragraphs": [
+    {
+      "text": "sc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))",
+      "user": "innocent",
+      "dateUpdated": "2020-07-01 13:20:45.608",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592460463571_154559872",
+      "id": "paragraph_1592460463571_154559872",
+      "dateCreated": "2020-06-18 06:07:43.571",
+      "dateStarted": "2020-07-01 13:20:45.612",
+      "dateFinished": "2020-07-01 13:20:46.562",
+      "status": "FINISHED"
+    },
+    {
+      "text": " System.getenv()",
+      "user": "innocent",
+      "dateUpdated": "2020-06-26 01:06:26.318",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mres1\u001b[0m: \u001b[1m\u001b[32mjava.util.Map[String,String]\u001b[0m \u003d {PATH\u003d/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin, ZEPPELIN_PORT\u003d8084, ZEPPELIN_LOG_DIR\u003d/usr/local/zeppelin/logs, ZEPPELIN_WAR\u003d/usr/local/zeppelin/zeppelin-web-0.9.0-preview1.war, ZEPPELIN_SPARK_CONF\u003d --master local\\[\\*\\] --conf spark\\.driver\\.cores\\\u003d1 --conf spark\\.executor\\.memory\\\u003d1g --conf spark\\.executor\\.cores\\\u003d1 --conf spark\\.webui\\.yarn\\.useProxy\\\u003dfalse --conf spark\\.app\\.name\\\u003dZeppelin --conf spark\\.driver\\.memory\\\u003d1g, ZEPPELIN_ENCODING\u003dUTF-8, ZEPPELIN_NICENESS\u003d0, JAVA_OPTS\u003d  -Dfile.encoding\u003dUTF-8 -Xms1024m -Xmx1024m -XX:MaxPermSize\u003d512m -Dlog4j.configuration\u003dfile:///usr/local/zeppelin/conf/log4j.properties -Dzeppelin.log.file\u003d/usr/local/zeppelin/logs/zeppelin-root-ip-172-31-28-57.log  -Df..."
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1593133440611_1001307495",
+      "id": "paragraph_1593133440611_1001307495",
+      "dateCreated": "2020-06-26 01:04:00.611",
+      "dateStarted": "2020-06-26 01:06:26.883",
+      "dateFinished": "2020-06-26 01:06:37.597",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%md\n# ls",
+      "user": "innocent",
+      "dateUpdated": "2020-06-26 01:19:20.529",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/text"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003els\u003c/h1\u003e\n\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1593021015250_-813449607",
+      "id": "paragraph_1593021015250_-813449607",
+      "dateCreated": "2020-06-24 17:50:15.250",
+      "dateStarted": "2020-06-26 01:19:20.533",
+      "dateFinished": "2020-06-26 01:19:21.390",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%python\ng \u003d 9",
+      "user": "innocent",
+      "dateUpdated": "2020-06-26 01:18:30.054",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1593118255903_2013089546",
+      "id": "paragraph_1593118255903_2013089546",
+      "dateCreated": "2020-06-25 20:50:55.903",
+      "dateStarted": "2020-06-26 01:18:30.064",
+      "dateFinished": "2020-06-26 01:18:32.226",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%spark.pyspark\ncdrs \u003d spark.read.format(\"csv\") \\\n    .option(\"header\",\"false\") \\\n    .load(\"s3n://sierra-leone-lake/blob/cdrs/africell-raw/202004*.csv\")\n",
+      "user": "innocent",
+      "dateUpdated": "2020-07-01 13:32:43.844",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Fail to execute line 3:     .load(\"s3n://sierra-leone-lake/blob/cdrs/africell-raw/202004*.csv\")\nTraceback (most recent call last):\n  File \"/tmp/1593587217279-0/zeppelin_python.py\", line 158, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 3, in \u003cmodule\u003e\n  File \"/usr/local/spark/python/pyspark/sql/readwriter.py\", line 160, in load\n    return self._df(self._jreader.load(path))\n  File \"/usr/local/spark/python/lib/py4j-0.10.8.1-src.zip/py4j/java_gateway.py\", line 1284, in __call__\n    answer \u003d self.gateway_client.send_command(command)\n  File \"/usr/local/spark/python/lib/py4j-0.10.8.1-src.zip/py4j/java_gateway.py\", line 1014, in send_command\n    response \u003d connection.send_command(command)\n  File \"/usr/local/spark/python/lib/py4j-0.10.8.1-src.zip/py4j/java_gateway.py\", line 1181, in send_command\n    answer \u003d smart_decode(self.stream.readline()[:-1])\n  File \"/opt/anaconda/lib/python3.7/socket.py\", line 589, in readinto\n    return self._sock.recv_into(b)\n  File \"/usr/local/spark/python/pyspark/context.py\", line 273, in signal_handler\n    raise KeyboardInterrupt()\nKeyboardInterrupt\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1593022289491_-1967511797",
+      "id": "paragraph_1593022289491_-1967511797",
+      "dateCreated": "2020-06-24 18:11:29.491",
+      "dateStarted": "2020-07-01 13:32:43.847",
+      "dateFinished": "2020-07-01 13:32:47.767",
+      "status": "ABORT"
+    },
+    {
+      "text": "import org.apache.spark.sql.functions.input_file_name\nimport org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\n\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql._\nimport spark.implicits._\n\n val cdrs \u003d spark.read.format(\"csv\")\n    .option(\"header\",\"false\")\n    .option(\"inferSchema\", \"true\")\n    .load(\"s3n://sierra-leone-lake/blob/cdrs/africell-raw/202004*.csv\")",
+      "user": "innocent",
+      "dateUpdated": "2020-07-01 13:33:15.340",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.spark.sql.functions.input_file_name\nimport org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql._\nimport spark.implicits._\n\u001b[1m\u001b[34mcdrs\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m \u003d [_c0: int, _c1: string ... 4 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592452523853_333946365",
+      "id": "paragraph_1592452523853_333946365",
+      "dateCreated": "2020-06-18 03:55:23.854",
+      "dateStarted": "2020-07-01 13:33:15.343",
+      "dateFinished": "2020-07-01 14:06:14.623",
+      "status": "FINISHED"
+    },
+    {
+      "text": "cdrs.first()",
+      "user": "innocent",
+      "dateUpdated": "2020-06-25 18:35:03.563",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mres3\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.Row\u001b[0m \u003d [12011,2020-03-01 08:00:01.000,Incoming SMS,482CFDA9904D2ABD525C0AA4A75E5F4F,0662B91E51A2EA16DD90A20709C71761,0]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1593110027191_902047592",
+      "id": "paragraph_1593110027191_902047592",
+      "dateCreated": "2020-06-25 18:33:47.191",
+      "dateStarted": "2020-06-25 18:35:03.568",
+      "dateFinished": "2020-06-25 18:35:13.188",
+      "status": "FINISHED"
+    },
+    {
+      "text": "import org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.sql.types.StringType\nimport org.apache.spark.storage.StorageLevel\n\nval cdr_renamed \u003d cdrs.withColumnRenamed(\"_c0\", \"antenna_id\")\n    .withColumnRenamed(\"_c1\", \"time\")\n    .withColumnRenamed(\"_c2\", \"direction\")\n    .withColumnRenamed(\"_c3\", \"source\")\n    .withColumnRenamed(\"_c4\", \"target\")\n    .withColumnRenamed(\"_c5\", \"duration\")\n\n// Change this to just use one of the other. We will need to speak to Africell to check if this is the correct interpretation\nval calls \u003d cdr_renamed.withColumn(\"msisdn\", when(col(\"direction\").contains(\"Outgoing\"), col(\"source\")).otherwise(col(\"source\")))\n    .withColumn(\"call_datetime\", to_timestamp($\"time\"))\n    .withColumn(\"call_date\", to_date($\"call_datetime\"))\n\ncalls.persist(StorageLevel.MEMORY_AND_DISK)\n\nval path_to_towers \u003d \"s3n://sierra-leone-lake/blob/towers/tower_district_secton.csv\"\n\nval cells \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(path_to_towers)\n  .withColumnRenamed(\"New_Dist\", \"locality\")\n  .withColumnRenamed(\"CI\", \"cell_id\")\n \ncells.persist(StorageLevel.MEMORY_AND_DISK)\n \n//val window \u003d Window.partitionBy(\"site_id\").orderBy(col(\"cell_id\"))\n//val districtSites \u003d cells.withColumn(\"row\",row_number.over(window))\n//        .where(col(\"row\") \u003d\u003d\u003d 1).select(col(\"latitude\").as(\"lat\"), col(\"longitude\").as(\"lon\"),$\"locality\", $\"site_id\")\n\n// (3) Saving the dataframes as a temporary view\ncalls.createOrReplaceTempView(\"calls\")\ncells.createOrReplaceTempView(\"cells\") \n//districtSites.createOrReplaceTempView(\"district_sites\") ",
+      "user": "innocent",
+      "dateUpdated": "2020-07-01 13:22:05.015",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.sql.types.StringType\nimport org.apache.spark.storage.StorageLevel\n\u001b[1m\u001b[34mcdr_renamed\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m \u003d [antenna_id: int, time: string ... 4 more fields]\n\u001b[1m\u001b[34mcalls\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m \u003d [antenna_id: int, time: string ... 7 more fields]\n\u001b[1m\u001b[34mpath_to_towers\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m \u003d s3n://sierra-leone-lake/blob/towers/tower_district_secton.csv\n\u001b[1m\u001b[34mcells\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m \u003d [cell_id: int, BTSNAME: string ... 8 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592460429240_-1579483453",
+      "id": "paragraph_1592460429240_-1579483453",
+      "dateCreated": "2020-06-18 06:07:09.240",
+      "dateStarted": "2020-07-01 13:22:05.019",
+      "dateFinished": "2020-07-01 13:22:19.455",
+      "status": "FINISHED"
+    },
+    {
+      "text": "calls.schema",
+      "user": "innocent",
+      "dateUpdated": "2020-06-18 17:47:28.087",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mres191\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.types.StructType\u001b[0m \u003d StructType(StructField(antenna_id,StringType,true), StructField(time,StringType,true), StructField(direction,StringType,true), StructField(source,StringType,true), StructField(target,StringType,true), StructField(duration,StringType,true), StructField(msisdn,StringType,true), StructField(call_datetime,TimestampType,true), StructField(call_date,DateType,true))\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592463500652_-2058601866",
+      "id": "paragraph_1592463500652_-2058601866",
+      "dateCreated": "2020-06-18 06:58:20.652",
+      "dateStarted": "2020-06-18 17:47:28.089",
+      "dateFinished": "2020-06-18 17:47:28.533",
+      "status": "FINISHED"
+    },
+    {
+      "text": "val tmp \u003d cdrs.withColumn(\"time\", col(\"_c1\").cast(StringType)).select(\"_c1\").first()(0)",
+      "user": "innocent",
+      "dateUpdated": "2020-06-18 12:59:01.076",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mtmp\u001b[0m: \u001b[1m\u001b[32mAny\u001b[0m \u003d 2020-04-01 08:00:00.000\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592465909250_1239486359",
+      "id": "paragraph_1592465909250_1239486359",
+      "dateCreated": "2020-06-18 07:38:29.251",
+      "dateStarted": "2020-06-18 12:59:01.079",
+      "dateFinished": "2020-06-18 12:59:09.606",
+      "status": "FINISHED"
+    },
+    {
+      "text": "// List of antennas -\u003e create pairs\n// Pick a subset first\nval od_matrix_directed_all_pairs_per_day \u003d spark.sql(\"\"\" \nSELECT * FROM (\n        SELECT connection_date,\n        connection_datetime,\n            locality_from,\n            locality_to,\n            locality_from_lat,\n            locality_from_lng,\n            locality_to_lat,\n            locality_to_lng,\n            count(*) AS subscriber_count\n        FROM (\n\n            SELECT t1.call_date AS connection_date,\n            t1.call_date AS connection_datetime,\n                t1.msisdn AS msisdn,\n                t1.locality AS locality_from,\n                t2.locality AS locality_to,\n                t1.Latitude AS locality_from_lat,\n                t2.Latitude AS locality_to_lat,\n                t1.longitude AS locality_from_lng,\n                t2.longitude AS locality_to_lng\n            FROM (\n                SELECT calls.msisdn,\n                    calls.call_date,\n                    cells.locality,\n                    cells.Latitude,\n                    cells.longitude,\n                    min(calls.call_datetime) AS earliest_visit,\n                    max(calls.call_datetime) AS latest_visit\n                FROM calls\n                INNER JOIN cells\n                    ON calls.antenna_id \u003d cells.cell_id\n                WHERE calls.call_date \u003e\u003d \u00272020-02-01\u0027\n                    AND calls.call_date \u003c\u003d CURRENT_DATE\n                GROUP BY msisdn, call_date, locality, Latitude, longitude\n            ) t1\n            FULL OUTER JOIN (\n                SELECT calls.msisdn,\n                    calls.call_date,\n                    cells.locality,\n                    cells.Latitude,\n                    cells.longitude,\n                    min(calls.call_datetime) AS earliest_visit,\n                    max(calls.call_datetime) AS latest_visit\n                FROM calls\n                INNER JOIN cells\n                    ON calls.antenna_id \u003d cells.cell_id\n                WHERE calls.call_date \u003e\u003d \u00272020-02-01\u0027\n                    AND calls.call_date \u003c\u003d CURRENT_DATE\n                GROUP BY msisdn, call_date, locality, Latitude, longitude\n            ) t2\n            ON t1.msisdn \u003d t2.msisdn\n                AND t1.call_date \u003d t2.call_date\n            WHERE t1.earliest_visit \u003c t2.latest_visit\n\n        ) AS pair_connections\n        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8\n    )\n\"\"\")",
+      "user": "innocent",
+      "dateUpdated": "2020-06-25 18:45:36.821",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mod_matrix_directed_all_pairs_per_day\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m \u003d [connection_date: date, connection_datetime: date ... 7 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592488100913_-740266649",
+      "id": "paragraph_1592488100913_-740266649",
+      "dateCreated": "2020-06-18 13:48:20.913",
+      "dateStarted": "2020-06-25 18:45:36.826",
+      "dateFinished": "2020-06-25 18:45:37.469",
+      "status": "FINISHED"
+    },
+    {
+      "text": "od_matrix_directed_all_pairs_per_day.show()",
+      "user": "innocent",
+      "dateUpdated": "2020-06-18 14:46:38.596",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+---------------+-------------+-----------+-----------------+-----------------+---------------+---------------+----------------+\n|connection_date|locality_from|locality_to|locality_from_lat|locality_from_lng|locality_to_lat|locality_to_lng|subscriber_count|\n+---------------+-------------+-----------+-----------------+-----------------+---------------+---------------+----------------+\n|     2020-04-01|    UPC NORTH|  UPC NORTH|         9.389373|       -11.767246|       9.589409|     -11.546852|             408|\n|     2020-04-01|      FT EAST|    FT EAST|          8.43966|         -13.1621|        8.43966|       -13.1621|           20904|\n|     2020-04-01|           BO|         BO|          7.96143|         -11.7417|       7.940896|     -11.726057|            3317|\n|     2020-04-01|      FT WEST| FT CENTRAL|          8.44875|         -13.2564|        8.48401|       -13.2384|             771|\n|     2020-04-01|      FT WEST|    FT WEST|         8.483741|       -13.256992|       8.491973|     -13.288022|             934|\n|     2020-04-01|      FT WEST| FT CENTRAL|          8.44864|         -13.2743|        8.48832|      -13.22643|             937|\n|     2020-04-01|      FT WEST|    FT WEST|          8.48517|         -13.2712|        8.48517|       -13.2712|           11268|\n|     2020-04-01|      FT EAST|    FT EAST|          8.47282|         -13.1912|        8.47753|      -13.20183|            1955|\n|     2020-04-01|   FT CENTRAL|    FT WEST|          8.48401|         -13.2384|       8.488116|      -13.24768|            1534|\n|     2020-04-01|      FT EAST|    FT EAST|         8.453465|       -13.180106|        8.43966|       -13.1621|            4284|\n|     2020-04-01|    UPC SOUTH|     KENEMA|          8.26312|        -10.47457|         7.8566|       -11.2174|              80|\n|     2020-04-01|      FT WEST| FT CENTRAL|         8.469158|         -13.2444|       8.469158|       -13.2444|             949|\n|     2020-04-01|      FT WEST| FT CENTRAL|         8.479809|       -13.271903|        8.48867|       -13.2315|            1375|\n|     2020-04-01|   FT CENTRAL|  UPC SOUTH|          8.48441|        -13.21461|       7.991863|     -10.840571|              71|\n|     2020-04-01|      FT WEST|    FT WEST|          8.42146|         -13.2875|        8.44875|       -13.2564|             562|\n|     2020-04-01|      FT WEST|     MAKENI|          8.45685|         -13.2594|          8.896|       -12.0582|             248|\n|     2020-04-01|   FT CENTRAL|    FT EAST|         8.480993|       -13.218795|        8.46366|       -13.1855|             337|\n|     2020-04-01|    Air Port-|    FT EAST|         8.555492|       -13.164853|        8.46738|        -13.184|             184|\n|     2020-04-01|      FT WEST|    FT WEST|          8.45774|         -13.2524|         8.4656|       -13.2622|            1949|\n|     2020-04-01|    UPC SOUTH|  UPC SOUTH|          8.18601|        -11.13492|        8.18601|      -11.13492|            1518|\n+---------------+-------------+-----------+-----------------+-----------------+---------------+---------------+----------------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592489523810_393878005",
+      "id": "paragraph_1592489523810_393878005",
+      "dateCreated": "2020-06-18 14:12:03.810",
+      "dateStarted": "2020-06-18 14:46:38.598",
+      "dateFinished": "2020-06-18 14:49:40.840",
+      "status": "FINISHED"
+    },
+    {
+      "text": "\nval window \u003d Window.partitionBy(\"msisdn\").orderBy(\"call_datetime\")\n\ncalls.groupBy(\"msid\")",
+      "user": "innocent",
+      "dateUpdated": "2020-06-18 13:47:29.872",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+\n|                time|\n+--------------------+\n|2020-04-01 08:00:...|\n|2020-04-01 08:00:...|\n+--------------------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592466983143_382211108",
+      "id": "paragraph_1592466983143_382211108",
+      "dateCreated": "2020-06-18 07:56:23.143",
+      "dateStarted": "2020-06-18 08:08:32.707",
+      "dateFinished": "2020-06-18 08:08:33.012",
+      "status": "FINISHED"
+    },
+    {
+      "text": "calls.unpersist()\ncells.unpersist()",
+      "user": "innocent",
+      "dateUpdated": "2020-06-22 02:28:39.145",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mres5\u001b[0m: \u001b[1m\u001b[32mcells.type\u001b[0m \u003d [cell_id: int, BTSNAME: string ... 8 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592792899280_616808313",
+      "id": "paragraph_1592792899280_616808313",
+      "dateCreated": "2020-06-22 02:28:19.280",
+      "dateStarted": "2020-06-22 02:28:39.161",
+      "dateFinished": "2020-06-22 02:28:39.550",
+      "status": "FINISHED"
+    },
+    {
+      "text": "val od_matrix \u003d od_matrix_directed_all_pairs_per_day.repartition(400)\nod_matrix.cache()",
+      "user": "innocent",
+      "dateUpdated": "2020-06-22 04:35:00.337",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mod_matrix\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.Dataset[org.apache.spark.sql.Row]\u001b[0m \u003d [connection_date: date, connection_datetime: date ... 7 more fields]\n\u001b[1m\u001b[34mres12\u001b[0m: \u001b[1m\u001b[32mod_matrix.type\u001b[0m \u003d [connection_date: date, connection_datetime: date ... 7 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592800232613_-756724645",
+      "id": "paragraph_1592800232613_-756724645",
+      "dateCreated": "2020-06-22 04:30:32.613",
+      "dateStarted": "2020-06-22 04:35:00.340",
+      "dateFinished": "2020-06-22 04:35:01.260",
+      "status": "FINISHED"
+    },
+    {
+      "text": "import org.apache.spark.sql.functions._\n\nod_matrix.withColumn(\"log_counts\", log($\"subscriber_count\"))\n .coalesce(1).write.format(\"csv\").option(\"header\", \"true\").option(\"path\",\"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/od_matrixv3.5\").save()",
+      "user": "innocent",
+      "dateUpdated": "2020-06-25 18:51:57.356",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592491458747_-1021032493",
+      "id": "paragraph_1592491458747_-1021032493",
+      "dateCreated": "2020-06-18 14:44:18.747",
+      "dateStarted": "2020-06-22 04:35:10.388",
+      "dateFinished": "2020-06-22 06:01:57.777",
+      "status": "ERROR"
+    },
+    {
+      "text": "",
+      "user": "innocent",
+      "dateUpdated": "2020-06-25 18:20:00.446",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592800993788_480939927",
+      "id": "paragraph_1592800993788_480939927",
+      "dateCreated": "2020-06-22 04:43:13.788",
+      "status": "READY"
+    },
+    {
+      "text": "val sample \u003d calls.limit(5)\nsample.show()",
+      "user": "innocent",
+      "dateUpdated": "2020-06-18 16:37:01.112",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+----------+--------------------+-------------+--------------------+--------------------+--------+--------------------+-------------------+----------+\n|antenna_id|                time|    direction|              source|              target|duration|              msisdn|      call_datetime| call_date|\n+----------+--------------------+-------------+--------------------+--------------------+--------+--------------------+-------------------+----------+\n|     10382|2020-04-01 08:00:...|Outgoing call|29EB06B3C025575EA...|147D3289EC2492C38...|       4|29EB06B3C025575EA...|2020-04-01 08:00:00|2020-04-01|\n|     10062|2020-04-01 08:00:...| Incoming SMS|FB8BE55CA96642FE7...|0662B91E51A2EA16D...|       0|0662B91E51A2EA16D...|2020-04-01 08:00:04|2020-04-01|\n|     12072|2020-04-01 08:00:...|Incoming call|022481D2F85A7E80C...|FAC6E055EF8BDD4E8...|       1|FAC6E055EF8BDD4E8...|2020-04-01 08:00:03|2020-04-01|\n|     20554|2020-04-01 08:00:...| Incoming SMS|BDEC0FAAB821EBD5A...|0662B91E51A2EA16D...|       0|0662B91E51A2EA16D...|2020-04-01 08:00:03|2020-04-01|\n|     40118|2020-04-01 08:00:...| Incoming SMS|65687C88A21A0534D...|91A0B96D2FE46ED69...|       0|91A0B96D2FE46ED69...|2020-04-01 08:00:03|2020-04-01|\n+----------+--------------------+-------------+--------------------+--------------------+--------+--------------------+-------------------+----------+\n\n\u001b[1m\u001b[34msample\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.Dataset[org.apache.spark.sql.Row]\u001b[0m \u003d [antenna_id: string, time: string ... 7 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592467407883_590353127",
+      "id": "paragraph_1592467407883_590353127",
+      "dateCreated": "2020-06-18 08:03:27.883",
+      "dateStarted": "2020-06-18 16:37:01.113",
+      "dateFinished": "2020-06-18 16:37:45.437",
+      "status": "FINISHED"
+    },
+    {
+      "text": "heat.show()",
+      "user": "innocent",
+      "dateUpdated": "2020-07-01 13:30:35.074",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+----------+-----+---+----+\n| call_date|month|day|hour|\n+----------+-----+---+----+\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n|2020-03-08|    3|  1|  21|\n+----------+-----+---+----+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1593610199429_-1678636487",
+      "id": "paragraph_1593610199429_-1678636487",
+      "dateCreated": "2020-07-01 13:29:59.429",
+      "dateStarted": "2020-07-01 13:30:35.076",
+      "dateFinished": "2020-07-01 13:30:35.615",
+      "status": "FINISHED"
+    },
+    {
+      "text": "import org.apache.spark.sql.functions._\nimport org.apache.spark.sql.functions.{col,hour,minute,second}\n\n\n// Heat Matrix\n//pick times\nval heat \u003d calls.select($\"call_date\", month($\"call_datetime\").alias(\"month\"), dayofweek($\"call_datetime\").alias(\"day\"), hour($\"call_datetime\").alias(\"hour\"))\nval preNatCOM \u003d heat.filter(col(\"call_date\") \u003c\u003d \"2020-03-07\").groupBy(\"day\", \"hour\").count().select(\"hour\", \"day\", \"count\")\nval preLockedDown \u003d heat.filter(col(\"call_date\") \u003e \"2020-03-07\" \u0026\u0026 col(\"call_date\") \u003c\u003d \"2020-04-04\").groupBy(\"day\", \"hour\").count().select(\"hour\", \"day\", \"count\")\n//sample.show()\nval firstLockedDown \u003d heat.filter(col(\"call_date\") \u003e\u003d \"2020-04-05\" \u0026\u0026 col(\"call_date\") \u003c\u003d \"2020-05-03\").groupBy(\"day\", \"hour\").count().select(\"hour\", \"day\", \"count\")\nval secondLockedDown \u003d heat.filter(col(\"call_date\") \u003e\u003d \"2020-05-03\").groupBy(\"day\", \"hour\").count().select(\"hour\", \"day\", \"count\")\n\npreNatCOM.createOrReplaceTempView(\"preNatCOM\")\npreLockedDown.createOrReplaceTempView(\"preLockedDown\")\nfirstLockedDown.createOrReplaceTempView(\"firstLockedDown\")\nsecondLockedDown.createOrReplaceTempView(\"secondLockedDown\")",
+      "user": "innocent",
+      "dateUpdated": "2020-07-01 13:28:26.271",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.spark.sql.functions._\nimport org.apache.spark.sql.functions.{col, hour, minute, second}\n\u001b[1m\u001b[34mheat\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m \u003d [call_date: date, month: int ... 2 more fields]\n\u001b[1m\u001b[34mpreNatCOM\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m \u003d [hour: int, day: int ... 1 more field]\n\u001b[1m\u001b[34mpreLockedDown\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m \u003d [hour: int, day: int ... 1 more field]\n\u001b[1m\u001b[34mfirstLockedDown\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m \u003d [hour: int, day: int ... 1 more field]\n\u001b[1m\u001b[34msecondLockedDown\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m \u003d [hour: int, day: int ... 1 more field]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592498221113_1912674398",
+      "id": "paragraph_1592498221113_1912674398",
+      "dateCreated": "2020-06-18 16:37:01.113",
+      "dateStarted": "2020-07-01 13:28:26.274",
+      "dateFinished": "2020-07-01 13:28:26.927",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%spark.sql\nselect * from preNatCOM",
+      "user": "innocent",
+      "dateUpdated": "2020-07-01 13:29:26.483",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "hour": "string",
+                      "day": "string",
+                      "count": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "hour",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "day",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "hour\tday\tcount\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592522375484_-1632588959",
+      "id": "paragraph_1592522375484_-1632588959",
+      "dateCreated": "2020-06-18 23:19:35.484",
+      "dateStarted": "2020-07-01 13:28:57.804",
+      "dateFinished": "2020-07-01 13:29:17.910",
+      "status": "FINISHED"
+    },
+    {
+      "text": "/*calls.groupBy(window(col(\"call_datetime\"),\n                          \"1 week\",\"1 week\"))\n                          .count().show()*/\npreLockedDown.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").option(\"path\",\"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/preLockedDownv2\").save()\npostLockedDown.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").option(\"path\",\"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/postLockedDownv2\").save()",
+      "user": "innocent",
+      "dateUpdated": "2020-06-19 00:05:36.306",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592519581460_-911217464",
+      "id": "paragraph_1592519581460_-911217464",
+      "dateCreated": "2020-06-18 22:33:01.460",
+      "dateStarted": "2020-06-19 00:05:36.308",
+      "dateFinished": "2020-06-19 00:41:03.821",
+      "status": "FINISHED"
+    },
+    {
+      "text": "heat.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").option(\"path\",\"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/heat\").save()",
+      "user": "innocent",
+      "dateUpdated": "2020-06-18 20:13:56.848",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {}
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592511091838_1491918806",
+      "id": "paragraph_1592511091838_1491918806",
+      "dateCreated": "2020-06-18 20:11:31.838",
+      "dateStarted": "2020-06-18 20:13:56.851",
+      "dateFinished": "2020-06-18 20:20:33.640",
+      "status": "FINISHED"
+    },
+    {
+      "text": "sample.join(cells, sample.col(\"antenna_id\") \u003d\u003d\u003d cells.col(\"cell_id\")).show()",
+      "user": "innocent",
+      "dateUpdated": "2020-06-18 17:06:07.427",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+----------+--------------------+-------------+--------------------+--------------------+--------+--------------------+-------------------+----------+-------+--------------------+-----------------+-------+--------+----------+----------+----------------+----------------+-----------+\n|antenna_id|                time|    direction|              source|              target|duration|              msisdn|      call_datetime| call_date|cell_id|             BTSNAME|             Name|site_id|Latitude| longitude|  locality|        New_Dist|      New_Dist_1|  New_Chief|\n+----------+--------------------+-------------+--------------------+--------------------+--------+--------------------+-------------------+----------+-------+--------------------+-----------------+-------+--------+----------+----------+----------------+----------------+-----------+\n|     12072|2020-04-01 08:00:...|Incoming call|022481D2F85A7E80C...|FAC6E055EF8BDD4E8...|       1|FAC6E055EF8BDD4E8...|2020-04-01 08:00:03|2020-04-01|  12072|            CITYROAD|         CITYROAD|   1207|8.453915|-13.170591|   FT EAST|Western Area Urb|Western Area Urb|   East III|\n|     10382|2020-04-01 08:00:...|Outgoing call|29EB06B3C025575EA...|147D3289EC2492C38...|       4|29EB06B3C025575EA...|2020-04-01 08:00:00|2020-04-01|  10382|       KISSYDOCKYARD|    KISSYDOCKYARD|   1038| 8.48209|-13.205047|FT CENTRAL|Western Area Urb|Western Area Urb|   East III|\n|     10062|2020-04-01 08:00:...| Incoming SMS|FB8BE55CA96642FE7...|0662B91E51A2EA16D...|       0|0662B91E51A2EA16D...|2020-04-01 08:00:04|2020-04-01|  10062|          ROCKELBANK|       ROCKELBANK|   1006| 8.48867|  -13.2315|FT CENTRAL|Western Area Urb|Western Area Urb|  Central I|\n|     40118|2020-04-01 08:00:...| Incoming SMS|65687C88A21A0534D...|91A0B96D2FE46ED69...|       0|91A0B96D2FE46ED69...|2020-04-01 08:00:03|2020-04-01|  40118|3G_COMPOUNDSTREET_II|COMPOUNDSTREET_II|   4011|8.882017|-12.044066|    MAKENI|         Bombali|         Bombali|Makeni City|\n|     20554|2020-04-01 08:00:...| Incoming SMS|BDEC0FAAB821EBD5A...|0662B91E51A2EA16D...|       0|0662B91E51A2EA16D...|2020-04-01 08:00:03|2020-04-01|  20554|            KALANGBA|         KALANGBA|   2055| 9.02775|-12.160405| UPC NORTH|         Bombali|         Bombali|  N\u0027gowahun|\n+----------+--------------------+-------------+--------------------+--------------------+--------+--------------------+-------------------+----------+-------+--------------------+-----------------+-------+--------+----------+----------+----------------+----------------+-----------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592498760707_-472473963",
+      "id": "paragraph_1592498760707_-472473963",
+      "dateCreated": "2020-06-18 16:46:00.707",
+      "dateStarted": "2020-06-18 17:06:07.429",
+      "dateFinished": "2020-06-18 17:06:50.909",
+      "status": "FINISHED"
+    },
+    {
+      "text": "",
+      "user": "innocent",
+      "dateUpdated": "2020-06-25 18:20:00.460",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592499828132_354660448",
+      "id": "paragraph_1592499828132_354660448",
+      "dateCreated": "2020-06-18 17:03:48.133",
+      "status": "READY"
+    }
+  ],
+  "name": "UserPaths",
+  "id": "2D94M4J8S",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.8.2",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

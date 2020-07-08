@@ -1,0 +1,932 @@
+{
+  "paragraphs": [
+    {
+      "text": "/**\n * title:generate_stops\n * author: Innocent Obi Jr\n * description: \n */\n \n//Default configurations (Remove in production)\nsc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))\nval pathToCdrs \u003d \"s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\"\nval pathToTowers \u003d \"s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\"\nval pathToOutput \u003d \"s3n://sierra-leone-lake/blob/AGGEGATED_CDRS/africell/stops\"",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-07 17:51:19.788",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "pathToCdrs: String \u003d s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\npathToTowers: String \u003d s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1593813481725_-1206439162",
+      "id": "20200703-215801_239465495",
+      "dateCreated": "2020-07-03 21:58:01.726",
+      "dateStarted": "2020-07-07 04:50:30.239",
+      "dateFinished": "2020-07-07 04:50:30.623",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\n//import org.apache.spark.sql._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\n\n val calls \u003d spark.read.format(\"csv\")\n    .option(\"header\",\"false\")\n    .option(\"inferSchema\", \"true\")\n    .load(pathToCdrs)\n    .withColumnRenamed(\"_c0\", \"antenna_id\")\n    .withColumnRenamed(\"_c1\", \"time\")\n    .withColumnRenamed(\"_c2\", \"direction\")\n    .withColumnRenamed(\"_c3\", \"source\")\n    .withColumn(\"subscriber\", col(\"source\"))\n    .withColumnRenamed(\"_c4\", \"target\")\n    .withColumnRenamed(\"_c5\", \"duration\")\n    .withColumn(\"site_id\", substring(col(\"antenna_id\"), 0, 4))\n    .withColumn(\"call_datetime\", to_timestamp($\"time\"))\n    .withColumn(\"call_date\", to_date($\"call_datetime\"))\n    .withColumn(\"end_time\",  to_timestamp(unix_timestamp($\"call_datetime\") + ($\"duration\")))\n    \n\nval cells \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(pathToTowers)\n  .withColumnRenamed(\"New_Dist\", \"locality\")\n  .withColumnRenamed(\"CI\", \"cell_id\")\n\ncells.persist(StorageLevel.MEMORY_AND_DISK)\ncells.createOrReplaceTempView(\"cells\")\n\ncalls.persist(StorageLevel.MEMORY_AND_DISK)\ncalls.createOrReplaceTempView(\"calls\")\n    ",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-07 04:50:32.716",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\ncalls: org.apache.spark.sql.DataFrame \u003d [antenna_id: int, time: timestamp ... 9 more fields]\ncells: org.apache.spark.sql.DataFrame \u003d [site_id: string, cell_id: int ... 8 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1593820049883_-1639976509",
+      "id": "20200703-234729_1101739060",
+      "dateCreated": "2020-07-03 23:47:29.883",
+      "dateStarted": "2020-07-07 04:50:32.739",
+      "dateFinished": "2020-07-07 04:51:17.327",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "// 1. District Subscribers\ncalls.withColumn(\"site_count\", count(\"site_id\").over(userSiteSpec))",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-07 17:53:44.069",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": false,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+----------+-------------------+-------------+--------------------+--------------------+--------+--------------------+-------+-------------------+----------+-------------------+-------+\n|antenna_id|               time|    direction|              source|              target|duration|          subscriber|site_id|      call_datetime| call_date|           end_time|dropRow|\n+----------+-------------------+-------------+--------------------+--------------------+--------+--------------------+-------+-------------------+----------+-------------------+-------+\n|     12018|2020-04-03 14:36:18|Incoming call|00124905558E3EFFA...|79CD8D0E210970A18...|      28|00124905558E3EFFA...|   1201|2020-04-03 14:36:18|2020-04-03|2020-04-03 14:36:46|      1|\n|     12018|2020-04-03 15:17:21|Incoming call|00124905558E3EFFA...|79CD8D0E210970A18...|      21|00124905558E3EFFA...|   1201|2020-04-03 15:17:21|2020-04-03|2020-04-03 15:17:42|      2|\n|     10071|2020-04-03 16:22:19|Outgoing call|00150C397604F0B2E...|7F9A98619C5BC5B3E...|       4|00150C397604F0B2E...|   1007|2020-04-03 16:22:19|2020-04-03|2020-04-03 16:22:23|      1|\n|     12133|2020-04-03 16:31:49|Outgoing call|0017E29A55B1DFE79...|BDF3C7A5CEB3F7AAD...|      18|0017E29A55B1DFE79...|   1213|2020-04-03 16:31:49|2020-04-03|2020-04-03 16:32:07|      1|\n|     34117|2020-04-03 16:16:55|Outgoing call|0017E29A55B1DFE79...|4DACED257CF74393B...|      27|0017E29A55B1DFE79...|   3411|2020-04-03 16:16:55|2020-04-03|2020-04-03 16:17:22|      1|\n|     20511|2020-04-03 14:45:12| Incoming SMS|001E4FEAECEF5E406...|0662B91E51A2EA16D...|       0|001E4FEAECEF5E406...|   2051|2020-04-03 14:45:12|2020-04-03|2020-04-03 14:45:12|      1|\n|     34862|2020-04-03 15:03:12|Incoming call|001EAD237BC642DA1...|7E854C27E0B8D8EE8...|      15|001EAD237BC642DA1...|   3486|2020-04-03 15:03:12|2020-04-03|2020-04-03 15:03:27|      1|\n|     34864|2020-04-03 15:10:38|Incoming call|001EAD237BC642DA1...|228C329180CF1A790...|      24|001EAD237BC642DA1...|   3486|2020-04-03 15:10:38|2020-04-03|2020-04-03 15:11:02|      2|\n|     12082|2020-04-03 16:09:20|Outgoing call|001F7B8BE0590DB37...|FFD8ED4FA7F6AF07D...|      11|001F7B8BE0590DB37...|   1208|2020-04-03 16:09:20|2020-04-03|2020-04-03 16:09:31|      1|\n|     36304|2020-04-03 15:23:57|Incoming call|002D7F116F054FE17...|6CCF5DA4353BC3036...|      25|002D7F116F054FE17...|   3630|2020-04-03 15:23:57|2020-04-03|2020-04-03 15:24:22|      1|\n|     12811|2020-04-03 15:06:03| Incoming SMS|002E9CAECFDAE042B...|107F8B8C9DCDFBF82...|       0|002E9CAECFDAE042B...|   1281|2020-04-03 15:06:03|2020-04-03|2020-04-03 15:06:03|      1|\n|     35244|2020-04-03 16:25:00|Outgoing call|0037455AC782713D2...|9F63263B4D7655CFD...|      16|0037455AC782713D2...|   3524|2020-04-03 16:25:00|2020-04-03|2020-04-03 16:25:16|      1|\n|     12222|2020-04-03 16:00:18|Outgoing call|0037D3DEA1F08CBDC...|7C3000BA6FB2BA714...|      36|0037D3DEA1F08CBDC...|   1222|2020-04-03 16:00:18|2020-04-03|2020-04-03 16:00:54|      1|\n|     12247|2020-04-03 14:28:36|Outgoing call|004D08F6B586923D5...|231F809F7FBD37F5E...|      51|004D08F6B586923D5...|   1224|2020-04-03 14:28:36|2020-04-03|2020-04-03 14:29:27|      1|\n|     12247|2020-04-03 15:30:08|Incoming call|004D08F6B586923D5...|CE7C0C4C0AC635366...|      69|004D08F6B586923D5...|   1224|2020-04-03 15:30:08|2020-04-03|2020-04-03 15:31:17|      2|\n|     12247|2020-04-03 16:25:18|Outgoing call|004D08F6B586923D5...|5605AA36793321909...|      41|004D08F6B586923D5...|   1224|2020-04-03 16:25:18|2020-04-03|2020-04-03 16:25:59|      3|\n|     12247|2020-04-03 16:42:09|Outgoing call|004D08F6B586923D5...|6A24370E4CB1DADC8...|      90|004D08F6B586923D5...|   1224|2020-04-03 16:42:09|2020-04-03|2020-04-03 16:43:39|      4|\n|     14171|2020-04-03 14:04:10| Incoming SMS|0054C56C8A3ED4E02...|0662B91E51A2EA16D...|       0|0054C56C8A3ED4E02...|   1417|2020-04-03 14:04:10|2020-04-03|2020-04-03 14:04:10|      1|\n|     14171|2020-04-03 14:08:14| Incoming SMS|0054C56C8A3ED4E02...|0662B91E51A2EA16D...|       0|0054C56C8A3ED4E02...|   1417|2020-04-03 14:08:14|2020-04-03|2020-04-03 14:08:14|      2|\n|     14172|2020-04-03 14:28:07| Incoming SMS|0054C56C8A3ED4E02...|0662B91E51A2EA16D...|       0|0054C56C8A3ED4E02...|   1417|2020-04-03 14:28:07|2020-04-03|2020-04-03 14:28:07|      3|\n+----------+-------------------+-------------+--------------------+--------------------+--------+--------------------+-------+-------------------+----------+-------------------+-------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1593820205160_1498179921",
+      "id": "20200703-235005_1368662916",
+      "dateCreated": "2020-07-03 23:50:05.161",
+      "dateStarted": "2020-07-07 04:51:24.909",
+      "dateFinished": "2020-07-07 04:51:55.648",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "// 2. \nuniqueSubscribers \u003d calls.groupBy(col(\"subscriber\"))\n    // filter where count \u003c4\n    // select($\"subscriber\").distinct()\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-07 17:53:53.775",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": false,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1593820675023_1761709567",
+      "id": "20200703-235755_1069837728",
+      "dateCreated": "2020-07-03 23:57:55.023",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val userSpec \u003d Window.partitionBy(\"subscriber\", \"call_date\").orderBy(\"call_datetime\")\nval userSiteSpec \u003d Window.partitionBy(\"subscriber\", \"call_date\", \"site_id\").orderBy(\"call_datetime\")\nval eventSiteSpec \u003d Window.partitionBy(\"subscriber\", \"call_date\", \"group\").orderBy(\"call_datetime\")\n//val summSpec \u003d Window.partitionBy(\"subscriber\",\"site_id\",\"stop_id\").orderBy(\"call_datetime\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-06 22:49:21.586",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "userSpec: org.apache.spark.sql.expressions.WindowSpec \u003d org.apache.spark.sql.expressions.WindowSpec@2c734467\nuserSiteSpec: org.apache.spark.sql.expressions.WindowSpec \u003d org.apache.spark.sql.expressions.WindowSpec@645ea5a5\neventSiteSpec: org.apache.spark.sql.expressions.WindowSpec \u003d org.apache.spark.sql.expressions.WindowSpec@e1ddf7f\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594075752633_-1641427254",
+      "id": "20200706-224912_1308522457",
+      "dateCreated": "2020-07-06 22:49:12.633",
+      "dateStarted": "2020-07-06 22:49:21.641",
+      "dateFinished": "2020-07-06 22:49:53.423",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "/*val tmp \u003d calls\n    .withColumn(\"site_count\", count(\"site_id\").over(userSiteSpec))\n    .filter(col(\"site_count\") \u003e 1)\n.withColumn(\"event_id\", row_number.over(userSpec))\n    .withColumn(\"difference\", $\"event_id\" - when((lag(\"event_id\", 1).over(userSiteSpec)).isNull, $\"event_id\").otherwise(lag(\"event_id\", 1).over(userSiteSpec)))\n    .withColumn(\"diffNotOne\", ($\"event_id\" - when((lag(\"event_id\", 1).over(userSiteSpec)).isNull, $\"event_id\").otherwise(lag(\"event_id\", 1).over(userSiteSpec)))!\u003d\u003d1)\n     .withColumn(\"diffValue\", when(col(\"diffNotOne\") \u003d\u003d\u003d true, 1).otherwise(0))\n    .withColumn(\"group\", sum(col(\"diffValue\")).over(userSiteSpec.rangeBetween(Window.unboundedPreceding, 0)))\n    .withColumn(\"stop_id\", min(col(\"event_id\")).over(eventSiteSpec))\ntmp.createOrReplaceTempView(\"tmp\")*/\n                    ",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-07 17:48:06.760",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "warning: there was one deprecation warning; re-run with -deprecation for details\ntmp: org.apache.spark.sql.DataFrame \u003d [antenna_id: int, time: timestamp ... 16 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594075762558_-1907710012",
+      "id": "20200706-224922_479960900",
+      "dateCreated": "2020-07-06 22:49:22.558",
+      "dateStarted": "2020-07-07 04:55:25.719",
+      "dateFinished": "2020-07-07 04:55:26.196",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\nselect * from tmp",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-07 17:48:31.380",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": false,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {
+                    "columns": [
+                      {
+                        "name": "antenna_id",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "time",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "direction",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "source",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "target",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "duration",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "subscriber",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "site_id",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "call_datetime",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "call_date",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {
+                          "priority": 0.0,
+                          "direction": "asc"
+                        },
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "end_time",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "event_id",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      }
+                    ],
+                    "scrollFocus": {},
+                    "selection": [],
+                    "grouping": {
+                      "grouping": [],
+                      "aggregations": [],
+                      "rowExpandedStates": {}
+                    },
+                    "treeView": {},
+                    "pagination": {
+                      "paginationCurrentPage": 1.0,
+                      "paginationPageSize": 250.0
+                    }
+                  },
+                  "tableColumnTypeState": {
+                    "names": {
+                      "antenna_id": "string",
+                      "time": "string",
+                      "direction": "string",
+                      "source": "string",
+                      "target": "string",
+                      "duration": "string",
+                      "subscriber": "string",
+                      "site_id": "string",
+                      "call_datetime": "string",
+                      "call_date": "string",
+                      "end_time": "string",
+                      "event_id": "string",
+                      "difference": "string",
+                      "diffNotOne": "string",
+                      "diffValue": "string",
+                      "group": "string",
+                      "stop_id": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "antenna_id\ttime\tdirection\tsource\ttarget\tduration\tsubscriber\tsite_id\tcall_datetime\tcall_date\tend_time\tevent_id\tdifference\tdiffNotOne\tdiffValue\tgroup\tstop_id\n10142\t2020-04-03 14:21:05.0\tOutgoing call\t00324843FC8308E94B7BFD53E0DD42AB\t7879FCEC8DCC0BC86612187370AC0F64\t93\t00324843FC8308E94B7BFD53E0DD42AB\t1014\t2020-04-03 14:21:05.0\t2020-04-03\t2020-04-03 14:22:38.0\t1\t0\ttrue\t1\t1\t1\n12791\t2020-04-03 16:20:29.0\tIncoming SMS\t00324843FC8308E94B7BFD53E0DD42AB\t0662B91E51A2EA16DD90A20709C71761\t0\t00324843FC8308E94B7BFD53E0DD42AB\t1279\t2020-04-03 16:20:29.0\t2020-04-03\t2020-04-03 16:20:29.0\t2\t0\ttrue\t1\t1\t1\n12791\t2020-04-03 16:20:43.0\tIncoming SMS\t00324843FC8308E94B7BFD53E0DD42AB\t0662B91E51A2EA16DD90A20709C71761\t0\t00324843FC8308E94B7BFD53E0DD42AB\t1279\t2020-04-03 16:20:43.0\t2020-04-03\t2020-04-03 16:20:43.0\t3\t1\tfalse\t0\t1\t1\n14211\t2020-04-03 14:22:16.0\tOutgoing call\t003EFA1FFDDC29E6FC3AD0FEA931BE0D\t4604EB48159105E6974E4332225AD193\t4\t003EFA1FFDDC29E6FC3AD0FEA931BE0D\t1421\t2020-04-03 14:22:16.0\t2020-04-03\t2020-04-03 14:22:20.0\t1\t0\ttrue\t1\t1\t1\n14211\t2020-04-03 16:00:55.0\tIncoming SMS\t003EFA1FFDDC29E6FC3AD0FEA931BE0D\t0662B91E51A2EA16DD90A20709C71761\t0\t003EFA1FFDDC29E6FC3AD0FEA931BE0D\t1421\t2020-04-03 16:00:55.0\t2020-04-03\t2020-04-03 16:00:55.0\t2\t1\tfalse\t0\t1\t1\n14211\t2020-04-03 16:37:53.0\tOutgoing call\t003EFA1FFDDC29E6FC3AD0FEA931BE0D\tBA743C9E44182C11EF23AB0AFB5A54F5\t34\t003EFA1FFDDC29E6FC3AD0FEA931BE0D\t1421\t2020-04-03 16:37:53.0\t2020-04-03\t2020-04-03 16:38:27.0\t3\t1\tfalse\t0\t1\t1\n14211\t2020-04-03 16:46:23.0\tOutgoing call\t003EFA1FFDDC29E6FC3AD0FEA931BE0D\t93F6F3A5E78CA39B85F8F3DD867B768E\t34\t003EFA1FFDDC29E6FC3AD0FEA931BE0D\t1421\t2020-04-03 16:46:23.0\t2020-04-03\t2020-04-03 16:46:57.0\t4\t1\tfalse\t0\t1\t1\n14192\t2020-04-03 14:11:53.0\tOutgoing call\t0049CCACDC7CDEC708F335D41B4D4F96\t891E27397170D0C73ED4B19991CF74FC\t66\t0049CCACDC7CDEC708F335D41B4D4F96\t1419\t2020-04-03 14:11:53.0\t2020-04-03\t2020-04-03 14:12:59.0\t1\t0\ttrue\t1\t1\t1\n12183\t2020-04-03 14:28:44.0\tIncoming call\t0049CCACDC7CDEC708F335D41B4D4F96\tA03B10E7E08DCEC7B27C81FFFE0840BF\t2\t0049CCACDC7CDEC708F335D41B4D4F96\t1218\t2020-04-03 14:28:44.0\t2020-04-03\t2020-04-03 14:28:46.0\t2\t0\ttrue\t1\t1\t1\n12183\t2020-04-03 14:29:00.0\tOutgoing call\t0049CCACDC7CDEC708F335D41B4D4F96\tA03B10E7E08DCEC7B27C81FFFE0840BF\t4\t0049CCACDC7CDEC708F335D41B4D4F96\t1218\t2020-04-03 14:29:00.0\t2020-04-03\t2020-04-03 14:29:04.0\t3\t1\tfalse\t0\t1\t1\n12183\t2020-04-03 14:29:12.0\tOutgoing call\t0049CCACDC7CDEC708F335D41B4D4F96\tA03B10E7E08DCEC7B27C81FFFE0840BF\t4\t0049CCACDC7CDEC708F335D41B4D4F96\t1218\t2020-04-03 14:29:12.0\t2020-04-03\t2020-04-03 14:29:16.0\t4\t1\tfalse\t0\t1\t1\n12183\t2020-04-03 14:36:44.0\tOutgoing call\t0049CCACDC7CDEC708F335D41B4D4F96\tA03B10E7E08DCEC7B27C81FFFE0840BF\t4\t0049CCACDC7CDEC708F335D41B4D4F96\t1218\t2020-04-03 14:36:44.0\t2020-04-03\t2020-04-03 14:36:48.0\t5\t1\tfalse\t0\t1\t1\n14192\t2020-04-03 14:41:14.0\tIncoming SMS\t0049CCACDC7CDEC708F335D41B4D4F96\t0662B91E51A2EA16DD90A20709C71761\t0\t0049CCACDC7CDEC708F335D41B4D4F96\t1419\t2020-04-03 14:41:14.0\t2020-04-03\t2020-04-03 14:41:14.0\t6\t5\ttrue\t1\t2\t6\n12183\t2020-04-03 14:50:01.0\tOutgoing call\t0049CCACDC7CDEC708F335D41B4D4F96\tA03B10E7E08DCEC7B27C81FFFE0840BF\t67\t0049CCACDC7CDEC708F335D41B4D4F96\t1218\t2020-04-03 14:50:01.0\t2020-04-03\t2020-04-03 14:51:08.0\t7\t2\ttrue\t1\t2\t6\n12183\t2020-04-03 15:49:18.0\tIncoming call\t0049CCACDC7CDEC708F335D41B4D4F96\tA03B10E7E08DCEC7B27C81FFFE0840BF\t9\t0049CCACDC7CDEC708F335D41B4D4F96\t1218\t2020-04-03 15:49:18.0\t2020-04-03\t2020-04-03 15:49:27.0\t8\t1\tfalse\t0\t2\t6\n12183\t2020-04-03 15:50:00.0\tOutgoing call\t0049CCACDC7CDEC708F335D41B4D4F96\tA03B10E7E08DCEC7B27C81FFFE0840BF\t29\t0049CCACDC7CDEC708F335D41B4D4F96\t1218\t2020-04-03 15:50:00.0\t2020-04-03\t2020-04-03 15:50:29.0\t9\t1\tfalse\t0\t2\t6\n14192\t2020-04-03 16:11:08.0\tOutgoing call\t0049CCACDC7CDEC708F335D41B4D4F96\tDF6E20A17E0031195769D674363F765B\t18\t0049CCACDC7CDEC708F335D41B4D4F96\t1419\t2020-04-03 16:11:08.0\t2020-04-03\t2020-04-03 16:11:26.0\t10\t4\ttrue\t1\t3\t10\n10142\t2020-04-03 14:28:54.0\tOutgoing call\t0049E8964C343C93F10960A0994F7AFB\t1B0A38395B8BD875E31EFBB3D53F79BF\t64\t0049E8964C343C93F10960A0994F7AFB\t1014\t2020-04-03 14:28:54.0\t2020-04-03\t2020-04-03 14:29:58.0\t1\t0\ttrue\t1\t1\t1\n34765\t2020-04-03 14:46:50.0\tIncoming SMS\t006BE528B47AC3E9223C39470806CA4F\t0662B91E51A2EA16DD90A20709C71761\t0\t006BE528B47AC3E9223C39470806CA4F\t3476\t2020-04-03 14:46:50.0\t2020-04-03\t2020-04-03 14:46:50.0\t1\t0\ttrue\t1\t1\t1\n40764\t2020-04-03 15:20:09.0\tOutgoing call\t006D99ACDF7BAC43721DB58CAD1045CA\t1EDBCC587CC2DC8212C82BD51F419217\t23\t006D99ACDF7BAC43721DB58CAD1045CA\t4076\t2020-04-03 15:20:09.0\t2020-04-03\t2020-04-03 15:20:32.0\t1\t0\ttrue\t1\t1\t1\n14172\t2020-04-03 14:05:36.0\tOutgoing call\t0073BEC67CF7A868BBFA7E13EDEC2F9F\tD40EF6BAB874342894B0C45383A70FF1\t54\t0073BEC67CF7A868BBFA7E13EDEC2F9F\t1417\t2020-04-03 14:05:36.0\t2020-04-03\t2020-04-03 14:06:30.0\t1\t0\ttrue\t1\t1\t1\n10016\t2020-04-03 14:23:46.0\tOutgoing call\t0073BEC67CF7A868BBFA7E13EDEC2F9F\tD40EF6BAB874342894B0C45383A70FF1\t7\t0073BEC67CF7A868BBFA7E13EDEC2F9F\t1001\t2020-04-03 14:23:46.0\t2020-04-03\t2020-04-03 14:23:53.0\t2\t0\ttrue\t1\t1\t1\n14172\t2020-04-03 14:55:14.0\tIncoming SMS\t0073BEC67CF7A868BBFA7E13EDEC2F9F\t0662B91E51A2EA16DD90A20709C71761\t0\t0073BEC67CF7A868BBFA7E13EDEC2F9F\t1417\t2020-04-03 14:55:14.0\t2020-04-03\t2020-04-03 14:55:14.0\t3\t2\ttrue\t1\t2\t3\n14172\t2020-04-03 15:01:53.0\tOutgoing call\t0073BEC67CF7A868BBFA7E13EDEC2F9F\t2B0AF6C71011C0E8D4E91B91506D45DC\t16\t0073BEC67CF7A868BBFA7E13EDEC2F9F\t1417\t2020-04-03 15:01:53.0\t2020-04-03\t2020-04-03 15:02:09.0\t4\t1\tfalse\t0\t2\t3\n21234\t2020-04-03 14:29:01.0\tOutgoing call\t007CEF84A0975B6A0763BC3865292E4D\t0DB55BF460B7E7833B562CA4BB57A935\t4\t007CEF84A0975B6A0763BC3865292E4D\t2123\t2020-04-03 14:29:01.0\t2020-04-03\t2020-04-03 14:29:05.0\t1\t0\ttrue\t1\t1\t1\n21233\t2020-04-03 14:29:18.0\tOutgoing call\t007CEF84A0975B6A0763BC3865292E4D\t0DB55BF460B7E7833B562CA4BB57A935\t4\t007CEF84A0975B6A0763BC3865292E4D\t2123\t2020-04-03 14:29:18.0\t2020-04-03\t2020-04-03 14:29:22.0\t2\t1\tfalse\t0\t1\t1\n21234\t2020-04-03 14:30:10.0\tOutgoing call\t007CEF84A0975B6A0763BC3865292E4D\t0DB55BF460B7E7833B562CA4BB57A935\t4\t007CEF84A0975B6A0763BC3865292E4D\t2123\t2020-04-03 14:30:10.0\t2020-04-03\t2020-04-03 14:30:14.0\t3\t1\tfalse\t0\t1\t1\n21234\t2020-04-03 14:30:24.0\tIncoming call\t007CEF84A0975B6A0763BC3865292E4D\t0DB55BF460B7E7833B562CA4BB57A935\t20\t007CEF84A0975B6A0763BC3865292E4D\t2123\t2020-04-03 14:30:24.0\t2020-04-03\t2020-04-03 14:30:44.0\t4\t1\tfalse\t0\t1\t1\n21234\t2020-04-03 15:46:45.0\tIncoming call\t007CEF84A0975B6A0763BC3865292E4D\t0DB55BF460B7E7833B562CA4BB57A935\t18\t007CEF84A0975B6A0763BC3865292E4D\t2123\t2020-04-03 15:46:45.0\t2020-04-03\t2020-04-03 15:47:03.0\t5\t1\tfalse\t0\t1\t1\n21234\t2020-04-03 16:12:25.0\tOutgoing call\t007CEF84A0975B6A0763BC3865292E4D\t0DB55BF460B7E7833B562CA4BB57A935\t4\t007CEF84A0975B6A0763BC3865292E4D\t2123\t2020-04-03 16:12:25.0\t2020-04-03\t2020-04-03 16:12:29.0\t6\t1\tfalse\t0\t1\t1\n21234\t2020-04-03 16:12:49.0\tIncoming call\t007CEF84A0975B6A0763BC3865292E4D\t0DB55BF460B7E7833B562CA4BB57A935\t15\t007CEF84A0975B6A0763BC3865292E4D\t2123\t2020-04-03 16:12:49.0\t2020-04-03\t2020-04-03 16:13:04.0\t7\t1\tfalse\t0\t1\t1\n21234\t2020-04-03 16:39:44.0\tOutgoing call\t007CEF84A0975B6A0763BC3865292E4D\t0DB55BF460B7E7833B562CA4BB57A935\t4\t007CEF84A0975B6A0763BC3865292E4D\t2123\t2020-04-03 16:39:44.0\t2020-04-03\t2020-04-03 16:39:48.0\t8\t1\tfalse\t0\t1\t1\n21234\t2020-04-03 16:40:06.0\tIncoming call\t007CEF84A0975B6A0763BC3865292E4D\t0DB55BF460B7E7833B562CA4BB57A935\t30\t007CEF84A0975B6A0763BC3865292E4D\t2123\t2020-04-03 16:40:06.0\t2020-04-03\t2020-04-03 16:40:36.0\t9\t1\tfalse\t0\t1\t1\n22092\t2020-04-03 14:53:00.0\tOutgoing call\t008CAE70CB2FC486703821E927B216E2\tA81477319D5E9F98B5ED2F6CC9D42313\t13\t008CAE70CB2FC486703821E927B216E2\t2209\t2020-04-03 14:53:00.0\t2020-04-03\t2020-04-03 14:53:13.0\t1\t0\ttrue\t1\t1\t1\n22093\t2020-04-03 15:48:50.0\tOutgoing call\t008DF10CBC6EBB2BD6BFEC54DBC20A1B\tC0204256F095537B164087B67CA6A224\t4\t008DF10CBC6EBB2BD6BFEC54DBC20A1B\t2209\t2020-04-03 15:48:50.0\t2020-04-03\t2020-04-03 15:48:54.0\t1\t0\ttrue\t1\t1\t1\n22093\t2020-04-03 15:52:30.0\tOutgoing call\t008DF10CBC6EBB2BD6BFEC54DBC20A1B\tC0204256F095537B164087B67CA6A224\t4\t008DF10CBC6EBB2BD6BFEC54DBC20A1B\t2209\t2020-04-03 15:52:30.0\t2020-04-03\t2020-04-03 15:52:34.0\t2\t1\tfalse\t0\t1\t1\n22093\t2020-04-03 15:59:29.0\tIncoming SMS\t008DF10CBC6EBB2BD6BFEC54DBC20A1B\t0662B91E51A2EA16DD90A20709C71761\t0\t008DF10CBC6EBB2BD6BFEC54DBC20A1B\t2209\t2020-04-03 15:59:29.0\t2020-04-03\t2020-04-03 15:59:29.0\t3\t1\tfalse\t0\t1\t1\n22093\t2020-04-03 16:00:47.0\tOutgoing call\t008DF10CBC6EBB2BD6BFEC54DBC20A1B\tC0204256F095537B164087B67CA6A224\t11\t008DF10CBC6EBB2BD6BFEC54DBC20A1B\t2209\t2020-04-03 16:00:47.0\t2020-04-03\t2020-04-03 16:00:58.0\t4\t1\tfalse\t0\t1\t1\n22093\t2020-04-03 16:20:47.0\tOutgoing call\t008DF10CBC6EBB2BD6BFEC54DBC20A1B\t3472C591A25827EDCD3B6723A72D977D\t68\t008DF10CBC6EBB2BD6BFEC54DBC20A1B\t2209\t2020-04-03 16:20:47.0\t2020-04-03\t2020-04-03 16:21:55.0\t5\t1\tfalse\t0\t1\t1\n22093\t2020-04-03 16:50:00.0\tIncoming call\t008DF10CBC6EBB2BD6BFEC54DBC20A1B\tC0204256F095537B164087B67CA6A224\t11\t008DF10CBC6EBB2BD6BFEC54DBC20A1B\t2209\t2020-04-03 16:50:00.0\t2020-04-03\t2020-04-03 16:50:11.0\t6\t1\tfalse\t0\t1\t1\n22093\t2020-04-03 16:52:36.0\tOutgoing call\t008DF10CBC6EBB2BD6BFEC54DBC20A1B\t46F996F0DA8CFCC2DEEFDCA4A2D70831\t7\t008DF10CBC6EBB2BD6BFEC54DBC20A1B\t2209\t2020-04-03 16:52:36.0\t2020-04-03\t2020-04-03 16:52:43.0\t7\t1\tfalse\t0\t1\t1\n34765\t2020-04-03 14:29:11.0\tIncoming SMS\t009295E70C3E6F640A5DCA58C53E1887\t0662B91E51A2EA16DD90A20709C71761\t0\t009295E70C3E6F640A5DCA58C53E1887\t3476\t2020-04-03 14:29:11.0\t2020-04-03\t2020-04-03 14:29:11.0\t1\t0\ttrue\t1\t1\t1\n36421\t2020-04-03 14:11:52.0\tIncoming call\t0099836A11DF6A3883D60996B6175F3C\t41861D6E69E813FE7DDFBD861BAFC69E\t55\t0099836A11DF6A3883D60996B6175F3C\t3642\t2020-04-03 14:11:52.0\t2020-04-03\t2020-04-03 14:12:47.0\t1\t0\ttrue\t1\t1\t1\n34020\t2020-04-03 14:23:43.0\tIncoming call\t0099836A11DF6A3883D60996B6175F3C\t41861D6E69E813FE7DDFBD861BAFC69E\t48\t0099836A11DF6A3883D60996B6175F3C\t3402\t2020-04-03 14:23:43.0\t2020-04-03\t2020-04-03 14:24:31.0\t2\t0\ttrue\t1\t1\t1\n36274\t2020-04-03 15:22:47.0\tIncoming call\t0099836A11DF6A3883D60996B6175F3C\t41861D6E69E813FE7DDFBD861BAFC69E\t16\t0099836A11DF6A3883D60996B6175F3C\t3627\t2020-04-03 15:22:47.0\t2020-04-03\t2020-04-03 15:23:03.0\t3\t0\ttrue\t1\t1\t1\n35164\t2020-04-03 16:20:03.0\tIncoming call\t0099836A11DF6A3883D60996B6175F3C\tBB695916DD041094876C529D368F85AD\t120\t0099836A11DF6A3883D60996B6175F3C\t3516\t2020-04-03 16:20:03.0\t2020-04-03\t2020-04-03 16:22:03.0\t4\t0\ttrue\t1\t1\t1\n36253\t2020-04-03 16:19:45.0\tIncoming call\t00A6A64BE3403D4186633301D3C8E7F4\t92FD245FAFB9CFFA4C79DD1B5907D2B9\t26\t00A6A64BE3403D4186633301D3C8E7F4\t3625\t2020-04-03 16:19:45.0\t2020-04-03\t2020-04-03 16:20:11.0\t1\t0\ttrue\t1\t1\t1\n34993\t2020-04-03 16:33:45.0\tOutgoing call\t00A6A64BE3403D4186633301D3C8E7F4\t14DBC9CC39D6BFBB19350486875AA0EE\t32\t00A6A64BE3403D4186633301D3C8E7F4\t3499\t2020-04-03 16:33:45.0\t2020-04-03\t2020-04-03 16:34:17.0\t2\t0\ttrue\t1\t1\t1\n36254\t2020-04-03 16:39:02.0\tOutgoing call\t00A6A64BE3403D4186633301D3C8E7F4\t96829903CD5E0EB2CAD3BE6D187CBBC9\t13\t00A6A64BE3403D4186633301D3C8E7F4\t3625\t2020-04-03 16:39:02.0\t2020-04-03\t2020-04-03 16:39:15.0\t3\t2\ttrue\t1\t2\t3\n20778\t2020-04-03 15:24:47.0\tIncoming call\t00DBF631F1FA221C5D5346057F77D744\t3048A1E292455D344FF18A5609B3A754\t46\t00DBF631F1FA221C5D5346057F77D744\t2077\t2020-04-03 15:24:47.0\t2020-04-03\t2020-04-03 15:25:33.0\t1\t0\ttrue\t1\t1\t1\n20778\t2020-04-03 16:55:57.0\tOutgoing call\t00DBF631F1FA221C5D5346057F77D744\t237E9ABA2F16AA7FC9A5E1E26B45F60D\t19\t00DBF631F1FA221C5D5346057F77D744\t2077\t2020-04-03 16:55:57.0\t2020-04-03\t2020-04-03 16:56:16.0\t2\t1\tfalse\t0\t1\t1\n20778\t2020-04-03 16:56:31.0\tOutgoing call\t00DBF631F1FA221C5D5346057F77D744\tE1F91A4EA52CDF833FACC5501E4B03E1\t3\t00DBF631F1FA221C5D5346057F77D744\t2077\t2020-04-03 16:56:31.0\t2020-04-03\t2020-04-03 16:56:34.0\t3\t1\tfalse\t0\t1\t1\n20778\t2020-04-03 16:57:22.0\tOutgoing call\t00DBF631F1FA221C5D5346057F77D744\tB8D4F497BE614CC5137F3A5919E36ED2\t301\t00DBF631F1FA221C5D5346057F77D744\t2077\t2020-04-03 16:57:22.0\t2020-04-03\t2020-04-03 17:02:23.0\t4\t1\tfalse\t0\t1\t1\n20273\t2020-04-03 14:41:08.0\tOutgoing call\t00DEA063BC30BA604B3B7E439FBBAC9B\tE579B6325B9D5638E01D682ACB459A51\t1\t00DEA063BC30BA604B3B7E439FBBAC9B\t2027\t2020-04-03 14:41:08.0\t2020-04-03\t2020-04-03 14:41:09.0\t1\t0\ttrue\t1\t1\t1\n22272\t2020-04-03 14:54:58.0\tOutgoing call\t00E0DDA2F6BF741428FF1DBFB63D7D26\t04B346FB9CBA490340AF9F672F5D789A\t4\t00E0DDA2F6BF741428FF1DBFB63D7D26\t2227\t2020-04-03 14:54:58.0\t2020-04-03\t2020-04-03 14:55:02.0\t1\t0\ttrue\t1\t1\t1\n34278\t2020-04-03 16:57:23.0\tOutgoing call\t00F107AA21ECE186BE3D96FE25EC6A9A\tDB3E7C13DA0EBA1375C42AF523B66DA4\t4\t00F107AA21ECE186BE3D96FE25EC6A9A\t3427\t2020-04-03 16:57:23.0\t2020-04-03\t2020-04-03 16:57:27.0\t1\t0\ttrue\t1\t1\t1\n34278\t2020-04-03 16:57:34.0\tOutgoing call\t00F107AA21ECE186BE3D96FE25EC6A9A\tDB3E7C13DA0EBA1375C42AF523B66DA4\t4\t00F107AA21ECE186BE3D96FE25EC6A9A\t3427\t2020-04-03 16:57:34.0\t2020-04-03\t2020-04-03 16:57:38.0\t2\t1\tfalse\t0\t1\t1\n22403\t2020-04-03 14:30:01.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\tA4BC97E910F25AB38F50A4918B20471E\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 14:30:01.0\t2020-04-03\t2020-04-03 14:30:05.0\t1\t0\ttrue\t1\t1\t1\n22403\t2020-04-03 14:30:42.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t9D6BC5DD8FD6F4BD9A5429069DE9B978\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 14:30:42.0\t2020-04-03\t2020-04-03 14:30:46.0\t2\t1\tfalse\t0\t1\t1\n22403\t2020-04-03 14:31:09.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\tC20F10B65A307AFD944FF1C72F77138B\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 14:31:09.0\t2020-04-03\t2020-04-03 14:31:13.0\t3\t1\tfalse\t0\t1\t1\n22403\t2020-04-03 14:31:24.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\tED2A4E69109E9D08BF7FE5EF09EEC037\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 14:31:24.0\t2020-04-03\t2020-04-03 14:31:28.0\t4\t1\tfalse\t0\t1\t1\n22403\t2020-04-03 14:32:02.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t51FF841EABC20D70E1EE8EA0DF2CD268\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 14:32:02.0\t2020-04-03\t2020-04-03 14:32:06.0\t5\t1\tfalse\t0\t1\t1\n22403\t2020-04-03 14:32:33.0\tIncoming call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t7DC3050B53112CBC9085B3F20B8E048A\t38\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 14:32:33.0\t2020-04-03\t2020-04-03 14:33:11.0\t6\t1\tfalse\t0\t1\t1\n20761\t2020-04-03 14:33:59.0\tIncoming call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t990E8EE31892EAE80FFAB207169B19F4\t175\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2076\t2020-04-03 14:33:59.0\t2020-04-03\t2020-04-03 14:36:54.0\t7\t0\ttrue\t1\t1\t1\n22403\t2020-04-03 16:05:22.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t990E8EE31892EAE80FFAB207169B19F4\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 16:05:22.0\t2020-04-03\t2020-04-03 16:05:26.0\t8\t2\ttrue\t1\t2\t8\n22403\t2020-04-03 16:05:49.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t990E8EE31892EAE80FFAB207169B19F4\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 16:05:49.0\t2020-04-03\t2020-04-03 16:05:53.0\t9\t1\tfalse\t0\t2\t8\n22403\t2020-04-03 16:06:15.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t990E8EE31892EAE80FFAB207169B19F4\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 16:06:15.0\t2020-04-03\t2020-04-03 16:06:19.0\t10\t1\tfalse\t0\t2\t8\n22403\t2020-04-03 16:06:34.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t990E8EE31892EAE80FFAB207169B19F4\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 16:06:34.0\t2020-04-03\t2020-04-03 16:06:38.0\t11\t1\tfalse\t0\t2\t8\n22403\t2020-04-03 16:07:19.0\tIncoming call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t7DC3050B53112CBC9085B3F20B8E048A\t9\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 16:07:19.0\t2020-04-03\t2020-04-03 16:07:28.0\t12\t1\tfalse\t0\t2\t8\n22403\t2020-04-03 16:23:40.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\tED2A4E69109E9D08BF7FE5EF09EEC037\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 16:23:40.0\t2020-04-03\t2020-04-03 16:23:44.0\t13\t1\tfalse\t0\t2\t8\n22401\t2020-04-03 16:25:46.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\tC20F10B65A307AFD944FF1C72F77138B\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 16:25:46.0\t2020-04-03\t2020-04-03 16:25:50.0\t14\t1\tfalse\t0\t2\t8\n22401\t2020-04-03 16:39:03.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t64623B5B3DC0B113EAE0D6367E2D625E\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 16:39:03.0\t2020-04-03\t2020-04-03 16:39:07.0\t15\t1\tfalse\t0\t2\t8\n22403\t2020-04-03 16:40:49.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t9D6BC5DD8FD6F4BD9A5429069DE9B978\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 16:40:49.0\t2020-04-03\t2020-04-03 16:40:53.0\t16\t1\tfalse\t0\t2\t8\n22403\t2020-04-03 16:41:18.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t9D6BC5DD8FD6F4BD9A5429069DE9B978\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 16:41:18.0\t2020-04-03\t2020-04-03 16:41:22.0\t17\t1\tfalse\t0\t2\t8\n22403\t2020-04-03 16:41:30.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t9D6BC5DD8FD6F4BD9A5429069DE9B978\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 16:41:30.0\t2020-04-03\t2020-04-03 16:41:34.0\t18\t1\tfalse\t0\t2\t8\n22403\t2020-04-03 16:48:07.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t10E21070E7EFC9D8C8761DF4E16EFCE7\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 16:48:07.0\t2020-04-03\t2020-04-03 16:48:11.0\t19\t1\tfalse\t0\t2\t8\n22403\t2020-04-03 16:49:53.0\tOutgoing call\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t88FEF64B5F56F43C8C52979B09095DD1\t4\t00F61BCE3F3F94B4B5C5E8F0CFE89E8F\t2240\t2020-04-03 16:49:53.0\t2020-04-03\t2020-04-03 16:49:57.0\t20\t1\tfalse\t0\t2\t8\n14252\t2020-04-03 14:05:25.0\tIncoming SMS\t00F9E1CF8F0705BBA16DA5F7CDB9E97B\t0662B91E51A2EA16DD90A20709C71761\t0\t00F9E1CF8F0705BBA16DA5F7CDB9E97B\t1425\t2020-04-03 14:05:25.0\t2020-04-03\t2020-04-03 14:05:25.0\t1\t0\ttrue\t1\t1\t1\n14128\t2020-04-03 14:49:41.0\tIncoming SMS\t00FF9D5A2F7A27D6B28D29CF3478B61E\t0662B91E51A2EA16DD90A20709C71761\t0\t00FF9D5A2F7A27D6B28D29CF3478B61E\t1412\t2020-04-03 14:49:41.0\t2020-04-03\t2020-04-03 14:49:41.0\t1\t0\ttrue\t1\t1\t1\n14033\t2020-04-03 14:55:42.0\tOutgoing call\t00FF9D5A2F7A27D6B28D29CF3478B61E\tE915822D733770F33EDD44732FD0A90A\t24\t00FF9D5A2F7A27D6B28D29CF3478B61E\t1403\t2020-04-03 14:55:42.0\t2020-04-03\t2020-04-03 14:56:06.0\t2\t0\ttrue\t1\t1\t1\n14323\t2020-04-03 15:35:29.0\tOutgoing call\t00FF9D5A2F7A27D6B28D29CF3478B61E\t0A683888395BD62296BDD94CFF1F5379\t11\t00FF9D5A2F7A27D6B28D29CF3478B61E\t1432\t2020-04-03 15:35:29.0\t2020-04-03\t2020-04-03 15:35:40.0\t3\t0\ttrue\t1\t1\t1\n14133\t2020-04-03 15:36:15.0\tOutgoing call\t00FF9D5A2F7A27D6B28D29CF3478B61E\t0A683888395BD62296BDD94CFF1F5379\t18\t00FF9D5A2F7A27D6B28D29CF3478B61E\t1413\t2020-04-03 15:36:15.0\t2020-04-03\t2020-04-03 15:36:33.0\t4\t0\ttrue\t1\t1\t1\n14323\t2020-04-03 15:55:06.0\tIncoming call\t00FF9D5A2F7A27D6B28D29CF3478B61E\t60195728F29A5794332D513E1F2F436C\t17\t00FF9D5A2F7A27D6B28D29CF3478B61E\t1432\t2020-04-03 15:55:06.0\t2020-04-03\t2020-04-03 15:55:23.0\t5\t2\ttrue\t1\t2\t5\n20591\t2020-04-03 15:02:52.0\tIncoming call\t0103EA5CDA8EC01C812BE4CBFD681B57\tB9EFF8153E0523F81830630B53DB589C\t13\t0103EA5CDA8EC01C812BE4CBFD681B57\t2059\t2020-04-03 15:02:52.0\t2020-04-03\t2020-04-03 15:03:05.0\t1\t0\ttrue\t1\t1\t1\n20603\t2020-04-03 15:04:16.0\tIncoming call\t0106291A86B32BE7A4A267E0E5D0A4CF\t5DBAF6A008ED0F8B478FFAB3C7AAAE7C\t10\t0106291A86B32BE7A4A267E0E5D0A4CF\t2060\t2020-04-03 15:04:16.0\t2020-04-03\t2020-04-03 15:04:26.0\t1\t0\ttrue\t1\t1\t1\n20604\t2020-04-03 15:04:41.0\tIncoming call\t0106291A86B32BE7A4A267E0E5D0A4CF\t5DBAF6A008ED0F8B478FFAB3C7AAAE7C\t20\t0106291A86B32BE7A4A267E0E5D0A4CF\t2060\t2020-04-03 15:04:41.0\t2020-04-03\t2020-04-03 15:05:01.0\t2\t1\tfalse\t0\t1\t1\n40256\t2020-04-03 15:19:50.0\tIncoming SMS\t010655B4E6410098D57AF180A7C020DF\t0662B91E51A2EA16DD90A20709C71761\t0\t010655B4E6410098D57AF180A7C020DF\t4025\t2020-04-03 15:19:50.0\t2020-04-03\t2020-04-03 15:19:50.0\t1\t0\ttrue\t1\t1\t1\n34818\t2020-04-03 14:23:34.0\tIncoming SMS\t010C1865355CF482AB4685EEEDD8F8A0\t0662B91E51A2EA16DD90A20709C71761\t0\t010C1865355CF482AB4685EEEDD8F8A0\t3481\t2020-04-03 14:23:34.0\t2020-04-03\t2020-04-03 14:23:34.0\t1\t0\ttrue\t1\t1\t1\n34813\t2020-04-03 14:51:55.0\tOutgoing call\t010C1865355CF482AB4685EEEDD8F8A0\t2476382BA9280CBF935B9074ED27BB0E\t4\t010C1865355CF482AB4685EEEDD8F8A0\t3481\t2020-04-03 14:51:55.0\t2020-04-03\t2020-04-03 14:51:59.0\t2\t1\tfalse\t0\t1\t1\n14338\t2020-04-03 14:52:24.0\tOutgoing call\t010C1865355CF482AB4685EEEDD8F8A0\t2476382BA9280CBF935B9074ED27BB0E\t4\t010C1865355CF482AB4685EEEDD8F8A0\t1433\t2020-04-03 14:52:24.0\t2020-04-03\t2020-04-03 14:52:28.0\t3\t0\ttrue\t1\t1\t1\n34918\t2020-04-03 16:10:46.0\tOutgoing call\t010C1865355CF482AB4685EEEDD8F8A0\tC7C536BC250171047759475C314CC22F\t4\t010C1865355CF482AB4685EEEDD8F8A0\t3491\t2020-04-03 16:10:46.0\t2020-04-03\t2020-04-03 16:10:50.0\t10\t0\ttrue\t1\t1\t1\n36456\t2020-04-03 16:11:02.0\tOutgoing call\t010C1865355CF482AB4685EEEDD8F8A0\t94E68F188961E19CD083857EF69B37E0\t4\t010C1865355CF482AB4685EEEDD8F8A0\t3645\t2020-04-03 16:11:02.0\t2020-04-03\t2020-04-03 16:11:06.0\t11\t0\ttrue\t1\t1\t1\n36456\t2020-04-03 16:11:10.0\tOutgoing call\t010C1865355CF482AB4685EEEDD8F8A0\t228EBABB36834F9F471B6996B1432E79\t4\t010C1865355CF482AB4685EEEDD8F8A0\t3645\t2020-04-03 16:11:10.0\t2020-04-03\t2020-04-03 16:11:14.0\t12\t1\tfalse\t0\t1\t1\n34813\t2020-04-03 14:53:01.0\tOutgoing call\t010C1865355CF482AB4685EEEDD8F8A0\t2476382BA9280CBF935B9074ED27BB0E\t4\t010C1865355CF482AB4685EEEDD8F8A0\t3481\t2020-04-03 14:53:01.0\t2020-04-03\t2020-04-03 14:53:05.0\t4\t2\ttrue\t1\t2\t4\n34813\t2020-04-03 14:53:14.0\tOutgoing call\t010C1865355CF482AB4685EEEDD8F8A0\t2476382BA9280CBF935B9074ED27BB0E\t4\t010C1865355CF482AB4685EEEDD8F8A0\t3481\t2020-04-03 14:53:14.0\t2020-04-03\t2020-04-03 14:53:18.0\t5\t1\tfalse\t0\t2\t4\n34813\t2020-04-03 14:54:38.0\tIncoming call\t010C1865355CF482AB4685EEEDD8F8A0\t2476382BA9280CBF935B9074ED27BB0E\t13\t010C1865355CF482AB4685EEEDD8F8A0\t3481\t2020-04-03 14:54:38.0\t2020-04-03\t2020-04-03 14:54:51.0\t6\t1\tfalse\t0\t2\t4\n34813\t2020-04-03 16:08:12.0\tOutgoing call\t010C1865355CF482AB4685EEEDD8F8A0\t6B988188079A44404D32AB0036B87CBB\t4\t010C1865355CF482AB4685EEEDD8F8A0\t3481\t2020-04-03 16:08:12.0\t2020-04-03\t2020-04-03 16:08:16.0\t7\t1\tfalse\t0\t2\t4\n34818\t2020-04-03 16:09:42.0\tOutgoing call\t010C1865355CF482AB4685EEEDD8F8A0\tC28FB66433135BC23265FBE611D4AE41\t4\t010C1865355CF482AB4685EEEDD8F8A0\t3481\t2020-04-03 16:09:42.0\t2020-04-03\t2020-04-03 16:09:46.0\t8\t1\tfalse\t0\t2\t4\n34818\t2020-04-03 16:10:18.0\tOutgoing call\t010C1865355CF482AB4685EEEDD8F8A0\t6B988188079A44404D32AB0036B87CBB\t4\t010C1865355CF482AB4685EEEDD8F8A0\t3481\t2020-04-03 16:10:18.0\t2020-04-03\t2020-04-03 16:10:22.0\t9\t1\tfalse\t0\t2\t4\n34913\t2020-04-03 16:11:41.0\tIncoming call\t010C1865355CF482AB4685EEEDD8F8A0\t228EBABB36834F9F471B6996B1432E79\t34\t010C1865355CF482AB4685EEEDD8F8A0\t3491\t2020-04-03 16:11:41.0\t2020-04-03\t2020-04-03 16:12:15.0\t14\t4\ttrue\t1\t2\t4\n34813\t2020-04-03 16:11:19.0\tOutgoing call\t010C1865355CF482AB4685EEEDD8F8A0\tE579AF14BBD9889FBD238BFECB3B471A\t4\t010C1865355CF482AB4685EEEDD8F8A0\t3481\t2020-04-03 16:11:19.0\t2020-04-03\t2020-04-03 16:11:23.0\t13\t4\ttrue\t1\t3\t13\n34818\t2020-04-03 16:58:33.0\tIncoming call\t010C1865355CF482AB4685EEEDD8F8A0\tC7C536BC250171047759475C314CC22F\t182\t010C1865355CF482AB4685EEEDD8F8A0\t3481\t2020-04-03 16:58:33.0\t2020-04-03\t2020-04-03 17:01:35.0\t15\t2\ttrue\t1\t4\t15\n12222\t2020-04-03 14:09:01.0\tIncoming call\t01370E2B06681600F6771970FCDA18B9\tEE8DC02823C411DF29B77FF3443EDA8C\t7\t01370E2B06681600F6771970FCDA18B9\t1222\t2020-04-03 14:09:01.0\t2020-04-03\t2020-04-03 14:09:08.0\t1\t0\ttrue\t1\t1\t1\n12223\t2020-04-03 14:51:01.0\tIncoming call\t01370E2B06681600F6771970FCDA18B9\tDA9E2546D65D1026CDAD4D8AACE6C537\t4\t01370E2B06681600F6771970FCDA18B9\t1222\t2020-04-03 14:51:01.0\t2020-04-03\t2020-04-03 14:51:05.0\t2\t1\tfalse\t0\t1\t1\n12228\t2020-04-03 14:51:16.0\tOutgoing call\t01370E2B06681600F6771970FCDA18B9\tDA9E2546D65D1026CDAD4D8AACE6C537\t22\t01370E2B06681600F6771970FCDA18B9\t1222\t2020-04-03 14:51:16.0\t2020-04-03\t2020-04-03 14:51:38.0\t3\t1\tfalse\t0\t1\t1\n12223\t2020-04-03 14:52:47.0\tOutgoing call\t01370E2B06681600F6771970FCDA18B9\tDA9E2546D65D1026CDAD4D8AACE6C537\t13\t01370E2B06681600F6771970FCDA18B9\t1222\t2020-04-03 14:52:47.0\t2020-04-03\t2020-04-03 14:53:00.0\t4\t1\tfalse\t0\t1\t1\n12223\t2020-04-03 15:04:18.0\tIncoming call\t01370E2B06681600F6771970FCDA18B9\tDA9E2546D65D1026CDAD4D8AACE6C537\t2\t01370E2B06681600F6771970FCDA18B9\t1222\t2020-04-03 15:04:18.0\t2020-04-03\t2020-04-03 15:04:20.0\t5\t1\tfalse\t0\t1\t1\n12223\t2020-04-03 15:04:33.0\tOutgoing call\t01370E2B06681600F6771970FCDA18B9\tDA9E2546D65D1026CDAD4D8AACE6C537\t13\t01370E2B06681600F6771970FCDA18B9\t1222\t2020-04-03 15:04:33.0\t2020-04-03\t2020-04-03 15:04:46.0\t6\t1\tfalse\t0\t1\t1\n12222\t2020-04-03 15:58:25.0\tIncoming call\t01370E2B06681600F6771970FCDA18B9\t52F403485B0DAEF73E4D8453486CC833\t1\t01370E2B06681600F6771970FCDA18B9\t1222\t2020-04-03 15:58:25.0\t2020-04-03\t2020-04-03 15:58:26.0\t7\t1\tfalse\t0\t1\t1\n10338\t2020-04-03 15:58:37.0\tIncoming call\t01370E2B06681600F6771970FCDA18B9\t52F403485B0DAEF73E4D8453486CC833\t60\t01370E2B06681600F6771970FCDA18B9\t1033\t2020-04-03 15:58:37.0\t2020-04-03\t2020-04-03 15:59:37.0\t8\t0\ttrue\t1\t1\t1\n12013\t2020-04-03 16:27:51.0\tIncoming call\t01370E2B06681600F6771970FCDA18B9\t52F403485B0DAEF73E4D8453486CC833\t24\t01370E2B06681600F6771970FCDA18B9\t1201\t2020-04-03 16:27:51.0\t2020-04-03\t2020-04-03 16:28:15.0\t9\t0\ttrue\t1\t1\t1\n35234\t2020-04-03 14:46:21.0\tIncoming call\t015A5F71077D2FACF17C45F2BF3F134B\t5EEEC9D56DEDDC404796C9A1C0E393CD\t18\t015A5F71077D2FACF17C45F2BF3F134B\t3523\t2020-04-03 14:46:21.0\t2020-04-03\t2020-04-03 14:46:39.0\t1\t0\ttrue\t1\t1\t1\n35234\t2020-04-03 16:36:00.0\tIncoming call\t015A5F71077D2FACF17C45F2BF3F134B\t682593898D9B4384545D89F813D8A429\t9\t015A5F71077D2FACF17C45F2BF3F134B\t3523\t2020-04-03 16:36:00.0\t2020-04-03\t2020-04-03 16:36:09.0\t2\t1\tfalse\t0\t1\t1\n12793\t2020-04-03 14:15:14.0\tIncoming call\t01A30F70E70BF77E35A4CDF1C231273A\tCA65B071B768C2DB9B3C3D00C5B004CC\t16\t01A30F70E70BF77E35A4CDF1C231273A\t1279\t2020-04-03 14:15:14.0\t2020-04-03\t2020-04-03 14:15:30.0\t1\t0\ttrue\t1\t1\t1\n12046\t2020-04-03 14:29:30.0\tIncoming SMS\t01A593671EB9062CC5EAB3F65C8C33BE\t0662B91E51A2EA16DD90A20709C71761\t0\t01A593671EB9062CC5EAB3F65C8C33BE\t1204\t2020-04-03 14:29:30.0\t2020-04-03\t2020-04-03 14:29:30.0\t1\t0\ttrue\t1\t1\t1\n12193\t2020-04-03 15:14:53.0\tIncoming call\t01A593671EB9062CC5EAB3F65C8C33BE\tC059F9C3CD145708802B93482FF0A3C0\t34\t01A593671EB9062CC5EAB3F65C8C33BE\t1219\t2020-04-03 15:14:53.0\t2020-04-03\t2020-04-03 15:15:27.0\t2\t0\ttrue\t1\t1\t1\n12041\t2020-04-03 16:19:48.0\tOutgoing call\t01A593671EB9062CC5EAB3F65C8C33BE\tC059F9C3CD145708802B93482FF0A3C0\t28\t01A593671EB9062CC5EAB3F65C8C33BE\t1204\t2020-04-03 16:19:48.0\t2020-04-03\t2020-04-03 16:20:16.0\t3\t2\ttrue\t1\t2\t3\n22086\t2020-04-03 15:01:10.0\tOutgoing call\t01A8AAE6AE26520F95CF07883B798D66\t423828C51EB49532E40B6796C15E1A11\t4\t01A8AAE6AE26520F95CF07883B798D66\t2208\t2020-04-03 15:01:10.0\t2020-04-03\t2020-04-03 15:01:14.0\t1\t0\ttrue\t1\t1\t1\n40320\t2020-04-03 15:05:43.0\tIncoming SMS\t01A8AAE6AE26520F95CF07883B798D66\t0662B91E51A2EA16DD90A20709C71761\t0\t01A8AAE6AE26520F95CF07883B798D66\t4032\t2020-04-03 15:05:43.0\t2020-04-03\t2020-04-03 15:05:43.0\t2\t0\ttrue\t1\t1\t1\n22084\t2020-04-03 15:06:21.0\tOutgoing call\t01A8AAE6AE26520F95CF07883B798D66\t423828C51EB49532E40B6796C15E1A11\t27\t01A8AAE6AE26520F95CF07883B798D66\t2208\t2020-04-03 15:06:21.0\t2020-04-03\t2020-04-03 15:06:48.0\t3\t2\ttrue\t1\t2\t3\n22086\t2020-04-03 15:23:13.0\tOutgoing call\t01A8AAE6AE26520F95CF07883B798D66\tA464B005448A1F90C8775DB8B3B25A44\t58\t01A8AAE6AE26520F95CF07883B798D66\t2208\t2020-04-03 15:23:13.0\t2020-04-03\t2020-04-03 15:24:11.0\t4\t1\tfalse\t0\t2\t3\n40321\t2020-04-03 16:51:38.0\tOutgoing call\t01A8AAE6AE26520F95CF07883B798D66\tA464B005448A1F90C8775DB8B3B25A44\t7\t01A8AAE6AE26520F95CF07883B798D66\t4032\t2020-04-03 16:51:38.0\t2020-04-03\t2020-04-03 16:51:45.0\t5\t3\ttrue\t1\t2\t3\n22112\t2020-04-03 14:57:04.0\tIncoming call\t01ACC1686668375A9C00F3D06E70AEBA\t068EC73F6D1D84946ECF19354E4F1B0C\t31\t01ACC1686668375A9C00F3D06E70AEBA\t2211\t2020-04-03 14:57:04.0\t2020-04-03\t2020-04-03 14:57:35.0\t1\t0\ttrue\t1\t1\t1\n20584\t2020-04-03 16:09:15.0\tOutgoing call\t01D1E791D4A5C2D929BC595C9977742A\t87ABBAA35F45DF33324BD67ADDD7195A\t67\t01D1E791D4A5C2D929BC595C9977742A\t2058\t2020-04-03 16:09:15.0\t2020-04-03\t2020-04-03 16:10:22.0\t1\t0\ttrue\t1\t1\t1\n35269\t2020-04-03 14:20:59.0\tIncoming SMS\t01E9A70BFE4E2BF69436E3703D4FEB37\t107F8B8C9DCDFBF825317DEE8BE7A30A\t0\t01E9A70BFE4E2BF69436E3703D4FEB37\t3526\t2020-04-03 14:20:59.0\t2020-04-03\t2020-04-03 14:20:59.0\t1\t0\ttrue\t1\t1\t1\n34669\t2020-04-03 14:06:05.0\tIncoming SMS\t01F4026FA4093C37C9AA252171CA78B2\t0662B91E51A2EA16DD90A20709C71761\t0\t01F4026FA4093C37C9AA252171CA78B2\t3466\t2020-04-03 14:06:05.0\t2020-04-03\t2020-04-03 14:06:05.0\t1\t0\ttrue\t1\t1\t1\n34669\t2020-04-03 14:07:01.0\tOutgoing call\t01F4026FA4093C37C9AA252171CA78B2\t36F7C69DE792E2B1E4F163DC9FBD6829\t3\t01F4026FA4093C37C9AA252171CA78B2\t3466\t2020-04-03 14:07:01.0\t2020-04-03\t2020-04-03 14:07:04.0\t2\t1\tfalse\t0\t1\t1\n34669\t2020-04-03 14:07:55.0\tIncoming SMS\t01F4026FA4093C37C9AA252171CA78B2\t91551D3AFBFD1AF547C32380D530469D\t0\t01F4026FA4093C37C9AA252171CA78B2\t3466\t2020-04-03 14:07:55.0\t2020-04-03\t2020-04-03 14:07:55.0\t3\t1\tfalse\t0\t1\t1\n34668\t2020-04-03 14:41:45.0\tOutgoing call\t01F4026FA4093C37C9AA252171CA78B2\tC6B4CC0BFBC3590929BA1D00FD4BAA41\t43\t01F4026FA4093C37C9AA252171CA78B2\t3466\t2020-04-03 14:41:45.0\t2020-04-03\t2020-04-03 14:42:28.0\t4\t1\tfalse\t0\t1\t1\n36393\t2020-04-03 14:42:08.0\tOutgoing call\t020E09D1E1FFBD61EF6D88DF8B0591CB\tC687F69492BAA9BED8050D535D19FBF6\t64\t020E09D1E1FFBD61EF6D88DF8B0591CB\t3639\t2020-04-03 14:42:08.0\t2020-04-03\t2020-04-03 14:43:12.0\t1\t0\ttrue\t1\t1\t1\n34861\t2020-04-03 15:28:37.0\tIncoming call\t0213CF75EB8AD8EBE935337DA6DF2CCB\tF8168E32DBE49FD848CD561A2CD0DC2B\t55\t0213CF75EB8AD8EBE935337DA6DF2CCB\t3486\t2020-04-03 15:28:37.0\t2020-04-03\t2020-04-03 15:29:32.0\t1\t0\ttrue\t1\t1\t1\n35265\t2020-04-03 16:07:43.0\tOutgoing call\t0213CF75EB8AD8EBE935337DA6DF2CCB\tF8168E32DBE49FD848CD561A2CD0DC2B\t2\t0213CF75EB8AD8EBE935337DA6DF2CCB\t3526\t2020-04-03 16:07:43.0\t2020-04-03\t2020-04-03 16:07:45.0\t2\t0\ttrue\t1\t1\t1\n36135\t2020-04-03 16:44:45.0\tOutgoing call\t0213CF75EB8AD8EBE935337DA6DF2CCB\t6C14BE0E9D0E16D05C84DD22CECE3D03\t2\t0213CF75EB8AD8EBE935337DA6DF2CCB\t3613\t2020-04-03 16:44:45.0\t2020-04-03\t2020-04-03 16:44:47.0\t3\t0\ttrue\t1\t1\t1\n34353\t2020-04-03 15:08:41.0\tIncoming call\t0216CB76C39EF16E7FCD1DF06A5A5069\t3CA2014541B751D106FB0DD111DD7850\t17\t0216CB76C39EF16E7FCD1DF06A5A5069\t3435\t2020-04-03 15:08:41.0\t2020-04-03\t2020-04-03 15:08:58.0\t1\t0\ttrue\t1\t1\t1\n34353\t2020-04-03 15:41:52.0\tIncoming call\t0216CB76C39EF16E7FCD1DF06A5A5069\tC46820009E7EC1182D0155722FF0572B\t38\t0216CB76C39EF16E7FCD1DF06A5A5069\t3435\t2020-04-03 15:41:52.0\t2020-04-03\t2020-04-03 15:42:30.0\t2\t1\tfalse\t0\t1\t1\n34358\t2020-04-03 15:43:54.0\tIncoming call\t0216CB76C39EF16E7FCD1DF06A5A5069\t3CA2014541B751D106FB0DD111DD7850\t12\t0216CB76C39EF16E7FCD1DF06A5A5069\t3435\t2020-04-03 15:43:54.0\t2020-04-03\t2020-04-03 15:44:06.0\t3\t1\tfalse\t0\t1\t1\n20531\t2020-04-03 14:46:35.0\tOutgoing call\t0221C0B1BDE176C4A06CA5AAF31E8999\tF8DFD48FEBCA14106E688E7C1009A754\t2\t0221C0B1BDE176C4A06CA5AAF31E8999\t2053\t2020-04-03 14:46:35.0\t2020-04-03\t2020-04-03 14:46:37.0\t1\t0\ttrue\t1\t1\t1\n20531\t2020-04-03 15:11:24.0\tOutgoing call\t0221C0B1BDE176C4A06CA5AAF31E8999\tA6AD5C8A6A81954375BCC26AE1DC425F\t35\t0221C0B1BDE176C4A06CA5AAF31E8999\t2053\t2020-04-03 15:11:24.0\t2020-04-03\t2020-04-03 15:11:59.0\t2\t1\tfalse\t0\t1\t1\n20461\t2020-04-03 15:12:47.0\tOutgoing call\t0221C0B1BDE176C4A06CA5AAF31E8999\tF8DFD48FEBCA14106E688E7C1009A754\t50\t0221C0B1BDE176C4A06CA5AAF31E8999\t2046\t2020-04-03 15:12:47.0\t2020-04-03\t2020-04-03 15:13:37.0\t3\t0\ttrue\t1\t1\t1\n20531\t2020-04-03 15:14:55.0\tIncoming SMS\t0221C0B1BDE176C4A06CA5AAF31E8999\t0662B91E51A2EA16DD90A20709C71761\t0\t0221C0B1BDE176C4A06CA5AAF31E8999\t2053\t2020-04-03 15:14:55.0\t2020-04-03\t2020-04-03 15:14:55.0\t4\t2\ttrue\t1\t2\t4\n20461\t2020-04-03 16:51:10.0\tOutgoing call\t0221C0B1BDE176C4A06CA5AAF31E8999\tDF7F52DBACAE673FB1876F44F2245572\t20\t0221C0B1BDE176C4A06CA5AAF31E8999\t2046\t2020-04-03 16:51:10.0\t2020-04-03\t2020-04-03 16:51:30.0\t5\t2\ttrue\t1\t2\t4\n10178\t2020-04-03 16:35:06.0\tIncoming call\t0229916FCCC7A872308EBCCCD166C2FC\t5D6FEBDD33A7440D12A7CEC9916B3CB8\t15\t0229916FCCC7A872308EBCCCD166C2FC\t1017\t2020-04-03 16:35:06.0\t2020-04-03\t2020-04-03 16:35:21.0\t1\t0\ttrue\t1\t1\t1\n14082\t2020-04-03 14:52:28.0\tIncoming call\t025CE4F29740F7BE24F997DD68E0AE94\t73C431A6BA3C924A707F243C4B7FEAD3\t344\t025CE4F29740F7BE24F997DD68E0AE94\t1408\t2020-04-03 14:52:28.0\t2020-04-03\t2020-04-03 14:58:12.0\t1\t0\ttrue\t1\t1\t1\n14082\t2020-04-03 15:23:42.0\tOutgoing call\t025CE4F29740F7BE24F997DD68E0AE94\t5DEDA5517781BB58EE0604BED4F27B26\t33\t025CE4F29740F7BE24F997DD68E0AE94\t1408\t2020-04-03 15:23:42.0\t2020-04-03\t2020-04-03 15:24:15.0\t2\t1\tfalse\t0\t1\t1\n14082\t2020-04-03 15:43:45.0\tOutgoing call\t025CE4F29740F7BE24F997DD68E0AE94\t36F7C69DE792E2B1E4F163DC9FBD6829\t9\t025CE4F29740F7BE24F997DD68E0AE94\t1408\t2020-04-03 15:43:45.0\t2020-04-03\t2020-04-03 15:43:54.0\t3\t1\tfalse\t0\t1\t1\n14082\t2020-04-03 15:45:42.0\tOutgoing call\t025CE4F29740F7BE24F997DD68E0AE94\t9D50CC529C65A2964EF15E555B658D58\t79\t025CE4F29740F7BE24F997DD68E0AE94\t1408\t2020-04-03 15:45:42.0\t2020-04-03\t2020-04-03 15:47:01.0\t4\t1\tfalse\t0\t1\t1\n14082\t2020-04-03 15:56:55.0\tOutgoing call\t025CE4F29740F7BE24F997DD68E0AE94\t6813CF0FC9F84F569823A5C41C8CA185\t95\t025CE4F29740F7BE24F997DD68E0AE94\t1408\t2020-04-03 15:56:55.0\t2020-04-03\t2020-04-03 15:58:30.0\t5\t1\tfalse\t0\t1\t1\n14082\t2020-04-03 16:10:15.0\tOutgoing call\t025CE4F29740F7BE24F997DD68E0AE94\t6813CF0FC9F84F569823A5C41C8CA185\t13\t025CE4F29740F7BE24F997DD68E0AE94\t1408\t2020-04-03 16:10:15.0\t2020-04-03\t2020-04-03 16:10:28.0\t6\t1\tfalse\t0\t1\t1\n14082\t2020-04-03 16:44:30.0\tOutgoing call\t025CE4F29740F7BE24F997DD68E0AE94\t36F7C69DE792E2B1E4F163DC9FBD6829\t7\t025CE4F29740F7BE24F997DD68E0AE94\t1408\t2020-04-03 16:44:30.0\t2020-04-03\t2020-04-03 16:44:37.0\t7\t1\tfalse\t0\t1\t1\n14082\t2020-04-03 16:55:30.0\tOutgoing call\t025CE4F29740F7BE24F997DD68E0AE94\t1C074FDA8429A86BBA3C8DFF07C21821\t4\t025CE4F29740F7BE24F997DD68E0AE94\t1408\t2020-04-03 16:55:30.0\t2020-04-03\t2020-04-03 16:55:34.0\t8\t1\tfalse\t0\t1\t1\n36403\t2020-04-03 14:23:49.0\tIncoming SMS\t027572B3B8384E010D313D2747A04E6E\t0662B91E51A2EA16DD90A20709C71761\t0\t027572B3B8384E010D313D2747A04E6E\t3640\t2020-04-03 14:23:49.0\t2020-04-03\t2020-04-03 14:23:49.0\t1\t0\ttrue\t1\t1\t1\n34853\t2020-04-03 14:25:55.0\tOutgoing call\t027572B3B8384E010D313D2747A04E6E\t6BDE2A8BD5B4E9F9664E21A61E720517\t201\t027572B3B8384E010D313D2747A04E6E\t3485\t2020-04-03 14:25:55.0\t2020-04-03\t2020-04-03 14:29:16.0\t2\t0\ttrue\t1\t1\t1\n34858\t2020-04-03 14:34:32.0\tIncoming call\t027572B3B8384E010D313D2747A04E6E\t04024B13AEB670C8E284E21F4DABB6C1\t16\t027572B3B8384E010D313D2747A04E6E\t3485\t2020-04-03 14:34:32.0\t2020-04-03\t2020-04-03 14:34:48.0\t3\t1\tfalse\t0\t1\t1\n36393\t2020-04-03 16:29:06.0\tOutgoing call\t027572B3B8384E010D313D2747A04E6E\t32EC466AD7DBA9879A1D749A193CA681\t19\t027572B3B8384E010D313D2747A04E6E\t3639\t2020-04-03 16:29:06.0\t2020-04-03\t2020-04-03 16:29:25.0\t8\t0\ttrue\t1\t1\t1\n36403\t2020-04-03 15:24:52.0\tOutgoing call\t027572B3B8384E010D313D2747A04E6E\t06DF19380F21C741F5A0964641872151\t4\t027572B3B8384E010D313D2747A04E6E\t3640\t2020-04-03 15:24:52.0\t2020-04-03\t2020-04-03 15:24:56.0\t4\t3\ttrue\t1\t2\t4\n34853\t2020-04-03 15:52:25.0\tIncoming SMS\t027572B3B8384E010D313D2747A04E6E\t0662B91E51A2EA16DD90A20709C71761\t0\t027572B3B8384E010D313D2747A04E6E\t3485\t2020-04-03 15:52:25.0\t2020-04-03\t2020-04-03 15:52:25.0\t5\t2\ttrue\t1\t2\t4\n34851\t2020-04-03 15:53:29.0\tIncoming SMS\t027572B3B8384E010D313D2747A04E6E\t91551D3AFBFD1AF547C32380D530469D\t0\t027572B3B8384E010D313D2747A04E6E\t3485\t2020-04-03 15:53:29.0\t2020-04-03\t2020-04-03 15:53:29.0\t6\t1\tfalse\t0\t2\t4\n36403\t2020-04-03 16:23:29.0\tOutgoing call\t027572B3B8384E010D313D2747A04E6E\t32EC466AD7DBA9879A1D749A193CA681\t47\t027572B3B8384E010D313D2747A04E6E\t3640\t2020-04-03 16:23:29.0\t2020-04-03\t2020-04-03 16:24:16.0\t7\t3\ttrue\t1\t3\t7\n34859\t2020-04-03 16:46:22.0\tIncoming call\t027572B3B8384E010D313D2747A04E6E\t32EC466AD7DBA9879A1D749A193CA681\t25\t027572B3B8384E010D313D2747A04E6E\t3485\t2020-04-03 16:46:22.0\t2020-04-03\t2020-04-03 16:46:47.0\t10\t4\ttrue\t1\t3\t7\n34858\t2020-04-03 16:59:53.0\tIncoming call\t027572B3B8384E010D313D2747A04E6E\t32EC466AD7DBA9879A1D749A193CA681\t13\t027572B3B8384E010D313D2747A04E6E\t3485\t2020-04-03 16:59:53.0\t2020-04-03\t2020-04-03 17:00:06.0\t11\t1\tfalse\t0\t3\t7\n36403\t2020-04-03 16:40:39.0\tOutgoing call\t027572B3B8384E010D313D2747A04E6E\t32EC466AD7DBA9879A1D749A193CA681\t38\t027572B3B8384E010D313D2747A04E6E\t3640\t2020-04-03 16:40:39.0\t2020-04-03\t2020-04-03 16:41:17.0\t9\t2\ttrue\t1\t4\t9\n20363\t2020-04-03 14:09:02.0\tOutgoing call\t02A56BE8DE79FCC7BE1FE439FFBE227C\t54F1D5097512CA8CE92587FA1BFA26D1\t30\t02A56BE8DE79FCC7BE1FE439FFBE227C\t2036\t2020-04-03 14:09:02.0\t2020-04-03\t2020-04-03 14:09:32.0\t1\t0\ttrue\t1\t1\t1\n20411\t2020-04-03 15:04:58.0\tOutgoing call\t02A56BE8DE79FCC7BE1FE439FFBE227C\tFFD8ED4FA7F6AF07DB17299066C4A3B6\t7\t02A56BE8DE79FCC7BE1FE439FFBE227C\t2041\t2020-04-03 15:04:58.0\t2020-04-03\t2020-04-03 15:05:05.0\t2\t0\ttrue\t1\t1\t1\n20212\t2020-04-03 15:24:18.0\tOutgoing call\t02A56BE8DE79FCC7BE1FE439FFBE227C\t54F1D5097512CA8CE92587FA1BFA26D1\t35\t02A56BE8DE79FCC7BE1FE439FFBE227C\t2021\t2020-04-03 15:24:18.0\t2020-04-03\t2020-04-03 15:24:53.0\t3\t0\ttrue\t1\t1\t1\n20212\t2020-04-03 16:13:13.0\tIncoming call\t02A56BE8DE79FCC7BE1FE439FFBE227C\t54F1D5097512CA8CE92587FA1BFA26D1\t39\t02A56BE8DE79FCC7BE1FE439FFBE227C\t2021\t2020-04-03 16:13:13.0\t2020-04-03\t2020-04-03 16:13:52.0\t4\t1\tfalse\t0\t1\t1\n12041\t2020-04-03 16:41:10.0\tIncoming call\t02BB0CEE3CD29B9E4E691C1650A4DD62\t3AE33EA1AD206339C75E38B2BA93FD7B\t21\t02BB0CEE3CD29B9E4E691C1650A4DD62\t1204\t2020-04-03 16:41:10.0\t2020-04-03\t2020-04-03 16:41:31.0\t1\t0\ttrue\t1\t1\t1\n12181\t2020-04-03 14:34:14.0\tIncoming call\t02D25C57F9438429C77F9BA1A2FB693D\tC5E13A4765A423D77C8156D79EDF696B\t119\t02D25C57F9438429C77F9BA1A2FB693D\t1218\t2020-04-03 14:34:14.0\t2020-04-03\t2020-04-03 14:36:13.0\t1\t0\ttrue\t1\t1\t1\n12161\t2020-04-03 16:59:37.0\tIncoming call\t02D25C57F9438429C77F9BA1A2FB693D\tC5E13A4765A423D77C8156D79EDF696B\t69\t02D25C57F9438429C77F9BA1A2FB693D\t1216\t2020-04-03 16:59:37.0\t2020-04-03\t2020-04-03 17:00:46.0\t2\t0\ttrue\t1\t1\t1\n22303\t2020-04-03 14:56:35.0\tIncoming SMS\t02D890E4460FBC162C7E51F54D57FB7D\t0662B91E51A2EA16DD90A20709C71761\t0\t02D890E4460FBC162C7E51F54D57FB7D\t2230\t2020-04-03 14:56:35.0\t2020-04-03\t2020-04-03 14:56:35.0\t1\t0\ttrue\t1\t1\t1\n22303\t2020-04-03 15:22:20.0\tIncoming call\t02D890E4460FBC162C7E51F54D57FB7D\tD590D0235F455A1D8FA6AA0820ED24FB\t52\t02D890E4460FBC162C7E51F54D57FB7D\t2230\t2020-04-03 15:22:20.0\t2020-04-03\t2020-04-03 15:23:12.0\t2\t1\tfalse\t0\t1\t1\n10207\t2020-04-03 15:53:24.0\tIncoming SMS\t0304164EE368D34DA7E29BCFB72C149F\tA685F353D568E762265D9CF9C2FD92C2\t0\t0304164EE368D34DA7E29BCFB72C149F\t1020\t2020-04-03 15:53:24.0\t2020-04-03\t2020-04-03 15:53:24.0\t1\t0\ttrue\t1\t1\t1\n34740\t2020-04-03 16:21:45.0\tIncoming SMS\t0304164EE368D34DA7E29BCFB72C149F\t0662B91E51A2EA16DD90A20709C71761\t0\t0304164EE368D34DA7E29BCFB72C149F\t3474\t2020-04-03 16:21:45.0\t2020-04-03\t2020-04-03 16:21:45.0\t2\t0\ttrue\t1\t1\t1\n12052\t2020-04-03 14:27:28.0\tIncoming call\t03332FA24AE69BE990664EFD17184E8B\t62C1B413570F65524676DE30E37F28B7\t21\t03332FA24AE69BE990664EFD17184E8B\t1205\t2020-04-03 14:27:28.0\t2020-04-03\t2020-04-03 14:27:49.0\t1\t0\ttrue\t1\t1\t1\n12043\t2020-04-03 15:02:04.0\tOutgoing call\t03332FA24AE69BE990664EFD17184E8B\t2754A17800B051552D682F49544B9ED3\t4\t03332FA24AE69BE990664EFD17184E8B\t1204\t2020-04-03 15:02:04.0\t2020-04-03\t2020-04-03 15:02:08.0\t2\t0\ttrue\t1\t1\t1\n20251\t2020-04-03 14:29:06.0\tIncoming call\t033961C3E12CB164BD65EE8FD5772158\t67E272A78BE5106250C6370995365E78\t25\t033961C3E12CB164BD65EE8FD5772158\t2025\t2020-04-03 14:29:06.0\t2020-04-03\t2020-04-03 14:29:31.0\t1\t0\ttrue\t1\t1\t1\n20251\t2020-04-03 16:03:53.0\tIncoming SMS\t033961C3E12CB164BD65EE8FD5772158\t0662B91E51A2EA16DD90A20709C71761\t0\t033961C3E12CB164BD65EE8FD5772158\t2025\t2020-04-03 16:03:53.0\t2020-04-03\t2020-04-03 16:03:53.0\t2\t1\tfalse\t0\t1\t1\n20251\t2020-04-03 16:04:47.0\tIncoming call\t033961C3E12CB164BD65EE8FD5772158\t67E272A78BE5106250C6370995365E78\t27\t033961C3E12CB164BD65EE8FD5772158\t2025\t2020-04-03 16:04:47.0\t2020-04-03\t2020-04-03 16:05:14.0\t3\t1\tfalse\t0\t1\t1\n14201\t2020-04-03 15:16:22.0\tIncoming call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t37\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:16:22.0\t2020-04-03\t2020-04-03 15:16:59.0\t1\t0\ttrue\t1\t1\t1\n14206\t2020-04-03 15:17:28.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:17:28.0\t2020-04-03\t2020-04-03 15:17:32.0\t2\t1\tfalse\t0\t1\t1\n14201\t2020-04-03 15:18:07.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:18:07.0\t2020-04-03\t2020-04-03 15:18:11.0\t3\t1\tfalse\t0\t1\t1\n14201\t2020-04-03 15:18:16.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:18:16.0\t2020-04-03\t2020-04-03 15:18:20.0\t4\t1\tfalse\t0\t1\t1\n14201\t2020-04-03 15:18:27.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:18:27.0\t2020-04-03\t2020-04-03 15:18:31.0\t5\t1\tfalse\t0\t1\t1\n14208\t2020-04-03 15:19:53.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:19:53.0\t2020-04-03\t2020-04-03 15:19:57.0\t6\t1\tfalse\t0\t1\t1\n14208\t2020-04-03 15:20:02.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:20:02.0\t2020-04-03\t2020-04-03 15:20:06.0\t7\t1\tfalse\t0\t1\t1\n14208\t2020-04-03 15:20:15.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:20:15.0\t2020-04-03\t2020-04-03 15:20:19.0\t8\t1\tfalse\t0\t1\t1\n14208\t2020-04-03 15:20:26.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:20:26.0\t2020-04-03\t2020-04-03 15:20:30.0\t9\t1\tfalse\t0\t1\t1\n14201\t2020-04-03 15:20:50.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t2\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:20:50.0\t2020-04-03\t2020-04-03 15:20:52.0\t10\t1\tfalse\t0\t1\t1\n14201\t2020-04-03 15:20:58.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t2\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:20:58.0\t2020-04-03\t2020-04-03 15:21:00.0\t11\t1\tfalse\t0\t1\t1\n14206\t2020-04-03 15:22:58.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t2\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:22:58.0\t2020-04-03\t2020-04-03 15:23:00.0\t12\t1\tfalse\t0\t1\t1\n14201\t2020-04-03 15:28:48.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:28:48.0\t2020-04-03\t2020-04-03 15:28:52.0\t13\t1\tfalse\t0\t1\t1\n14201\t2020-04-03 15:28:58.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:28:58.0\t2020-04-03\t2020-04-03 15:29:02.0\t14\t1\tfalse\t0\t1\t1\n14201\t2020-04-03 15:29:08.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:29:08.0\t2020-04-03\t2020-04-03 15:29:12.0\t15\t1\tfalse\t0\t1\t1\n14201\t2020-04-03 15:29:18.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:29:18.0\t2020-04-03\t2020-04-03 15:29:22.0\t16\t1\tfalse\t0\t1\t1\n14201\t2020-04-03 15:29:28.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:29:28.0\t2020-04-03\t2020-04-03 15:29:32.0\t17\t1\tfalse\t0\t1\t1\n14218\t2020-04-03 15:30:08.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1421\t2020-04-03 15:30:08.0\t2020-04-03\t2020-04-03 15:30:12.0\t18\t0\ttrue\t1\t1\t1\n14218\t2020-04-03 15:30:17.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1421\t2020-04-03 15:30:17.0\t2020-04-03\t2020-04-03 15:30:21.0\t19\t1\tfalse\t0\t1\t1\n14218\t2020-04-03 15:30:41.0\tIncoming call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t1\t033B94194E53E999E81398F232205102\t1421\t2020-04-03 15:30:41.0\t2020-04-03\t2020-04-03 15:30:42.0\t20\t1\tfalse\t0\t1\t1\n14218\t2020-04-03 15:30:51.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1421\t2020-04-03 15:30:51.0\t2020-04-03\t2020-04-03 15:30:55.0\t21\t1\tfalse\t0\t1\t1\n14218\t2020-04-03 15:30:59.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1421\t2020-04-03 15:30:59.0\t2020-04-03\t2020-04-03 15:31:03.0\t22\t1\tfalse\t0\t1\t1\n14218\t2020-04-03 15:31:07.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t2\t033B94194E53E999E81398F232205102\t1421\t2020-04-03 15:31:07.0\t2020-04-03\t2020-04-03 15:31:09.0\t23\t1\tfalse\t0\t1\t1\n14201\t2020-04-03 15:32:15.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:32:15.0\t2020-04-03\t2020-04-03 15:32:19.0\t24\t7\ttrue\t1\t2\t24\n14201\t2020-04-03 15:32:25.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:32:25.0\t2020-04-03\t2020-04-03 15:32:29.0\t25\t1\tfalse\t0\t2\t24\n14201\t2020-04-03 15:32:34.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:32:34.0\t2020-04-03\t2020-04-03 15:32:38.0\t26\t1\tfalse\t0\t2\t24\n14201\t2020-04-03 15:33:01.0\tIncoming call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t36\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 15:33:01.0\t2020-04-03\t2020-04-03 15:33:37.0\t27\t1\tfalse\t0\t2\t24\n14201\t2020-04-03 16:13:04.0\tOutgoing call\t033B94194E53E999E81398F232205102\tBAD7E6BD3A7C5768567B989D7BAE5E45\t4\t033B94194E53E999E81398F232205102\t1420\t2020-04-03 16:13:04.0\t2020-04-03\t2020-04-03 16:13:08.0\t28\t1\tfalse\t0\t2\t24\n22483\t2020-04-03 15:52:04.0\tIncoming call\t0351B9682A2DCA72A238583508F56891\t6B9D33336128989B2895A7F478F6D46D\t58\t0351B9682A2DCA72A238583508F56891\t2248\t2020-04-03 15:52:04.0\t2020-04-03\t2020-04-03 15:53:02.0\t1\t0\ttrue\t1\t1\t1\n20632\t2020-04-03 15:01:59.0\tIncoming SMS\t037C8DC7575F28F15C0C2B17C2589755\t9666A15208C625885569DFC80E4F7401\t0\t037C8DC7575F28F15C0C2B17C2589755\t2063\t2020-04-03 15:01:59.0\t2020-04-03\t2020-04-03 15:01:59.0\t1\t0\ttrue\t1\t1\t1\n12062\t2020-04-03 14:09:08.0\tOutgoing call\t03855BD054A29FE938B08CCDDA0FA11B\t05B85ADD741AB8E309CD84936BE002DE\t40\t03855BD054A29FE938B08CCDDA0FA11B\t1206\t2020-04-03 14:09:08.0\t2020-04-03\t2020-04-03 14:09:48.0\t1\t0\ttrue\t1\t1\t1\n12062\t2020-04-03 14:38:01.0\tOutgoing call\t03855BD054A29FE938B08CCDDA0FA11B\tCDE5D2FA421D4D5913C6C49CCED2E7CA\t4\t03855BD054A29FE938B08CCDDA0FA11B\t1206\t2020-04-03 14:38:01.0\t2020-04-03\t2020-04-03 14:38:05.0\t2\t1\tfalse\t0\t1\t1\n10143\t2020-04-03 14:54:16.0\tIncoming call\t03855BD054A29FE938B08CCDDA0FA11B\t05B85ADD741AB8E309CD84936BE002DE\t1\t03855BD054A29FE938B08CCDDA0FA11B\t1014\t2020-04-03 14:54:16.0\t2020-04-03\t2020-04-03 14:54:17.0\t3\t0\ttrue\t1\t1\t1\n10143\t2020-04-03 14:54:30.0\tOutgoing call\t03855BD054A29FE938B08CCDDA0FA11B\t05B85ADD741AB8E309CD84936BE002DE\t20\t03855BD054A29FE938B08CCDDA0FA11B\t1014\t2020-04-03 14:54:30.0\t2020-04-03\t2020-04-03 14:54:50.0\t4\t1\tfalse\t0\t1\t1\n10242\t2020-04-03 14:56:42.0\tOutgoing call\t03855BD054A29FE938B08CCDDA0FA11B\t05B85ADD741AB8E309CD84936BE002DE\t17\t03855BD054A29FE938B08CCDDA0FA11B\t1024\t2020-04-03 14:56:42.0\t2020-04-03\t2020-04-03 14:56:59.0\t5\t0\ttrue\t1\t1\t1\n10162\t2020-04-03 15:13:50.0\tOutgoing call\t03855BD054A29FE938B08CCDDA0FA11B\t05B85ADD741AB8E309CD84936BE002DE\t12\t03855BD054A29FE938B08CCDDA0FA11B\t1016\t2020-04-03 15:13:50.0\t2020-04-03\t2020-04-03 15:14:02.0\t7\t0\ttrue\t1\t1\t1\n12062\t2020-04-03 15:00:17.0\tIncoming call\t03855BD054A29FE938B08CCDDA0FA11B\t021F77DF8B07C7DEB0FF4BB79176DC1C\t32\t03855BD054A29FE938B08CCDDA0FA11B\t1206\t2020-04-03 15:00:17.0\t2020-04-03\t2020-04-03 15:00:49.0\t6\t4\ttrue\t1\t2\t6\n10162\t2020-04-03 16:25:48.0\tIncoming SMS\t03855BD054A29FE938B08CCDDA0FA11B\t0662B91E51A2EA16DD90A20709C71761\t0\t03855BD054A29FE938B08CCDDA0FA11B\t1016\t2020-04-03 16:25:48.0\t2020-04-03\t2020-04-03 16:25:48.0\t9\t2\ttrue\t1\t2\t6\n12062\t2020-04-03 15:38:57.0\tOutgoing call\t03855BD054A29FE938B08CCDDA0FA11B\tE4D7BB8536CDC9805CBB580E4DC3E8BD\t131\t03855BD054A29FE938B08CCDDA0FA11B\t1206\t2020-04-03 15:38:57.0\t2020-04-03\t2020-04-03 15:41:08.0\t8\t2\ttrue\t1\t3\t8\n35374\t2020-04-03 15:02:13.0\tIncoming SMS\t03A5F6F7AB73049EB6A96A9EF3AE6075\t9666A15208C625885569DFC80E4F7401\t0\t03A5F6F7AB73049EB6A96A9EF3AE6075\t3537\t2020-04-03 15:02:13.0\t2020-04-03\t2020-04-03 15:02:13.0\t1\t0\ttrue\t1\t1\t1\n20201\t2020-04-03 14:32:35.0\tIncoming call\t03ADD7492EFFBE7A59F14AC79D74259F\t64E08237C922E15ECDD3B50D55C247E5\t8\t03ADD7492EFFBE7A59F14AC79D74259F\t2020\t2020-04-03 14:32:35.0\t2020-04-03\t2020-04-03 14:32:43.0\t1\t0\ttrue\t1\t1\t1\n20309\t2020-04-03 15:12:24.0\tIncoming call\t03ADD7492EFFBE7A59F14AC79D74259F\tD523D88F04C9014AC6E395786482A4E4\t34\t03ADD7492EFFBE7A59F14AC79D74259F\t2030\t2020-04-03 15:12:24.0\t2020-04-03\t2020-04-03 15:12:58.0\t2\t0\ttrue\t1\t1\t1\n34912\t2020-04-03 14:37:59.0\tIncoming SMS\t03BD9607468C884EF189115CDB865C5E\t767F84FA9782248424A12936520973EA\t0\t03BD9607468C884EF189115CDB865C5E\t3491\t2020-04-03 14:37:59.0\t2020-04-03\t2020-04-03 14:37:59.0\t1\t0\ttrue\t1\t1\t1\n35449\t2020-04-03 16:48:13.0\tIncoming call\t03C323D301978DB365A5A88496939D7A\t4CD09B8FF13FC2AA07F9BBC61C49461E\t51\t03C323D301978DB365A5A88496939D7A\t3544\t2020-04-03 16:48:13.0\t2020-04-03\t2020-04-03 16:49:04.0\t1\t0\ttrue\t1\t1\t1\n12081\t2020-04-03 16:02:51.0\tIncoming call\t03C8D66FFFF957F21B2942206E50F95A\tF4AD452F452EE31FFAC216AB811D59CA\t12\t03C8D66FFFF957F21B2942206E50F95A\t1208\t2020-04-03 16:02:51.0\t2020-04-03\t2020-04-03 16:03:03.0\t1\t0\ttrue\t1\t1\t1\n20632\t2020-04-03 15:17:29.0\tOutgoing call\t03CC243FEA460E19E08A635A48650C1E\t16674F1B87C927D7F68E196F52CA7BAA\t35\t03CC243FEA460E19E08A635A48650C1E\t2063\t2020-04-03 15:17:29.0\t2020-04-03\t2020-04-03 15:18:04.0\t1\t0\ttrue\t1\t1\t1\n20632\t2020-04-03 15:26:11.0\tOutgoing call\t03CC243FEA460E19E08A635A48650C1E\t16674F1B87C927D7F68E196F52CA7BAA\t5\t03CC243FEA460E19E08A635A48650C1E\t2063\t2020-04-03 15:26:11.0\t2020-04-03\t2020-04-03 15:26:16.0\t2\t1\tfalse\t0\t1\t1\n20632\t2020-04-03 15:26:33.0\tOutgoing call\t03CC243FEA460E19E08A635A48650C1E\t7DB1B845DEDDB93251FC7FBF9E262425\t10\t03CC243FEA460E19E08A635A48650C1E\t2063\t2020-04-03 15:26:33.0\t2020-04-03\t2020-04-03 15:26:43.0\t3\t1\tfalse\t0\t1\t1\n20637\t2020-04-03 16:34:03.0\tOutgoing call\t03CC243FEA460E19E08A635A48650C1E\t16674F1B87C927D7F68E196F52CA7BAA\t31\t03CC243FEA460E19E08A635A48650C1E\t2063\t2020-04-03 16:34:03.0\t2020-04-03\t2020-04-03 16:34:34.0\t4\t1\tfalse\t0\t1\t1\n14063\t2020-04-03 16:24:54.0\tOutgoing call\t03E24AE770EFE9623F515E7E3506F6D4\t1757D23291CECEEE4643278E9E6D13A2\t24\t03E24AE770EFE9623F515E7E3506F6D4\t1406\t2020-04-03 16:24:54.0\t2020-04-03\t2020-04-03 16:25:18.0\t1\t0\ttrue\t1\t1\t1\n14063\t2020-04-03 16:26:56.0\tIncoming call\t03E24AE770EFE9623F515E7E3506F6D4\t1757D23291CECEEE4643278E9E6D13A2\t25\t03E24AE770EFE9623F515E7E3506F6D4\t1406\t2020-04-03 16:26:56.0\t2020-04-03\t2020-04-03 16:27:21.0\t2\t1\tfalse\t0\t1\t1\n14063\t2020-04-03 16:28:46.0\tOutgoing call\t03E24AE770EFE9623F515E7E3506F6D4\tFDB6313D72652FB52B3B6E02F3161844\t4\t03E24AE770EFE9623F515E7E3506F6D4\t1406\t2020-04-03 16:28:46.0\t2020-04-03\t2020-04-03 16:28:50.0\t3\t1\tfalse\t0\t1\t1\n14063\t2020-04-03 16:29:23.0\tOutgoing call\t03E24AE770EFE9623F515E7E3506F6D4\tFDB6313D72652FB52B3B6E02F3161844\t4\t03E24AE770EFE9623F515E7E3506F6D4\t1406\t2020-04-03 16:29:23.0\t2020-04-03\t2020-04-03 16:29:27.0\t4\t1\tfalse\t0\t1\t1\n14063\t2020-04-03 16:46:40.0\tOutgoing call\t03E24AE770EFE9623F515E7E3506F6D4\tDFC005170FE2E0BEA2BB0C5C063430A9\t4\t03E24AE770EFE9623F515E7E3506F6D4\t1406\t2020-04-03 16:46:40.0\t2020-04-03\t2020-04-03 16:46:44.0\t5\t1\tfalse\t0\t1\t1\n20222\t2020-04-03 15:33:00.0\tOutgoing call\t03FEC060400F5E3E697ECF5BCABD37F9\t859B78F08E93E32DC4DC5B5E10823003\t23\t03FEC060400F5E3E697ECF5BCABD37F9\t2022\t2020-04-03 15:33:00.0\t2020-04-03\t2020-04-03 15:33:23.0\t1\t0\ttrue\t1\t1\t1\n20222\t2020-04-03 16:00:07.0\tOutgoing call\t03FEC060400F5E3E697ECF5BCABD37F9\t859B78F08E93E32DC4DC5B5E10823003\t11\t03FEC060400F5E3E697ECF5BCABD37F9\t2022\t2020-04-03 16:00:07.0\t2020-04-03\t2020-04-03 16:00:18.0\t2\t1\tfalse\t0\t1\t1\n20222\t2020-04-03 16:08:09.0\tOutgoing call\t03FEC060400F5E3E697ECF5BCABD37F9\t09ABD6CB0D6EC2CC4B6AD61AA6443EF2\t17\t03FEC060400F5E3E697ECF5BCABD37F9\t2022\t2020-04-03 16:08:09.0\t2020-04-03\t2020-04-03 16:08:26.0\t3\t1\tfalse\t0\t1\t1\n20222\t2020-04-03 16:40:03.0\tIncoming call\t03FEC060400F5E3E697ECF5BCABD37F9\t221A46DA4B29854BB7BFED4FD7D07C9A\t20\t03FEC060400F5E3E697ECF5BCABD37F9\t2022\t2020-04-03 16:40:03.0\t2020-04-03\t2020-04-03 16:40:23.0\t4\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 14:29:16.0\tIncoming call\t043F1731A0125B79B473276C93568DC9\t9A10A8049309DF4CB6C61F53F69A793F\t59\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 14:29:16.0\t2020-04-03\t2020-04-03 14:30:15.0\t1\t0\ttrue\t1\t1\t1\n14342\t2020-04-03 14:44:13.0\tIncoming call\t043F1731A0125B79B473276C93568DC9\t939BAFA5DC551279E7AA4AC48D7E1A26\t46\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 14:44:13.0\t2020-04-03\t2020-04-03 14:44:59.0\t2\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 14:53:15.0\tIncoming call\t043F1731A0125B79B473276C93568DC9\t4D87378F54C715489EDE280E593331C1\t7\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 14:53:15.0\t2020-04-03\t2020-04-03 14:53:22.0\t3\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 14:53:33.0\tOutgoing call\t043F1731A0125B79B473276C93568DC9\t4D87378F54C715489EDE280E593331C1\t4\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 14:53:33.0\t2020-04-03\t2020-04-03 14:53:37.0\t4\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 14:57:31.0\tIncoming call\t043F1731A0125B79B473276C93568DC9\t6219D27C33994335BF106861275AD22D\t25\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 14:57:31.0\t2020-04-03\t2020-04-03 14:57:56.0\t5\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 15:16:28.0\tIncoming call\t043F1731A0125B79B473276C93568DC9\tB340703B386AD3AA98BFF5518BA6E096\t19\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 15:16:28.0\t2020-04-03\t2020-04-03 15:16:47.0\t6\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 15:27:17.0\tOutgoing call\t043F1731A0125B79B473276C93568DC9\tC819D6252D2787668FC3C97503CC0EB3\t3\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 15:27:17.0\t2020-04-03\t2020-04-03 15:27:20.0\t7\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 15:34:44.0\tIncoming call\t043F1731A0125B79B473276C93568DC9\tDA0B69BA114CE1E53AA161D39FAEF0F6\t19\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 15:34:44.0\t2020-04-03\t2020-04-03 15:35:03.0\t8\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:03:30.0\tOutgoing call\t043F1731A0125B79B473276C93568DC9\tDA0B69BA114CE1E53AA161D39FAEF0F6\t4\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:03:30.0\t2020-04-03\t2020-04-03 16:03:34.0\t9\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:03:47.0\tOutgoing call\t043F1731A0125B79B473276C93568DC9\t80C496BCE3305C244666B8225E7CF8FA\t4\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:03:47.0\t2020-04-03\t2020-04-03 16:03:51.0\t10\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:03:58.0\tOutgoing call\t043F1731A0125B79B473276C93568DC9\t80C496BCE3305C244666B8225E7CF8FA\t4\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:03:58.0\t2020-04-03\t2020-04-03 16:04:02.0\t11\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:04:08.0\tOutgoing call\t043F1731A0125B79B473276C93568DC9\t80C496BCE3305C244666B8225E7CF8FA\t4\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:04:08.0\t2020-04-03\t2020-04-03 16:04:12.0\t12\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:04:18.0\tOutgoing call\t043F1731A0125B79B473276C93568DC9\t80C496BCE3305C244666B8225E7CF8FA\t4\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:04:18.0\t2020-04-03\t2020-04-03 16:04:22.0\t13\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:05:39.0\tOutgoing call\t043F1731A0125B79B473276C93568DC9\t80C496BCE3305C244666B8225E7CF8FA\t4\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:05:39.0\t2020-04-03\t2020-04-03 16:05:43.0\t14\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:09:17.0\tIncoming SMS\t043F1731A0125B79B473276C93568DC9\t0662B91E51A2EA16DD90A20709C71761\t0\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:09:17.0\t2020-04-03\t2020-04-03 16:09:17.0\t15\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:13:06.0\tOutgoing call\t043F1731A0125B79B473276C93568DC9\tDA0B69BA114CE1E53AA161D39FAEF0F6\t23\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:13:06.0\t2020-04-03\t2020-04-03 16:13:29.0\t16\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:23:02.0\tOutgoing call\t043F1731A0125B79B473276C93568DC9\t80146A182F3750D0C80E17D2A8DF5946\t129\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:23:02.0\t2020-04-03\t2020-04-03 16:25:11.0\t17\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:31:52.0\tOutgoing call\t043F1731A0125B79B473276C93568DC9\tBDA4B266C19737C57956F5E07EAC4B7B\t20\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:31:52.0\t2020-04-03\t2020-04-03 16:32:12.0\t18\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:32:37.0\tOutgoing call\t043F1731A0125B79B473276C93568DC9\tBDA4B266C19737C57956F5E07EAC4B7B\t32\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:32:37.0\t2020-04-03\t2020-04-03 16:33:09.0\t19\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:34:31.0\tOutgoing call\t043F1731A0125B79B473276C93568DC9\tDA0B69BA114CE1E53AA161D39FAEF0F6\t30\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:34:31.0\t2020-04-03\t2020-04-03 16:35:01.0\t20\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:36:36.0\tOutgoing call\t043F1731A0125B79B473276C93568DC9\tCC9CAD8625FE53841B8BE645811BD0E5\t33\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:36:36.0\t2020-04-03\t2020-04-03 16:37:09.0\t21\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:38:22.0\tIncoming call\t043F1731A0125B79B473276C93568DC9\tDA0B69BA114CE1E53AA161D39FAEF0F6\t33\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:38:22.0\t2020-04-03\t2020-04-03 16:38:55.0\t22\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:48:06.0\tIncoming call\t043F1731A0125B79B473276C93568DC9\tED3ED1EBB0F679F72F011E605B26E62C\t21\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:48:06.0\t2020-04-03\t2020-04-03 16:48:27.0\t23\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:53:15.0\tOutgoing call\t043F1731A0125B79B473276C93568DC9\tD4B6DEB033A3D9567781B2004597A2CA\t20\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:53:15.0\t2020-04-03\t2020-04-03 16:53:35.0\t24\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:57:47.0\tOutgoing call\t043F1731A0125B79B473276C93568DC9\t74F3BE8DBFA970DFFE1B9AE42EB4A849\t23\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:57:47.0\t2020-04-03\t2020-04-03 16:58:10.0\t25\t1\tfalse\t0\t1\t1\n14342\t2020-04-03 16:58:45.0\tIncoming call\t043F1731A0125B79B473276C93568DC9\tE8977AA1812217E9EE486192C1512297\t80\t043F1731A0125B79B473276C93568DC9\t1434\t2020-04-03 16:58:45.0\t2020-04-03\t2020-04-03 17:00:05.0\t26\t1\tfalse\t0\t1\t1\n12802\t2020-04-03 14:08:33.0\tOutgoing call\t0441DEDD0CA7309A8E54F088D4464340\tBC799C00EFD8B6B0D59363D594B0B1D0\t33\t0441DEDD0CA7309A8E54F088D4464340\t1280\t2020-04-03 14:08:33.0\t2020-04-03\t2020-04-03 14:09:06.0\t1\t0\ttrue\t1\t1\t1\n12802\t2020-04-03 15:10:32.0\tIncoming call\t0441DEDD0CA7309A8E54F088D4464340\t8AB913039CE882053AB6D2D40E93ACEF\t49\t0441DEDD0CA7309A8E54F088D4464340\t1280\t2020-04-03 15:10:32.0\t2020-04-03\t2020-04-03 15:11:21.0\t2\t1\tfalse\t0\t1\t1\n12802\t2020-04-03 15:12:29.0\tOutgoing call\t0441DEDD0CA7309A8E54F088D4464340\t7690A1E7B0E38F9710A401EB804D43F7\t99\t0441DEDD0CA7309A8E54F088D4464340\t1280\t2020-04-03 15:12:29.0\t2020-04-03\t2020-04-03 15:14:08.0\t3\t1\tfalse\t0\t1\t1\n12802\t2020-04-03 15:17:38.0\tOutgoing call\t0441DEDD0CA7309A8E54F088D4464340\t0226CB0C9F39C628D5F500F62C96A984\t13\t0441DEDD0CA7309A8E54F088D4464340\t1280\t2020-04-03 15:17:38.0\t2020-04-03\t2020-04-03 15:17:51.0\t4\t1\tfalse\t0\t1\t1\n35082\t2020-04-03 15:53:06.0\tIncoming SMS\t0446CF955B7CED0DB8EB84720AF1B0FA\t0662B91E51A2EA16DD90A20709C71761\t0\t0446CF955B7CED0DB8EB84720AF1B0FA\t3508\t2020-04-03 15:53:06.0\t2020-04-03\t2020-04-03 15:53:06.0\t1\t0\ttrue\t1\t1\t1\n35082\t2020-04-03 15:53:37.0\tIncoming SMS\t0446CF955B7CED0DB8EB84720AF1B0FA\t2BC922BA7159DB112A8D90FCA365A230\t0\t0446CF955B7CED0DB8EB84720AF1B0FA\t3508\t2020-04-03 15:53:37.0\t2020-04-03\t2020-04-03 15:53:37.0\t2\t1\tfalse\t0\t1\t1\n35082\t2020-04-03 15:53:37.0\tIncoming SMS\t0446CF955B7CED0DB8EB84720AF1B0FA\t2BC922BA7159DB112A8D90FCA365A230\t0\t0446CF955B7CED0DB8EB84720AF1B0FA\t3508\t2020-04-03 15:53:37.0\t2020-04-03\t2020-04-03 15:53:37.0\t3\t1\tfalse\t0\t1\t1\n35082\t2020-04-03 15:54:26.0\tOutgoing call\t0446CF955B7CED0DB8EB84720AF1B0FA\t1E03697CE4B984343A132A1E9DF91524\t81\t0446CF955B7CED0DB8EB84720AF1B0FA\t3508\t2020-04-03 15:54:26.0\t2020-04-03\t2020-04-03 15:55:47.0\t4\t1\tfalse\t0\t1\t1\n12182\t2020-04-03 14:03:39.0\tIncoming call\t0453CEBA7682BAA55D4D1DC45797BEC4\t2AA9A5494ABEBEE5F4F4CE67A2DC32FF\t174\t0453CEBA7682BAA55D4D1DC45797BEC4\t1218\t2020-04-03 14:03:39.0\t2020-04-03\t2020-04-03 14:06:33.0\t1\t0\ttrue\t1\t1\t1\n12182\t2020-04-03 14:24:29.0\tOutgoing call\t0453CEBA7682BAA55D4D1DC45797BEC4\t4247B086C10D325379E9CBA1F86718F3\t7\t0453CEBA7682BAA55D4D1DC45797BEC4\t1218\t2020-04-03 14:24:29.0\t2020-04-03\t2020-04-03 14:24:36.0\t2\t1\tfalse\t0\t1\t1\n12182\t2020-04-03 14:25:25.0\tIncoming call\t0453CEBA7682BAA55D4D1DC45797BEC4\t7CF547B23549D33DEDD3F1AC7EC93811\t99\t0453CEBA7682BAA55D4D1DC45797BEC4\t1218\t2020-04-03 14:25:25.0\t2020-04-03\t2020-04-03 14:27:04.0\t3\t1\tfalse\t0\t1\t1\n12182\t2020-04-03 14:29:12.0\tOutgoing call\t0453CEBA7682BAA55D4D1DC45797BEC4\t4292D9EE62DEC67E366D114747D07F59\t4\t0453CEBA7682BAA55D4D1DC45797BEC4\t1218\t2020-04-03 14:29:12.0\t2020-04-03\t2020-04-03 14:29:16.0\t4\t1\tfalse\t0\t1\t1\n12182\t2020-04-03 14:52:06.0\tOutgoing call\t0453CEBA7682BAA55D4D1DC45797BEC4\tA8BE5FAB8364CD3DCAE72743CF6D507F\t4\t0453CEBA7682BAA55D4D1DC45797BEC4\t1218\t2020-04-03 14:52:06.0\t2020-04-03\t2020-04-03 14:52:10.0\t5\t1\tfalse\t0\t1\t1\n12182\t2020-04-03 14:59:27.0\tIncoming SMS\t0453CEBA7682BAA55D4D1DC45797BEC4\t0662B91E51A2EA16DD90A20709C71761\t0\t0453CEBA7682BAA55D4D1DC45797BEC4\t1218\t2020-04-03 14:59:27.0\t2020-04-03\t2020-04-03 14:59:27.0\t6\t1\tfalse\t0\t1\t1\n12182\t2020-04-03 15:01:26.0\tOutgoing call\t0453CEBA7682BAA55D4D1DC45797BEC4\tA8BE5FAB8364CD3DCAE72743CF6D507F\t22\t0453CEBA7682BAA55D4D1DC45797BEC4\t1218\t2020-04-03 15:01:26.0\t2020-04-03\t2020-04-03 15:01:48.0\t7\t1\tfalse\t0\t1\t1\n34014\t2020-04-03 14:00:20.0\tOutgoing call\t04610365E713B1AA5C4BF3F79ABF58D0\t074C3F05A48392025379807EEE52B19B\t26\t04610365E713B1AA5C4BF3F79ABF58D0\t3401\t2020-04-03 14:00:20.0\t2020-04-03\t2020-04-03 14:00:46.0\t1\t0\ttrue\t1\t1\t1\n34014\t2020-04-03 14:10:23.0\tOutgoing call\t04610365E713B1AA5C4BF3F79ABF58D0\t048D042F7484D7A547FD001E9180BE27\t51\t04610365E713B1AA5C4BF3F79ABF58D0\t3401\t2020-04-03 14:10:23.0\t2020-04-03\t2020-04-03 14:11:14.0\t2\t1\tfalse\t0\t1\t1\n34014\t2020-04-03 14:16:50.0\tOutgoing call\t04610365E713B1AA5C4BF3F79ABF58D0\tA631D4A9458F3B10FEDF29789C085BF3\t20\t04610365E713B1AA5C4BF3F79ABF58D0\t3401\t2020-04-03 14:16:50.0\t2020-04-03\t2020-04-03 14:17:10.0\t3\t1\tfalse\t0\t1\t1\n36571\t2020-04-03 14:34:03.0\tIncoming call\t04610365E713B1AA5C4BF3F79ABF58D0\t520D853350786638B6023EEAA38240C3\t41\t04610365E713B1AA5C4BF3F79ABF58D0\t3657\t2020-04-03 14:34:03.0\t2020-04-03\t2020-04-03 14:34:44.0\t4\t0\ttrue\t1\t1\t1\n10376\t2020-04-03 15:20:54.0\tIncoming call\t04610365E713B1AA5C4BF3F79ABF58D0\tF4B03B6215481B180EE101775CF2DBB3\t22\t04610365E713B1AA5C4BF3F79ABF58D0\t1037\t2020-04-03 15:20:54.0\t2020-04-03\t2020-04-03 15:21:16.0\t5\t0\ttrue\t1\t1\t1\n10376\t2020-04-03 15:44:57.0\tOutgoing call\t04610365E713B1AA5C4BF3F79ABF58D0\t16F0E213F8B58A471007D6528FB7A825\t30\t04610365E713B1AA5C4BF3F79ABF58D0\t1037\t2020-04-03 15:44:57.0\t2020-04-03\t2020-04-03 15:45:27.0\t6\t1\tfalse\t0\t1\t1\n34290\t2020-04-03 16:24:33.0\tIncoming call\t04610365E713B1AA5C4BF3F79ABF58D0\tEED9BDE4300671ECD325C605AA9D0BD3\t5\t04610365E713B1AA5C4BF3F79ABF58D0\t3429\t2020-04-03 16:24:33.0\t2020-04-03\t2020-04-03 16:24:38.0\t9\t0\ttrue\t1\t1\t1\n34290\t2020-04-03 16:24:56.0\tOutgoing call\t04610365E713B1AA5C4BF3F79ABF58D0\tEED9BDE4300671ECD325C605AA9D0BD3\t28\t04610365E713B1AA5C4BF3F79ABF58D0\t3429\t2020-04-03 16:24:56.0\t2020-04-03\t2020-04-03 16:25:24.0\t10\t1\tfalse\t0\t1\t1\n34290\t2020-04-03 16:39:10.0\tOutgoing call\t04610365E713B1AA5C4BF3F79ABF58D0\t77A48B0E86490B6D12A1D181B4B03C56\t63\t04610365E713B1AA5C4BF3F79ABF58D0\t3429\t2020-04-03 16:39:10.0\t2020-04-03\t2020-04-03 16:40:13.0\t11\t1\tfalse\t0\t1\t1\n34291\t2020-04-03 16:40:33.0\tOutgoing call\t04610365E713B1AA5C4BF3F79ABF58D0\t77A48B0E86490B6D12A1D181B4B03C56\t4\t04610365E713B1AA5C4BF3F79ABF58D0\t3429\t2020-04-03 16:40:33.0\t2020-04-03\t2020-04-03 16:40:37.0\t12\t1\tfalse\t0\t1\t1\n36661\t2020-04-03 16:51:42.0\tIncoming SMS\t04610365E713B1AA5C4BF3F79ABF58D0\tF0E39151CF3395FD0DCDD683BDD5C470\t0\t04610365E713B1AA5C4BF3F79ABF58D0\t3666\t2020-04-03 16:51:42.0\t2020-04-03\t2020-04-03 16:51:42.0\t13\t0\ttrue\t1\t1\t1\n36661\t2020-04-03 16:55:35.0\tIncoming SMS\t04610365E713B1AA5C4BF3F79ABF58D0\tA685F353D568E762265D9CF9C2FD92C2\t0\t04610365E713B1AA5C4BF3F79ABF58D0\t3666\t2020-04-03 16:55:35.0\t2020-04-03\t2020-04-03 16:55:35.0\t14\t1\tfalse\t0\t1\t1\n36661\t2020-04-03 16:55:35.0\tIncoming SMS\t04610365E713B1AA5C4BF3F79ABF58D0\tA685F353D568E762265D9CF9C2FD92C2\t0\t04610365E713B1AA5C4BF3F79ABF58D0\t3666\t2020-04-03 16:55:35.0\t2020-04-03\t2020-04-03 16:55:35.0\t15\t1\tfalse\t0\t1\t1\n34014\t2020-04-03 15:53:12.0\tOutgoing call\t04610365E713B1AA5C4BF3F79ABF58D0\tA631D4A9458F3B10FEDF29789C085BF3\t16\t04610365E713B1AA5C4BF3F79ABF58D0\t3401\t2020-04-03 15:53:12.0\t2020-04-03\t2020-04-03 15:53:28.0\t7\t4\ttrue\t1\t2\t7\n10371\t2020-04-03 15:57:48.0\tIncoming call\t04610365E713B1AA5C4BF3F79ABF58D0\t8A56CFE81CC0D975993E4F9A444724AD\t10\t04610365E713B1AA5C4BF3F79ABF58D0\t1037\t2020-04-03 15:57:48.0\t2020-04-03\t2020-04-03 15:57:58.0\t8\t2\ttrue\t1\t2\t7\n21182\t2020-04-03 16:49:14.0\tIncoming call\t04702073791302537EAE33856015A75F\tE911401746F39E1342B353F0AD2068A8\t15\t04702073791302537EAE33856015A75F\t2118\t2020-04-03 16:49:14.0\t2020-04-03\t2020-04-03 16:49:29.0\t1\t0\ttrue\t1\t1\t1\n40545\t2020-04-03 15:29:01.0\tOutgoing call\t047C590E35D40EB363638D823E92C9CC\t595E53C24CDB9AB851C648890DA458AB\t249\t047C590E35D40EB363638D823E92C9CC\t4054\t2020-04-03 15:29:01.0\t2020-04-03\t2020-04-03 15:33:10.0\t1\t0\ttrue\t1\t1\t1\n40545\t2020-04-03 16:07:26.0\tOutgoing call\t047C590E35D40EB363638D823E92C9CC\t595E53C24CDB9AB851C648890DA458AB\t24\t047C590E35D40EB363638D823E92C9CC\t4054\t2020-04-03 16:07:26.0\t2020-04-03\t2020-04-03 16:07:50.0\t2\t1\tfalse\t0\t1\t1\n12023\t2020-04-03 14:00:55.0\tIncoming call\t04A179D3CE46081D612E4B1CEA8C2B88\tF3D3F87F97C8283B6AA6B1872C4C887B\t25\t04A179D3CE46081D612E4B1CEA8C2B88\t1202\t2020-04-03 14:00:55.0\t2020-04-03\t2020-04-03 14:01:20.0\t1\t0\ttrue\t1\t1\t1\n22312\t2020-04-03 14:01:37.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2231\t2020-04-03 14:01:37.0\t2020-04-03\t2020-04-03 14:01:37.0\t1\t0\ttrue\t1\t1\t1\n22312\t2020-04-03 14:37:40.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2231\t2020-04-03 14:37:40.0\t2020-04-03\t2020-04-03 14:37:40.0\t2\t1\tfalse\t0\t1\t1\n22177\t2020-04-03 14:43:22.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 14:43:22.0\t2020-04-03\t2020-04-03 14:43:22.0\t3\t0\ttrue\t1\t1\t1\n22172\t2020-04-03 14:44:01.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 14:44:01.0\t2020-04-03\t2020-04-03 14:44:01.0\t4\t1\tfalse\t0\t1\t1\n22177\t2020-04-03 15:20:38.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 15:20:38.0\t2020-04-03\t2020-04-03 15:20:38.0\t5\t1\tfalse\t0\t1\t1\n22177\t2020-04-03 15:21:05.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 15:21:05.0\t2020-04-03\t2020-04-03 15:21:05.0\t6\t1\tfalse\t0\t1\t1\n22172\t2020-04-03 15:21:41.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 15:21:41.0\t2020-04-03\t2020-04-03 15:21:41.0\t7\t1\tfalse\t0\t1\t1\n22177\t2020-04-03 15:32:09.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 15:32:09.0\t2020-04-03\t2020-04-03 15:32:09.0\t8\t1\tfalse\t0\t1\t1\n22177\t2020-04-03 15:43:11.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 15:43:11.0\t2020-04-03\t2020-04-03 15:43:11.0\t9\t1\tfalse\t0\t1\t1\n22177\t2020-04-03 15:43:31.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 15:43:31.0\t2020-04-03\t2020-04-03 15:43:31.0\t10\t1\tfalse\t0\t1\t1\n22173\t2020-04-03 16:09:02.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 16:09:02.0\t2020-04-03\t2020-04-03 16:09:02.0\t11\t1\tfalse\t0\t1\t1\n22173\t2020-04-03 16:09:28.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 16:09:28.0\t2020-04-03\t2020-04-03 16:09:28.0\t12\t1\tfalse\t0\t1\t1\n22177\t2020-04-03 16:32:44.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 16:32:44.0\t2020-04-03\t2020-04-03 16:32:44.0\t13\t1\tfalse\t0\t1\t1\n22177\t2020-04-03 16:34:28.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 16:34:28.0\t2020-04-03\t2020-04-03 16:34:28.0\t14\t1\tfalse\t0\t1\t1\n22177\t2020-04-03 16:34:36.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 16:34:36.0\t2020-04-03\t2020-04-03 16:34:36.0\t15\t1\tfalse\t0\t1\t1\n22172\t2020-04-03 16:45:53.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 16:45:53.0\t2020-04-03\t2020-04-03 16:45:53.0\t16\t1\tfalse\t0\t1\t1\n22172\t2020-04-03 16:46:13.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 16:46:13.0\t2020-04-03\t2020-04-03 16:46:13.0\t17\t1\tfalse\t0\t1\t1\n22177\t2020-04-03 16:48:38.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 16:48:38.0\t2020-04-03\t2020-04-03 16:48:38.0\t18\t1\tfalse\t0\t1\t1\n22177\t2020-04-03 16:54:29.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 16:54:29.0\t2020-04-03\t2020-04-03 16:54:29.0\t19\t1\tfalse\t0\t1\t1\n22177\t2020-04-03 16:54:52.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 16:54:52.0\t2020-04-03\t2020-04-03 16:54:52.0\t20\t1\tfalse\t0\t1\t1\n22172\t2020-04-03 16:59:25.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 16:59:25.0\t2020-04-03\t2020-04-03 16:59:25.0\t21\t1\tfalse\t0\t1\t1\n22172\t2020-04-03 16:59:46.0\tIncoming SMS\t04B6C546F376EBC2A9BC4FFF3628FE08\t0662B91E51A2EA16DD90A20709C71761\t0\t04B6C546F376EBC2A9BC4FFF3628FE08\t2217\t2020-04-03 16:59:46.0\t2020-04-03\t2020-04-03 16:59:46.0\t22\t1\tfalse\t0\t1\t1\n14033\t2020-04-03 14:11:47.0\tIncoming call\t04BD9072D74A909500EF2D5359197F69\t024CDD27B9DFE6A1747FC46B0E9B7B0E\t85\t04BD9072D74A909500EF2D5359197F69\t1403\t2020-04-03 14:11:47.0\t2020-04-03\t2020-04-03 14:13:12.0\t1\t0\ttrue\t1\t1\t1\n14032\t2020-04-03 14:26:27.0\tOutgoing call\t04BD9072D74A909500EF2D5359197F69\t88B0C05149CC7B162F62056D4277A717\t28\t04BD9072D74A909500EF2D5359197F69\t1403\t2020-04-03 14:26:27.0\t2020-04-03\t2020-04-03 14:26:55.0\t2\t1\tfalse\t0\t1\t1\n14033\t2020-04-03 14:46:32.0\tOutgoing call\t04BD9072D74A909500EF2D5359197F69\t024CDD27B9DFE6A1747FC46B0E9B7B0E\t85\t04BD9072D74A909500EF2D5359197F69\t1403\t2020-04-03 14:46:32.0\t2020-04-03\t2020-04-03 14:47:57.0\t3\t1\tfalse\t0\t1\t1\n14032\t2020-04-03 14:51:08.0\tIncoming SMS\t04BD9072D74A909500EF2D5359197F69\t0662B91E51A2EA16DD90A20709C71761\t0\t04BD9072D74A909500EF2D5359197F69\t1403\t2020-04-03 14:51:08.0\t2020-04-03\t2020-04-03 14:51:08.0\t4\t1\tfalse\t0\t1\t1\n14033\t2020-04-03 14:52:39.0\tOutgoing call\t04BD9072D74A909500EF2D5359197F69\t024CDD27B9DFE6A1747FC46B0E9B7B0E\t341\t04BD9072D74A909500EF2D5359197F69\t1403\t2020-04-03 14:52:39.0\t2020-04-03\t2020-04-03 14:58:20.0\t5\t1\tfalse\t0\t1\t1\n14032\t2020-04-03 16:09:33.0\tOutgoing call\t04BD9072D74A909500EF2D5359197F69\t36F7C69DE792E2B1E4F163DC9FBD6829\t6\t04BD9072D74A909500EF2D5359197F69\t1403\t2020-04-03 16:09:33.0\t2020-04-03\t2020-04-03 16:09:39.0\t6\t1\tfalse\t0\t1\t1\n14032\t2020-04-03 16:10:04.0\tOutgoing call\t04BD9072D74A909500EF2D5359197F69\t1C9D0C777FDC2A490D7B5B0896FC4593\t32\t04BD9072D74A909500EF2D5359197F69\t1403\t2020-04-03 16:10:04.0\t2020-04-03\t2020-04-03 16:10:36.0\t7\t1\tfalse\t0\t1\t1\n14033\t2020-04-03 16:10:54.0\tOutgoing call\t04BD9072D74A909500EF2D5359197F69\t024CDD27B9DFE6A1747FC46B0E9B7B0E\t85\t04BD9072D74A909500EF2D5359197F69\t1403\t2020-04-03 16:10:54.0\t2020-04-03\t2020-04-03 16:12:19.0\t8\t1\tfalse\t0\t1\t1\n14032\t2020-04-03 16:23:32.0\tOutgoing call\t04BD9072D74A909500EF2D5359197F69\tA6377D0797E7175D8703F654D65495F4\t4\t04BD9072D74A909500EF2D5359197F69\t1403\t2020-04-03 16:23:32.0\t2020-04-03\t2020-04-03 16:23:36.0\t9\t1\tfalse\t0\t1\t1\n14032\t2020-04-03 16:30:10.0\tOutgoing call\t04BD9072D74A909500EF2D5359197F69\tA6377D0797E7175D8703F654D65495F4\t4\t04BD9072D74A909500EF2D5359197F69\t1403\t2020-04-03 16:30:10.0\t2020-04-03\t2020-04-03 16:30:14.0\t10\t1\tfalse\t0\t1\t1\n14032\t2020-04-03 16:31:38.0\tIncoming SMS\t04BD9072D74A909500EF2D5359197F69\t0662B91E51A2EA16DD90A20709C71761\t0\t04BD9072D74A909500EF2D5359197F69\t1403\t2020-04-03 16:31:38.0\t2020-04-03\t2020-04-03 16:31:38.0\t11\t1\tfalse\t0\t1\t1\n14032\t2020-04-03 16:32:00.0\tOutgoing call\t04BD9072D74A909500EF2D5359197F69\tA6377D0797E7175D8703F654D65495F4\t22\t04BD9072D74A909500EF2D5359197F69\t1403\t2020-04-03 16:32:00.0\t2020-04-03\t2020-04-03 16:32:22.0\t12\t1\tfalse\t0\t1\t1\n14032\t2020-04-03 16:55:07.0\tOutgoing call\t04BD9072D74A909500EF2D5359197F69\t024CDD27B9DFE6A1747FC46B0E9B7B0E\t163\t04BD9072D74A909500EF2D5359197F69\t1403\t2020-04-03 16:55:07.0\t2020-04-03\t2020-04-03 16:57:50.0\t13\t1\tfalse\t0\t1\t1\n40275\t2020-04-03 14:35:39.0\tIncoming SMS\t04C011B1F4B401DC45D80CF9AF7DD756\t0662B91E51A2EA16DD90A20709C71761\t0\t04C011B1F4B401DC45D80CF9AF7DD756\t4027\t2020-04-03 14:35:39.0\t2020-04-03\t2020-04-03 14:35:39.0\t1\t0\ttrue\t1\t1\t1\n40275\t2020-04-03 14:36:33.0\tOutgoing call\t04C011B1F4B401DC45D80CF9AF7DD756\t167258FD409BD5D24C1600D270F9B517\t23\t04C011B1F4B401DC45D80CF9AF7DD756\t4027\t2020-04-03 14:36:33.0\t2020-04-03\t2020-04-03 14:36:56.0\t2\t1\tfalse\t0\t1\t1\n40275\t2020-04-03 14:45:58.0\tIncoming call\t04C011B1F4B401DC45D80CF9AF7DD756\t7CEEBE328AECB00E1C73D3FD7E8BEE67\t61\t04C011B1F4B401DC45D80CF9AF7DD756\t4027\t2020-04-03 14:45:58.0\t2020-04-03\t2020-04-03 14:46:59.0\t3\t1\tfalse\t0\t1\t1\n40271\t2020-04-03 15:07:30.0\tIncoming call\t04C011B1F4B401DC45D80CF9AF7DD756\t0E2A7DA76290FDD22180CFC6AC3D2C9F\t15\t04C011B1F4B401DC45D80CF9AF7DD756\t4027\t2020-04-03 15:07:30.0\t2020-04-03\t2020-04-03 15:07:45.0\t4\t1\tfalse\t0\t1\t1\n40271\t2020-04-03 15:14:55.0\tOutgoing call\t04C011B1F4B401DC45D80CF9AF7DD756\tA7BC7571696E6040A3776EA753BBE106\t12\t04C011B1F4B401DC45D80CF9AF7DD756\t4027\t2020-04-03 15:14:55.0\t2020-04-03\t2020-04-03 15:15:07.0\t5\t1\tfalse\t0\t1\t1\n14206\t2020-04-03 15:57:43.0\tOutgoing call\t04CC24FD9BFFDC99E0EEC26ADCBDEA0A\t7A017D006242B16EEBA433C7DD3B4DA3\t20\t04CC24FD9BFFDC99E0EEC26ADCBDEA0A\t1420\t2020-04-03 15:57:43.0\t2020-04-03\t2020-04-03 15:58:03.0\t1\t0\ttrue\t1\t1\t1\n14218\t2020-04-03 16:02:50.0\tOutgoing call\t04CC24FD9BFFDC99E0EEC26ADCBDEA0A\t7A017D006242B16EEBA433C7DD3B4DA3\t14\t04CC24FD9BFFDC99E0EEC26ADCBDEA0A\t1421\t2020-04-03 16:02:50.0\t2020-04-03\t2020-04-03 16:03:04.0\t2\t0\ttrue\t1\t1\t1\n14218\t2020-04-03 16:35:41.0\tIncoming call\t04CC24FD9BFFDC99E0EEC26ADCBDEA0A\t0324D0FE6EBCE30196F6A39BB289EBD2\t1\t04CC24FD9BFFDC99E0EEC26ADCBDEA0A\t1421\t2020-04-03 16:35:41.0\t2020-04-03\t2020-04-03 16:35:42.0\t3\t1\tfalse\t0\t1\t1\n14218\t2020-04-03 16:36:41.0\tOutgoing call\t04CC24FD9BFFDC99E0EEC26ADCBDEA0A\t0324D0FE6EBCE30196F6A39BB289EBD2\t28\t04CC24FD9BFFDC99E0EEC26ADCBDEA0A\t1421\t2020-04-03 16:36:41.0\t2020-04-03\t2020-04-03 16:37:09.0\t4\t1\tfalse\t0\t1\t1\n14218\t2020-04-03 16:42:15.0\tIncoming call\t04CC24FD9BFFDC99E0EEC26ADCBDEA0A\tA85FE675CD24DFDF0B20D387FA813888\t399\t04CC24FD9BFFDC99E0EEC26ADCBDEA0A\t1421\t2020-04-03 16:42:15.0\t2020-04-03\t2020-04-03 16:48:54.0\t5\t1\tfalse\t0\t1\t1\n22613\t2020-04-03 15:58:38.0\tIncoming call\t04E6BE7918359768EC102560290E53EC\tB9641481419301B637C761C2B64397D8\t20\t04E6BE7918359768EC102560290E53EC\t2261\t2020-04-03 15:58:38.0\t2020-04-03\t2020-04-03 15:58:58.0\t1\t0\ttrue\t1\t1\t1\n12103\t2020-04-03 14:45:18.0\tOutgoing call\t04FAA97EA6FE55E1627BB5380E665C70\t08F71E92EE778DC499BA9665B627DDD1\t4\t04FAA97EA6FE55E1627BB5380E665C70\t1210\t2020-04-03 14:45:18.0\t2020-04-03\t2020-04-03 14:45:22.0\t1\t0\ttrue\t1\t1\t1\n22582\t2020-04-03 14:10:31.0\tOutgoing call\t0501D8C7878224C38C094F3FE180B654\t3220A27A6170FE7304B1C89AD08467D9\t10\t0501D8C7878224C38C094F3FE180B654\t2258\t2020-04-03 14:10:31.0\t2020-04-03\t2020-04-03 14:10:41.0\t1\t0\ttrue\t1\t1\t1\n22173\t2020-04-03 14:29:02.0\tOutgoing call\t0501D8C7878224C38C094F3FE180B654\t3220A27A6170FE7304B1C89AD08467D9\t3\t0501D8C7878224C38C094F3FE180B654\t2217\t2020-04-03 14:29:02.0\t2020-04-03\t2020-04-03 14:29:05.0\t2\t0\ttrue\t1\t1\t1\n12252\t2020-04-03 14:52:23.0\tIncoming call\t050C540F2D040E77F8C7996EEF199643\tA3B6BE7013B6340F9BB0E54F7F0F25EC\t37\t050C540F2D040E77F8C7996EEF199643\t1225\t2020-04-03 14:52:23.0\t2020-04-03\t2020-04-03 14:53:00.0\t1\t0\ttrue\t1\t1\t1\n21144\t2020-04-03 15:29:12.0\tIncoming SMS\t0512F02505EC5EF361BEF2A4557A6A37\t0662B91E51A2EA16DD90A20709C71761\t0\t0512F02505EC5EF361BEF2A4557A6A37\t2114\t2020-04-03 15:29:12.0\t2020-04-03\t2020-04-03 15:29:12.0\t1\t0\ttrue\t1\t1\t1\n21144\t2020-04-03 15:30:06.0\tIncoming SMS\t0512F02505EC5EF361BEF2A4557A6A37\t0662B91E51A2EA16DD90A20709C71761\t0\t0512F02505EC5EF361BEF2A4557A6A37\t2114\t2020-04-03 15:30:06.0\t2020-04-03\t2020-04-03 15:30:06.0\t2\t1\tfalse\t0\t1\t1\n21144\t2020-04-03 15:37:00.0\tIncoming call\t0512F02505EC5EF361BEF2A4557A6A37\t6466F18A2DB4A94E962194B51BF425BE\t22\t0512F02505EC5EF361BEF2A4557A6A37\t2114\t2020-04-03 15:37:00.0\t2020-04-03\t2020-04-03 15:37:22.0\t3\t1\tfalse\t0\t1\t1\n21144\t2020-04-03 16:12:19.0\tOutgoing call\t0512F02505EC5EF361BEF2A4557A6A37\t6466F18A2DB4A94E962194B51BF425BE\t7\t0512F02505EC5EF361BEF2A4557A6A37\t2114\t2020-04-03 16:12:19.0\t2020-04-03\t2020-04-03 16:12:26.0\t4\t1\tfalse\t0\t1\t1\n12246\t2020-04-03 14:09:10.0\tIncoming SMS\t0540B86CD6B98BFD43C84E01D477ED6A\t0662B91E51A2EA16DD90A20709C71761\t0\t0540B86CD6B98BFD43C84E01D477ED6A\t1224\t2020-04-03 14:09:10.0\t2020-04-03\t2020-04-03 14:09:10.0\t1\t0\ttrue\t1\t1\t1\n12243\t2020-04-03 15:00:37.0\tIncoming SMS\t0540B86CD6B98BFD43C84E01D477ED6A\t9666A15208C625885569DFC80E4F7401\t0\t0540B86CD6B98BFD43C84E01D477ED6A\t1224\t2020-04-03 15:00:37.0\t2020-04-03\t2020-04-03 15:00:37.0\t2\t1\tfalse\t0\t1\t1\n12243\t2020-04-03 15:23:49.0\tOutgoing call\t0540B86CD6B98BFD43C84E01D477ED6A\t5BCAA3BA2A72466CA1C28498FEC34F9E\t15\t0540B86CD6B98BFD43C84E01D477ED6A\t1224\t2020-04-03 15:23:49.0\t2020-04-03\t2020-04-03 15:24:04.0\t3\t1\tfalse\t0\t1\t1\n12243\t2020-04-03 15:39:53.0\tIncoming call\t0540B86CD6B98BFD43C84E01D477ED6A\t4F692391F7C24FEE2DF0BA56D7C98673\t57\t0540B86CD6B98BFD43C84E01D477ED6A\t1224\t2020-04-03 15:39:53.0\t2020-04-03\t2020-04-03 15:40:50.0\t4\t1\tfalse\t0\t1\t1\n14206\t2020-04-03 14:03:50.0\tOutgoing call\t0540BD9C77E736CF82C5208DEE98BCB1\tC5649DA37E65AA60AA029ACB9FBC55FC\t139\t0540BD9C77E736CF82C5208DEE98BCB1\t1420\t2020-04-03 14:03:50.0\t2020-04-03\t2020-04-03 14:06:09.0\t1\t0\ttrue\t1\t1\t1\n14078\t2020-04-03 14:20:58.0\tOutgoing call\t0540BD9C77E736CF82C5208DEE98BCB1\tC80D2F8B05F048B239589FCE4F632C2D\t64\t0540BD9C77E736CF82C5208DEE98BCB1\t1407\t2020-04-03 14:20:58.0\t2020-04-03\t2020-04-03 14:22:02.0\t2\t0\ttrue\t1\t1\t1\n20647\t2020-04-03 14:43:00.0\tIncoming call\t0540BD9C77E736CF82C5208DEE98BCB1\t1954BB9080ED29E498AA06C7ED26BB59\t54\t0540BD9C77E736CF82C5208DEE98BCB1\t2064\t2020-04-03 14:43:00.0\t2020-04-03\t2020-04-03 14:43:54.0\t3\t0\ttrue\t1\t1\t1\n14053\t2020-04-03 15:04:16.0\tIncoming call\t0540BD9C77E736CF82C5208DEE98BCB1\tD14B7540A7FFD34A5BC5454A92D96F70\t46\t0540BD9C77E736CF82C5208DEE98BCB1\t1405\t2020-04-03 15:04:16.0\t2020-04-03\t2020-04-03 15:05:02.0\t4\t0\ttrue\t1\t1\t1\n14053\t2020-04-03 15:05:38.0\tIncoming call\t0540BD9C77E736CF82C5208DEE98BCB1\tD14B7540A7FFD34A5BC5454A92D96F70\t33\t0540BD9C77E736CF82C5208DEE98BCB1\t1405\t2020-04-03 15:05:38.0\t2020-04-03\t2020-04-03 15:06:11.0\t5\t1\tfalse\t0\t1\t1\n14206\t2020-04-03 15:44:47.0\tOutgoing call\t0540BD9C77E736CF82C5208DEE98BCB1\tC5649DA37E65AA60AA029ACB9FBC55FC\t63\t0540BD9C77E736CF82C5208DEE98BCB1\t1420\t2020-04-03 15:44:47.0\t2020-04-03\t2020-04-03 15:45:50.0\t6\t5\ttrue\t1\t2\t6\n35075\t2020-04-03 14:06:25.0\tIncoming SMS\t05427958513B1D0E5D249EE5B784B089\t91551D3AFBFD1AF547C32380D530469D\t0\t05427958513B1D0E5D249EE5B784B089\t3507\t2020-04-03 14:06:25.0\t2020-04-03\t2020-04-03 14:06:25.0\t1\t0\ttrue\t1\t1\t1\n20153\t2020-04-03 15:13:29.0\tOutgoing call\t054AB9B2375B580A984ED91F4F60BF5D\t0418BC3D74123F01EF191749F7A5C748\t52\t054AB9B2375B580A984ED91F4F60BF5D\t2015\t2020-04-03 15:13:29.0\t2020-04-03\t2020-04-03 15:14:21.0\t1\t0\ttrue\t1\t1\t1\n12801\t2020-04-03 14:19:49.0\tIncoming call\t05529BEE0A0569856F8A33ED3308DEEE\tE77822D22B4ED6D1C039E7D68B20A8A6\t39\t05529BEE0A0569856F8A33ED3308DEEE\t1280\t2020-04-03 14:19:49.0\t2020-04-03\t2020-04-03 14:20:28.0\t1\t0\ttrue\t1\t1\t1\n12801\t2020-04-03 14:46:36.0\tOutgoing call\t05529BEE0A0569856F8A33ED3308DEEE\tE1B1E65C15D222CE8B29E52A3232B24E\t10\t05529BEE0A0569856F8A33ED3308DEEE\t1280\t2020-04-03 14:46:36.0\t2020-04-03\t2020-04-03 14:46:46.0\t2\t1\tfalse\t0\t1\t1\n12801\t2020-04-03 14:48:18.0\tOutgoing call\t05529BEE0A0569856F8A33ED3308DEEE\tE1B1E65C15D222CE8B29E52A3232B24E\t20\t05529BEE0A0569856F8A33ED3308DEEE\t1280\t2020-04-03 14:48:18.0\t2020-04-03\t2020-04-03 14:48:38.0\t3\t1\tfalse\t0\t1\t1\n12043\t2020-04-03 15:27:21.0\tOutgoing call\t05529BEE0A0569856F8A33ED3308DEEE\tE77822D22B4ED6D1C039E7D68B20A8A6\t23\t05529BEE0A0569856F8A33ED3308DEEE\t1204\t2020-04-03 15:27:21.0\t2020-04-03\t2020-04-03 15:27:44.0\t4\t0\ttrue\t1\t1\t1\n12043\t2020-04-03 15:28:00.0\tIncoming call\t05529BEE0A0569856F8A33ED3308DEEE\tE77822D22B4ED6D1C039E7D68B20A8A6\t63\t05529BEE0A0569856F8A33ED3308DEEE\t1204\t2020-04-03 15:28:00.0\t2020-04-03\t2020-04-03 15:29:03.0\t5\t1\tfalse\t0\t1\t1\n12053\t2020-04-03 15:37:33.0\tOutgoing call\t05529BEE0A0569856F8A33ED3308DEEE\t5C5AB48B8AEE3D7025DFF9A6D8270C81\t2\t05529BEE0A0569856F8A33ED3308DEEE\t1205\t2020-04-03 15:37:33.0\t2020-04-03\t2020-04-03 15:37:35.0\t6\t0\ttrue\t1\t1\t1\n36422\t2020-04-03 14:00:09.0\tOutgoing call\t05555E3E7BDCE250849F4787FE2D0BED\tD179D5BD574DF786335249E056CC4181\t9\t05555E3E7BDCE250849F4787FE2D0BED\t3642\t2020-04-03 14:00:09.0\t2020-04-03\t2020-04-03 14:00:18.0\t1\t0\ttrue\t1\t1\t1\n36422\t2020-04-03 14:01:06.0\tOutgoing SMS\t05555E3E7BDCE250849F4787FE2D0BED\tD179D5BD574DF786335249E056CC4181\t0\t05555E3E7BDCE250849F4787FE2D0BED\t3642\t2020-04-03 14:01:06.0\t2020-04-03\t2020-04-03 14:01:06.0\t2\t1\tfalse\t0\t1\t1\n36422\t2020-04-03 14:04:09.0\tIncoming SMS\t05555E3E7BDCE250849F4787FE2D0BED\tD179D5BD574DF786335249E056CC4181\t0\t05555E3E7BDCE250849F4787FE2D0BED\t3642\t2020-04-03 14:04:09.0\t2020-04-03\t2020-04-03 14:04:09.0\t3\t1\tfalse\t0\t1\t1\n36424\t2020-04-03 14:09:50.0\tOutgoing call\t05555E3E7BDCE250849F4787FE2D0BED\tC18B726759E7D39D21DF34DB0227D28D\t19\t05555E3E7BDCE250849F4787FE2D0BED\t3642\t2020-04-03 14:09:50.0\t2020-04-03\t2020-04-03 14:10:09.0\t4\t1\tfalse\t0\t1\t1\n36422\t2020-04-03 14:51:52.0\tIncoming SMS\t05555E3E7BDCE250849F4787FE2D0BED\t0662B91E51A2EA16DD90A20709C71761\t0\t05555E3E7BDCE250849F4787FE2D0BED\t3642\t2020-04-03 14:51:52.0\t2020-04-03\t2020-04-03 14:51:52.0\t5\t1\tfalse\t0\t1\t1\n36422\t2020-04-03 14:56:19.0\tIncoming SMS\t05555E3E7BDCE250849F4787FE2D0BED\t91551D3AFBFD1AF547C32380D530469D\t0\t05555E3E7BDCE250849F4787FE2D0BED\t3642\t2020-04-03 14:56:19.0\t2020-04-03\t2020-04-03 14:56:19.0\t6\t1\tfalse\t0\t1\t1\n22073\t2020-04-03 15:30:58.0\tOutgoing call\t05645D4C1D1DC168EA657D474C7A1ABE\t1E601A27CAD02EF27E13BF7FD9B125DF\t88\t05645D4C1D1DC168EA657D474C7A1ABE\t2207\t2020-04-03 15:30:58.0\t2020-04-03\t2020-04-03 15:32:26.0\t1\t0\ttrue\t1\t1\t1\n14143\t2020-04-03 14:08:25.0\tIncoming call\t058C6EB13AE2756F97AA5B22BE29FC94\t67DCC6B8F0AF3FE40C603C28A7B62B62\t21\t058C6EB13AE2756F97AA5B22BE29FC94\t1414\t2020-04-03 14:08:25.0\t2020-04-03\t2020-04-03 14:08:46.0\t1\t0\ttrue\t1\t1\t1\n10172\t2020-04-03 15:24:13.0\tOutgoing call\t058C6EB13AE2756F97AA5B22BE29FC94\tBFFC9870EBFA4A1CD8C51782A773B549\t59\t058C6EB13AE2756F97AA5B22BE29FC94\t1017\t2020-04-03 15:24:13.0\t2020-04-03\t2020-04-03 15:25:12.0\t2\t0\ttrue\t1\t1\t1\n10172\t2020-04-03 15:46:03.0\tIncoming SMS\t058C6EB13AE2756F97AA5B22BE29FC94\t41DEE35E0B4B68D0E3D390F3C05C16CF\t0\t058C6EB13AE2756F97AA5B22BE29FC94\t1017\t2020-04-03 15:46:03.0\t2020-04-03\t2020-04-03 15:46:03.0\t3\t1\tfalse\t0\t1\t1\n10172\t2020-04-03 15:46:06.0\tIncoming SMS\t058C6EB13AE2756F97AA5B22BE29FC94\t41DEE35E0B4B68D0E3D390F3C05C16CF\t0\t058C6EB13AE2756F97AA5B22BE29FC94\t1017\t2020-04-03 15:46:06.0\t2020-04-03\t2020-04-03 15:46:06.0\t4\t1\tfalse\t0\t1\t1\n10172\t2020-04-03 15:46:07.0\tIncoming SMS\t058C6EB13AE2756F97AA5B22BE29FC94\t41DEE35E0B4B68D0E3D390F3C05C16CF\t0\t058C6EB13AE2756F97AA5B22BE29FC94\t1017\t2020-04-03 15:46:07.0\t2020-04-03\t2020-04-03 15:46:07.0\t5\t1\tfalse\t0\t1\t1\n40634\t2020-04-03 14:29:29.0\tIncoming call\t058CFFB91ABB93AD1E37C0A8B2D6F36B\t7D795D7A1FB6F43D3534AF32856F37AC\t26\t058CFFB91ABB93AD1E37C0A8B2D6F36B\t4063\t2020-04-03 14:29:29.0\t2020-04-03\t2020-04-03 14:29:55.0\t1\t0\ttrue\t1\t1\t1\n40214\t2020-04-03 15:05:48.0\tOutgoing call\t058CFFB91ABB93AD1E37C0A8B2D6F36B\tD6B5F3F22B6E29A7267DCB7BC5D20BE9\t46\t058CFFB91ABB93AD1E37C0A8B2D6F36B\t4021\t2020-04-03 15:05:48.0\t2020-04-03\t2020-04-03 15:06:34.0\t2\t0\ttrue\t1\t1\t1\n20284\t2020-04-03 15:30:54.0\tOutgoing call\t059E8014A7A8BF2FE36BE0DE1C760AD0\tAB568656B09A1BF22037298C6FDB5B1C\t4\t059E8014A7A8BF2FE36BE0DE1C760AD0\t2028\t2020-04-03 15:30:54.0\t2020-04-03\t2020-04-03 15:30:58.0\t1\t0\ttrue\t1\t1\t1\n20289\t2020-04-03 15:31:27.0\tIncoming call\t059E8014A7A8BF2FE36BE0DE1C760AD0\tAB568656B09A1BF22037298C6FDB5B1C\t17\t059E8014A7A8BF2FE36BE0DE1C760AD0\t2028\t2020-04-03 15:31:27.0\t2020-04-03\t2020-04-03 15:31:44.0\t2\t1\tfalse\t0\t1\t1\n20284\t2020-04-03 16:12:09.0\tIncoming SMS\t059E8014A7A8BF2FE36BE0DE1C760AD0\t0662B91E51A2EA16DD90A20709C71761\t0\t059E8014A7A8BF2FE36BE0DE1C760AD0\t2028\t2020-04-03 16:12:09.0\t2020-04-03\t2020-04-03 16:12:09.0\t3\t1\tfalse\t0\t1\t1\n22192\t2020-04-03 15:53:17.0\tIncoming SMS\t05D1A7BE1374ED89182718D24C546158\t0662B91E51A2EA16DD90A20709C71761\t0\t05D1A7BE1374ED89182718D24C546158\t2219\t2020-04-03 15:53:17.0\t2020-04-03\t2020-04-03 15:53:17.0\t1\t0\ttrue\t1\t1\t1\n20221\t2020-04-03 14:19:01.0\tIncoming SMS\t05ECE976FAC3A1FD3D272969C7781057\t91A0B96D2FE46ED69CEE41E7919C9FD7\t0\t05ECE976FAC3A1FD3D272969C7781057\t2022\t2020-04-03 14:19:01.0\t2020-04-03\t2020-04-03 14:19:01.0\t1\t0\ttrue\t1\t1\t1\n20686\t2020-04-03 15:15:48.0\tOutgoing call\t05FC6963E6A050AB3B8266420D2303DD\t2F4FA74A7C28CE1EE8493305AE967BDE\t27\t05FC6963E6A050AB3B8266420D2303DD\t2068\t2020-04-03 15:15:48.0\t2020-04-03\t2020-04-03 15:16:15.0\t1\t0\ttrue\t1\t1\t1\n35075\t2020-04-03 14:20:12.0\tIncoming SMS\t061463C57AAECDAD5761153EADFD13B2\t0662B91E51A2EA16DD90A20709C71761\t0\t061463C57AAECDAD5761153EADFD13B2\t3507\t2020-04-03 14:20:12.0\t2020-04-03\t2020-04-03 14:20:12.0\t1\t0\ttrue\t1\t1\t1\n36082\t2020-04-03 14:36:35.0\tOutgoing call\t061463C57AAECDAD5761153EADFD13B2\tD06DFB53BA8DA0AB902FC2AB7E7B2A1A\t187\t061463C57AAECDAD5761153EADFD13B2\t3608\t2020-04-03 14:36:35.0\t2020-04-03\t2020-04-03 14:39:42.0\t2\t0\ttrue\t1\t1\t1\n34359\t2020-04-03 14:50:21.0\tIncoming SMS\t061463C57AAECDAD5761153EADFD13B2\t0662B91E51A2EA16DD90A20709C71761\t0\t061463C57AAECDAD5761153EADFD13B2\t3435\t2020-04-03 14:50:21.0\t2020-04-03\t2020-04-03 14:50:21.0\t3\t0\ttrue\t1\t1\t1\n34359\t2020-04-03 14:51:12.0\tOutgoing call\t061463C57AAECDAD5761153EADFD13B2\tD06DFB53BA8DA0AB902FC2AB7E7B2A1A\t99\t061463C57AAECDAD5761153EADFD13B2\t3435\t2020-04-03 14:51:12.0\t2020-04-03\t2020-04-03 14:52:51.0\t4\t1\tfalse\t0\t1\t1\n40347\t2020-04-03 14:32:30.0\tIncoming call\t06153C17F5C9AAA78C203CEDA6B1F741\t0148EB9B0FFA21A11F3089AB7000663B\t24\t06153C17F5C9AAA78C203CEDA6B1F741\t4034\t2020-04-03 14:32:30.0\t2020-04-03\t2020-04-03 14:32:54.0\t1\t0\ttrue\t1\t1\t1\n40349\t2020-04-03 15:54:43.0\tIncoming SMS\t06153C17F5C9AAA78C203CEDA6B1F741\tA685F353D568E762265D9CF9C2FD92C2\t0\t06153C17F5C9AAA78C203CEDA6B1F741\t4034\t2020-04-03 15:54:43.0\t2020-04-03\t2020-04-03 15:54:43.0\t2\t1\tfalse\t0\t1\t1\n40349\t2020-04-03 16:00:02.0\tIncoming SMS\t06153C17F5C9AAA78C203CEDA6B1F741\tA685F353D568E762265D9CF9C2FD92C2\t0\t06153C17F5C9AAA78C203CEDA6B1F741\t4034\t2020-04-03 16:00:02.0\t2020-04-03\t2020-04-03 16:00:02.0\t3\t1\tfalse\t0\t1\t1\n40349\t2020-04-03 16:00:03.0\tIncoming SMS\t06153C17F5C9AAA78C203CEDA6B1F741\tA685F353D568E762265D9CF9C2FD92C2\t0\t06153C17F5C9AAA78C203CEDA6B1F741\t4034\t2020-04-03 16:00:03.0\t2020-04-03\t2020-04-03 16:00:03.0\t4\t1\tfalse\t0\t1\t1\n40344\t2020-04-03 16:55:43.0\tOutgoing call\t06153C17F5C9AAA78C203CEDA6B1F741\t0148EB9B0FFA21A11F3089AB7000663B\t23\t06153C17F5C9AAA78C203CEDA6B1F741\t4034\t2020-04-03 16:55:43.0\t2020-04-03\t2020-04-03 16:56:06.0\t5\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 14:46:02.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 14:46:02.0\t2020-04-03\t2020-04-03 14:46:02.0\t1\t0\ttrue\t1\t1\t1\n22263\t2020-04-03 14:46:06.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 14:46:06.0\t2020-04-03\t2020-04-03 14:46:06.0\t2\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 14:46:32.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 14:46:32.0\t2020-04-03\t2020-04-03 14:46:32.0\t3\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 14:46:49.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 14:46:49.0\t2020-04-03\t2020-04-03 14:46:49.0\t4\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 14:47:06.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 14:47:06.0\t2020-04-03\t2020-04-03 14:47:06.0\t5\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 14:47:12.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 14:47:12.0\t2020-04-03\t2020-04-03 14:47:12.0\t6\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:05:18.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:05:18.0\t2020-04-03\t2020-04-03 15:05:18.0\t7\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:05:20.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:05:20.0\t2020-04-03\t2020-04-03 15:05:20.0\t8\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:05:39.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:05:39.0\t2020-04-03\t2020-04-03 15:05:39.0\t9\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:05:44.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:05:44.0\t2020-04-03\t2020-04-03 15:05:44.0\t10\t1\tfalse\t0\t1\t1\n22268\t2020-04-03 15:26:41.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:26:41.0\t2020-04-03\t2020-04-03 15:26:41.0\t11\t1\tfalse\t0\t1\t1\n22268\t2020-04-03 15:26:57.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:26:57.0\t2020-04-03\t2020-04-03 15:26:57.0\t12\t1\tfalse\t0\t1\t1\n22268\t2020-04-03 15:27:02.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:27:02.0\t2020-04-03\t2020-04-03 15:27:02.0\t13\t1\tfalse\t0\t1\t1\n22268\t2020-04-03 15:27:06.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:27:06.0\t2020-04-03\t2020-04-03 15:27:06.0\t14\t1\tfalse\t0\t1\t1\n22268\t2020-04-03 15:27:11.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:27:11.0\t2020-04-03\t2020-04-03 15:27:11.0\t15\t1\tfalse\t0\t1\t1\n22268\t2020-04-03 15:27:17.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:27:17.0\t2020-04-03\t2020-04-03 15:27:17.0\t16\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:27:59.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:27:59.0\t2020-04-03\t2020-04-03 15:27:59.0\t17\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:28:05.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:28:05.0\t2020-04-03\t2020-04-03 15:28:05.0\t18\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:28:06.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:28:06.0\t2020-04-03\t2020-04-03 15:28:06.0\t19\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:28:10.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:28:10.0\t2020-04-03\t2020-04-03 15:28:10.0\t20\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:33:12.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:33:12.0\t2020-04-03\t2020-04-03 15:33:12.0\t21\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:33:18.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:33:18.0\t2020-04-03\t2020-04-03 15:33:18.0\t22\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:33:27.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:33:27.0\t2020-04-03\t2020-04-03 15:33:27.0\t23\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:33:44.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:33:44.0\t2020-04-03\t2020-04-03 15:33:44.0\t24\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:33:57.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:33:57.0\t2020-04-03\t2020-04-03 15:33:57.0\t25\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:34:03.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:34:03.0\t2020-04-03\t2020-04-03 15:34:03.0\t26\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:34:36.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:34:36.0\t2020-04-03\t2020-04-03 15:34:36.0\t27\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:34:41.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:34:41.0\t2020-04-03\t2020-04-03 15:34:41.0\t28\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:34:42.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:34:42.0\t2020-04-03\t2020-04-03 15:34:42.0\t29\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:34:48.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:34:48.0\t2020-04-03\t2020-04-03 15:34:48.0\t30\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:35:02.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:35:02.0\t2020-04-03\t2020-04-03 15:35:02.0\t31\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:35:07.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:35:07.0\t2020-04-03\t2020-04-03 15:35:07.0\t32\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:35:08.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:35:08.0\t2020-04-03\t2020-04-03 15:35:08.0\t33\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:35:12.0\tOutgoing SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:35:12.0\t2020-04-03\t2020-04-03 15:35:12.0\t34\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:35:26.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:35:26.0\t2020-04-03\t2020-04-03 15:35:26.0\t35\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 15:35:27.0\tIncoming SMS\t062050EA32D86742CD926F9CF129B4D2\t6FF692AD134D90D3454DC380D01F7D20\t0\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 15:35:27.0\t2020-04-03\t2020-04-03 15:35:27.0\t36\t1\tfalse\t0\t1\t1\n22263\t2020-04-03 16:00:42.0\tOutgoing call\t062050EA32D86742CD926F9CF129B4D2\tF906CFE8C4178ECF5A65A4059854BF6B\t1\t062050EA32D86742CD926F9CF129B4D2\t2226\t2020-04-03 16:00:42.0\t2020-04-03\t2020-04-03 16:00:43.0\t37\t1\tfalse\t0\t1\t1\n36633\t2020-04-03 15:41:09.0\tIncoming call\t062508AC67418D6A32C2F6F2AEF937E9\t3DFB1D194606CE461BC4B29687FF828F\t76\t062508AC67418D6A32C2F6F2AEF937E9\t3663\t2020-04-03 15:41:09.0\t2020-04-03\t2020-04-03 15:42:25.0\t1\t0\ttrue\t1\t1\t1\n35669\t2020-04-03 16:37:19.0\tIncoming call\t062508AC67418D6A32C2F6F2AEF937E9\t962D9ED359DEE1BABE8E1CFFAD8BC300\t23\t062508AC67418D6A32C2F6F2AEF937E9\t3566\t2020-04-03 16:37:19.0\t2020-04-03\t2020-04-03 16:37:42.0\t2\t0\ttrue\t1\t1\t1\n12793\t2020-04-03 16:39:54.0\tIncoming call\t062508AC67418D6A32C2F6F2AEF937E9\t962D9ED359DEE1BABE8E1CFFAD8BC300\t82\t062508AC67418D6A32C2F6F2AEF937E9\t1279\t2020-04-03 16:39:54.0\t2020-04-03\t2020-04-03 16:41:16.0\t3\t0\ttrue\t1\t1\t1\n12802\t2020-04-03 14:25:57.0\tOutgoing call\t066506179DF0A0BDA025CDAD58B68DE4\t27F348FB4AC94A1DD68FDC54012CBE1D\t4\t066506179DF0A0BDA025CDAD58B68DE4\t1280\t2020-04-03 14:25:57.0\t2020-04-03\t2020-04-03 14:26:01.0\t1\t0\ttrue\t1\t1\t1\n12012\t2020-04-03 14:26:13.0\tOutgoing call\t066506179DF0A0BDA025CDAD58B68DE4\t27F348FB4AC94A1DD68FDC54012CBE1D\t4\t066506179DF0A0BDA025CDAD58B68DE4\t1201\t2020-04-03 14:26:13.0\t2020-04-03\t2020-04-03 14:26:17.0\t2\t0\ttrue\t1\t1\t1\n10032\t2020-04-03 14:36:12.0\tIncoming SMS\t066506179DF0A0BDA025CDAD58B68DE4\t0662B91E51A2EA16DD90A20709C71761\t0\t066506179DF0A0BDA025CDAD58B68DE4\t1003\t2020-04-03 14:36:12.0\t2020-04-03\t2020-04-03 14:36:12.0\t4\t0\ttrue\t1\t1\t1\n12802\t2020-04-03 14:26:39.0\tIncoming call\t066506179DF0A0BDA025CDAD58B68DE4\t27F348FB4AC94A1DD68FDC54012CBE1D\t17\t066506179DF0A0BDA025CDAD58B68DE4\t1280\t2020-04-03 14:26:39.0\t2020-04-03\t2020-04-03 14:26:56.0\t3\t2\ttrue\t1\t2\t3\n14312\t2020-04-03 14:26:26.0\tIncoming SMS\t067E7AFB4873D1BF9F6DD056CAB97EDF\t0662B91E51A2EA16DD90A20709C71761\t0\t067E7AFB4873D1BF9F6DD056CAB97EDF\t1431\t2020-04-03 14:26:26.0\t2020-04-03\t2020-04-03 14:26:26.0\t1\t0\ttrue\t1\t1\t1\n20511\t2020-04-03 15:10:39.0\tOutgoing call\t06838C9E94E19F5CCFBF2A1A169BBD2F\t92BF7E5B37CC1A61A8DDE81BAAC8EA65\t27\t06838C9E94E19F5CCFBF2A1A169BBD2F\t2051\t2020-04-03 15:10:39.0\t2020-04-03\t2020-04-03 15:11:06.0\t1\t0\ttrue\t1\t1\t1\n20522\t2020-04-03 16:07:29.0\tOutgoing call\t06838C9E94E19F5CCFBF2A1A169BBD2F\t6703790878CC446BC91AC89FD3DA70A1\t12\t06838C9E94E19F5CCFBF2A1A169BBD2F\t2052\t2020-04-03 16:07:29.0\t2020-04-03\t2020-04-03 16:07:41.0\t2\t0\ttrue\t1\t1\t1\n35089\t2020-04-03 14:13:57.0\tOutgoing call\t06855B7A9FD70FFB4F1A849D67B22CB1\t072CE5D11CB7EA1A8B0B57E48CBB17D1\t21\t06855B7A9FD70FFB4F1A849D67B22CB1\t3508\t2020-04-03 14:13:57.0\t2020-04-03\t2020-04-03 14:14:18.0\t1\t0\ttrue\t1\t1\t1\n35083\t2020-04-03 14:14:46.0\tOutgoing call\t06855B7A9FD70FFB4F1A849D67B22CB1\t072CE5D11CB7EA1A8B0B57E48CBB17D1\t17\t06855B7A9FD70FFB4F1A849D67B22CB1\t3508\t2020-04-03 14:14:46.0\t2020-04-03\t2020-04-03 14:15:03.0\t2\t1\tfalse\t0\t1\t1\n35089\t2020-04-03 14:16:04.0\tOutgoing call\t06855B7A9FD70FFB4F1A849D67B22CB1\t0D0025DCC89CBC4B5059642F20CA72E0\t46\t06855B7A9FD70FFB4F1A849D67B22CB1\t3508\t2020-04-03 14:16:04.0\t2020-04-03\t2020-04-03 14:16:50.0\t3\t1\tfalse\t0\t1\t1\n35088\t2020-04-03 14:25:27.0\tIncoming call\t06855B7A9FD70FFB4F1A849D67B22CB1\tD3417E3EE97F452094B5D60854BB0C1F\t27\t06855B7A9FD70FFB4F1A849D67B22CB1\t3508\t2020-04-03 14:25:27.0\t2020-04-03\t2020-04-03 14:25:54.0\t4\t1\tfalse\t0\t1\t1\n35089\t2020-04-03 14:48:15.0\tOutgoing call\t06855B7A9FD70FFB4F1A849D67B22CB1\t072CE5D11CB7EA1A8B0B57E48CBB17D1\t38\t06855B7A9FD70FFB4F1A849D67B22CB1\t3508\t2020-04-03 14:48:15.0\t2020-04-03\t2020-04-03 14:48:53.0\t5\t1\tfalse\t0\t1\t1\n35089\t2020-04-03 15:26:28.0\tOutgoing call\t06855B7A9FD70FFB4F1A849D67B22CB1\t620299EC6E7CF9B9467A6B1DEF38CC15\t31\t06855B7A9FD70FFB4F1A849D67B22CB1\t3508\t2020-04-03 15:26:28.0\t2020-04-03\t2020-04-03 15:26:59.0\t6\t1\tfalse\t0\t1\t1\n35089\t2020-04-03 15:29:37.0\tOutgoing call\t06855B7A9FD70FFB4F1A849D67B22CB1\t620299EC6E7CF9B9467A6B1DEF38CC15\t11\t06855B7A9FD70FFB4F1A849D67B22CB1\t3508\t2020-04-03 15:29:37.0\t2020-04-03\t2020-04-03 15:29:48.0\t7\t1\tfalse\t0\t1\t1\n35089\t2020-04-03 15:36:00.0\tIncoming call\t06855B7A9FD70FFB4F1A849D67B22CB1\tD3417E3EE97F452094B5D60854BB0C1F\t17\t06855B7A9FD70FFB4F1A849D67B22CB1\t3508\t2020-04-03 15:36:00.0\t2020-04-03\t2020-04-03 15:36:17.0\t8\t1\tfalse\t0\t1\t1\n35089\t2020-04-03 15:52:46.0\tOutgoing call\t06855B7A9FD70FFB4F1A849D67B22CB1\t82ABC9B4AC4A2959C64F204E68176332\t53\t06855B7A9FD70FFB4F1A849D67B22CB1\t3508\t2020-04-03 15:52:46.0\t2020-04-03\t2020-04-03 15:53:39.0\t9\t1\tfalse\t0\t1\t1\n35083\t2020-04-03 16:04:49.0\tIncoming call\t06855B7A9FD70FFB4F1A849D67B22CB1\t043F437105631FBADFBFAED9C0C9870E\t13\t06855B7A9FD70FFB4F1A849D67B22CB1\t3508\t2020-04-03 16:04:49.0\t2020-04-03\t2020-04-03 16:05:02.0\t10\t1\tfalse\t0\t1\t1\n35083\t2020-04-03 16:05:38.0\tOutgoing call\t06855B7A9FD70FFB4F1A849D67B22CB1\t043F437105631FBADFBFAED9C0C9870E\t38\t06855B7A9FD70FFB4F1A849D67B22CB1\t3508\t2020-04-03 16:05:38.0\t2020-04-03\t2020-04-03 16:06:16.0\t11\t1\tfalse\t0\t1\t1\n20438\t2020-04-03 16:35:31.0\tOutgoing call\t06946F04A510225C6BEBF91217B0307D\t5F4A533BC6738510475371307155AF75\t4\t06946F04A510225C6BEBF91217B0307D\t2043\t2020-04-03 16:35:31.0\t2020-04-03\t2020-04-03 16:35:35.0\t1\t0\ttrue\t1\t1\t1\n20438\t2020-04-03 16:36:20.0\tOutgoing call\t06946F04A510225C6BEBF91217B0307D\t77E7A1C39E0A813CC843990695099F61\t18\t06946F04A510225C6BEBF91217B0307D\t2043\t2020-04-03 16:36:20.0\t2020-04-03\t2020-04-03 16:36:38.0\t2\t1\tfalse\t0\t1\t1\n12793\t2020-04-03 14:22:57.0\tIncoming call\t069C0F58D62CBD775AC20328893F31EA\t031C84F48FBF34F57EA5784FB731BB5F\t48\t069C0F58D62CBD775AC20328893F31EA\t1279\t2020-04-03 14:22:57.0\t2020-04-03\t2020-04-03 14:23:45.0\t1\t0\ttrue\t1\t1\t1\n12793\t2020-04-03 15:10:04.0\tIncoming SMS\t069C0F58D62CBD775AC20328893F31EA\t0662B91E51A2EA16DD90A20709C71761\t0\t069C0F58D62CBD775AC20328893F31EA\t1279\t2020-04-03 15:10:04.0\t2020-04-03\t2020-04-03 15:10:04.0\t2\t1\tfalse\t0\t1\t1\n36650\t2020-04-03 15:55:54.0\tOutgoing SMS\t06B2D0F82550A85835712F7AE845A709\t04C29C29AAF40FA98E0F66EEFACDFE3A\t0\t06B2D0F82550A85835712F7AE845A709\t3665\t2020-04-03 15:55:54.0\t2020-04-03\t2020-04-03 15:55:54.0\t1\t0\ttrue\t1\t1\t1\n35510\t2020-04-03 15:58:17.0\tIncoming SMS\t06B2D0F82550A85835712F7AE845A709\tA685F353D568E762265D9CF9C2FD92C2\t0\t06B2D0F82550A85835712F7AE845A709\t3551\t2020-04-03 15:58:17.0\t2020-04-03\t2020-04-03 15:58:17.0\t2\t0\ttrue\t1\t1\t1\n34469\t2020-04-03 16:36:12.0\tIncoming SMS\t06B2D0F82550A85835712F7AE845A709\tA685F353D568E762265D9CF9C2FD92C2\t0\t06B2D0F82550A85835712F7AE845A709\t3446\t2020-04-03 16:36:12.0\t2020-04-03\t2020-04-03 16:36:12.0\t3\t0\ttrue\t1\t1\t1\n34469\t2020-04-03 16:36:12.0\tIncoming SMS\t06B2D0F82550A85835712F7AE845A709\tA685F353D568E762265D9CF9C2FD92C2\t0\t06B2D0F82550A85835712F7AE845A709\t3446\t2020-04-03 16:36:12.0\t2020-04-03\t2020-04-03 16:36:12.0\t4\t1\tfalse\t0\t1\t1\n34469\t2020-04-03 16:38:00.0\tIncoming SMS\t06B2D0F82550A85835712F7AE845A709\tA685F353D568E762265D9CF9C2FD92C2\t0\t06B2D0F82550A85835712F7AE845A709\t3446\t2020-04-03 16:38:00.0\t2020-04-03\t2020-04-03 16:38:00.0\t5\t1\tfalse\t0\t1\t1\n34469\t2020-04-03 16:51:34.0\tIncoming SMS\t06B2D0F82550A85835712F7AE845A709\tA685F353D568E762265D9CF9C2FD92C2\t0\t06B2D0F82550A85835712F7AE845A709\t3446\t2020-04-03 16:51:34.0\t2020-04-03\t2020-04-03 16:51:34.0\t6\t1\tfalse\t0\t1\t1\n34469\t2020-04-03 16:51:34.0\tIncoming SMS\t06B2D0F82550A85835712F7AE845A709\tA685F353D568E762265D9CF9C2FD92C2\t0\t06B2D0F82550A85835712F7AE845A709\t3446\t2020-04-03 16:51:34.0\t2020-04-03\t2020-04-03 16:51:34.0\t7\t1\tfalse\t0\t1\t1\n34469\t2020-04-03 16:52:53.0\tIncoming SMS\t06B2D0F82550A85835712F7AE845A709\tA685F353D568E762265D9CF9C2FD92C2\t0\t06B2D0F82550A85835712F7AE845A709\t3446\t2020-04-03 16:52:53.0\t2020-04-03\t2020-04-03 16:52:53.0\t8\t1\tfalse\t0\t1\t1\n34424\t2020-04-03 15:11:10.0\tOutgoing call\t06BA690400384ECFF9B38995D7D06814\t77757922A5882CDDBDEAB2136BA09A71\t199\t06BA690400384ECFF9B38995D7D06814\t3442\t2020-04-03 15:11:10.0\t2020-04-03\t2020-04-03 15:14:29.0\t1\t0\ttrue\t1\t1\t1"
+          },
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"result-alert alert-warning\" role\u003d\"alert\"\u003e\u003cbutton type\u003d\"button\" class\u003d\"close\" data-dismiss\u003d\"alert\" aria-label\u003d\"Close\"\u003e\u003cspan aria-hidden\u003d\"true\"\u003e\u0026times;\u003c/span\u003e\u003c/button\u003e\u003cstrong\u003eOutput is truncated\u003c/strong\u003e to 102400 bytes. Learn more about \u003cstrong\u003eZEPPELIN_INTERPRETER_OUTPUT_LIMIT\u003c/strong\u003e\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594075869130_-2021121318",
+      "id": "20200706-225109_798963230",
+      "dateCreated": "2020-07-06 22:51:09.130",
+      "dateStarted": "2020-07-06 23:00:18.031",
+      "dateFinished": "2020-07-06 23:00:50.303",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "/** 3. Generate All Stops\n// Window over the user\n// sortby time\n// generate index \u003d\u003e called event_id\n// Aggregation function will create a list of stops\n// groupby anetnna_id\n*/\n\n/** Specs for window function\n * userSpec :\u003d  this will run our aggregation + analytic function on the key (subscrber, call_date)\n * userSiteSpec :\u003d  this will run our aggregation + analytic function on the key (subscriber, call_date, site_id)\n * eventSiteSpec :\u003d  this will run our aggregation + analytic function on the key (subscrber, call_date, group)\n * @param group  the stops ids \n * @param event_id the index for row in `userSpec`\n * @param difference the difference between a rows event_id and the event_id the precedes it in the window\n * @param diffNotOne boolean representing whether the `difference` is not equal to one. True if not equal to one\n * @param diffValue assigns a 1 where `diffNotOne` is true and 0 otherwise\n * @param group cumulative sum of the `diffValue` in the specified window\n * @param stop_id gets the minimum event_id over the apppropriate window (eventSiteSpec)\n * \n * \n */ \nval userSpec \u003d Window.partitionBy(\"subscriber\", \"call_date\").orderBy(\"call_datetime\")\nval userSiteSpec \u003d Window.partitionBy(\"subscriber\", \"call_date\", \"site_id\").orderBy(\"call_datetime\")\nval eventSiteSpec \u003d Window.partitionBy(\"subscriber\", \"call_date\", \"group\").orderBy(\"call_datetime\")\n//val summSpec \u003d Window.partitionBy(\"subscriber\",\"site_id\",\"stop_id\").orderBy(\"call_datetime\")\n\nval stops \u003d calls\n                    .withColumn(\"site_count\", count(\"site_id\").over(userSiteSpec))\n                    .filter(col(\"site_count\") \u003e 1)\n                    .withColumn(\"event_id\", row_number.over(userSpec))\n                    .withColumn(\"difference\", $\"event_id\" - when((lag(\"event_id\", 1).over(userSiteSpec)).isNull, $\"event_id\").otherwise(lag(\"event_id\", 1).over(userSiteSpec)))\n                   .withColumn(\"diffNotOne\", ($\"event_id\" - when((lag(\"event_id\", 1).over(userSiteSpec)).isNull, $\"event_id\").otherwise(lag(\"event_id\", 1).over(userSiteSpec)))!\u003d\u003d 1)\n                   .withColumn(\"diffValue\", when(col(\"diffNotOne\") \u003d\u003d\u003d true, 1).otherwise(0))\n                   .withColumn(\"group\", sum(col(\"diffValue\")).over(userSiteSpec.rangeBetween(Window.unboundedPreceding, 0)))\n                   .withColumn(\"stop_id\", min(col(\"event_id\")).over(eventSiteSpec))\n                   // group by the subscriber, site_id and the stop id\n                   .groupBy(\"subscriber\",\"site_id\",\"stop_id\")\n                   // collect the minimum and maximum start and end time\n                   .agg(min(col(\"call_datetime\")).alias(\"start_time\"), max(col(\"end_time\")).alias(\"end_time\"))\n                   //calculates the duration between the start and end times.\n                   .withColumn(\"duration\", unix_timestamp(col(\"end_time\")) - unix_timestamp(col(\"start_time\")))\n\n// Registers a temporary view for the stops dataframe\nstops.createOrReplaceTempView(\"stops\")\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-07 04:56:00.086",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "warning: there was one deprecation warning; re-run with -deprecation for details\nuserSpec: org.apache.spark.sql.expressions.WindowSpec \u003d org.apache.spark.sql.expressions.WindowSpec@78561a79\nuserSiteSpec: org.apache.spark.sql.expressions.WindowSpec \u003d org.apache.spark.sql.expressions.WindowSpec@36d8374d\neventSiteSpec: org.apache.spark.sql.expressions.WindowSpec \u003d org.apache.spark.sql.expressions.WindowSpec@59196d5e\nstops: org.apache.spark.sql.DataFrame \u003d [subscriber: string, site_id: string ... 4 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1593820890654_1743104024",
+      "id": "20200704-000130_514181174",
+      "dateCreated": "2020-07-04 00:01:30.654",
+      "dateStarted": "2020-07-07 04:56:00.109",
+      "dateFinished": "2020-07-07 04:56:00.790",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "stops.where(col(\"subscriber\") \u003d\u003d\u003d \"00004B6AB9F25A6973379CEA85B1E46C\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-07 17:48:55.499",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": false,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------+-------+-------------------+-------------------+--------+\n|          subscriber|site_id|stop_id|         start_time|           end_time|duration|\n+--------------------+-------+-------+-------------------+-------------------+--------+\n|00004B6AB9F25A697...|   1210|      4|2020-04-03 15:26:51|2020-04-03 16:27:22|    3631|\n|00004B6AB9F25A697...|   1216|      4|2020-04-03 15:24:06|2020-04-03 15:24:09|       3|\n|00004B6AB9F25A697...|   1210|      1|2020-04-03 14:41:14|2020-04-03 15:10:22|    1748|\n|00004B6AB9F25A697...|   1216|      1|2020-04-03 14:32:22|2020-04-03 14:32:26|       4|\n+--------------------+-------+-------+-------------------+-------------------+--------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1593984301053_1582789655",
+      "id": "20200705-212501_1431610347",
+      "dateCreated": "2020-07-05 21:25:01.053",
+      "dateStarted": "2020-07-05 21:45:13.957",
+      "dateFinished": "2020-07-05 21:45:51.589",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\nselect * from stops where subscriber \u003d \"00004B6AB9F25A6973379CEA85B1E46C\" ",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-07 17:49:06.340",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": false,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "antenna_id": "string",
+                      "time": "string",
+                      "direction": "string",
+                      "source": "string",
+                      "target": "string",
+                      "duration": "string",
+                      "subscriber": "string",
+                      "site_id": "string",
+                      "msisdn": "string",
+                      "call_datetime": "string",
+                      "call_date": "string",
+                      "end_time": "string",
+                      "event_id": "string",
+                      "difference": "string",
+                      "diff": "string",
+                      "diff_value": "string",
+                      "group": "string",
+                      "stop_id": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "antenna_id\ttime\tdirection\tsource\ttarget\tduration\tsubscriber\tsite_id\tmsisdn\tcall_datetime\tcall_date\tend_time\tevent_id\tdifference\tdiff\tdiff_value\tgroup\tstop_id\n12161\t2020-04-03 14:32:22.0\tOutgoing call\t00004B6AB9F25A6973379CEA85B1E46C\tD42E6740B727684A545A0911AF1FE4AA\t4\t00004B6AB9F25A6973379CEA85B1E46C\t1216\t00004B6AB9F25A6973379CEA85B1E46C\t2020-04-03 14:32:22.0\t2020-04-03\t2020-04-03 14:32:26.0\t1\t0\ttrue\t1\t1\t1\n12101\t2020-04-03 14:41:14.0\tOutgoing call\t00004B6AB9F25A6973379CEA85B1E46C\tD42E6740B727684A545A0911AF1FE4AA\t4\t00004B6AB9F25A6973379CEA85B1E46C\t1210\t00004B6AB9F25A6973379CEA85B1E46C\t2020-04-03 14:41:14.0\t2020-04-03\t2020-04-03 14:41:18.0\t2\t0\ttrue\t1\t1\t1\n12101\t2020-04-03 15:10:18.0\tOutgoing call\t00004B6AB9F25A6973379CEA85B1E46C\tD42E6740B727684A545A0911AF1FE4AA\t4\t00004B6AB9F25A6973379CEA85B1E46C\t1210\t00004B6AB9F25A6973379CEA85B1E46C\t2020-04-03 15:10:18.0\t2020-04-03\t2020-04-03 15:10:22.0\t3\t1\tfalse\t0\t1\t1\n12161\t2020-04-03 15:24:06.0\tOutgoing call\t00004B6AB9F25A6973379CEA85B1E46C\tDCEE399085B47429B93796AC7886CE5D\t3\t00004B6AB9F25A6973379CEA85B1E46C\t1216\t00004B6AB9F25A6973379CEA85B1E46C\t2020-04-03 15:24:06.0\t2020-04-03\t2020-04-03 15:24:09.0\t4\t3\ttrue\t1\t2\t4\n12101\t2020-04-03 15:26:51.0\tOutgoing call\t00004B6AB9F25A6973379CEA85B1E46C\tD42E6740B727684A545A0911AF1FE4AA\t1\t00004B6AB9F25A6973379CEA85B1E46C\t1210\t00004B6AB9F25A6973379CEA85B1E46C\t2020-04-03 15:26:51.0\t2020-04-03\t2020-04-03 15:26:52.0\t5\t2\ttrue\t1\t2\t4\n12101\t2020-04-03 16:27:18.0\tOutgoing call\t00004B6AB9F25A6973379CEA85B1E46C\tD42E6740B727684A545A0911AF1FE4AA\t4\t00004B6AB9F25A6973379CEA85B1E46C\t1210\t00004B6AB9F25A6973379CEA85B1E46C\t2020-04-03 16:27:18.0\t2020-04-03\t2020-04-03 16:27:22.0\t6\t1\tfalse\t0\t2\t4\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1593973508551_1042158077",
+      "id": "20200705-182508_1226390649",
+      "dateCreated": "2020-07-05 18:25:08.551",
+      "dateStarted": "2020-07-05 18:39:18.030",
+      "dateFinished": "2020-07-05 18:39:20.561",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "// Create a window spec that partitions by the user\nval spec \u003d Window.partitionBy(\"subscriber\").orderBy(\"stop_id\")\n\n// Filter out stops less 10 minutes and generate new index called \"STOP_ID\"\nval filteredStops \u003d stops.filter(col(\"duration\") \u003e\u003d 600)\n    .withColumn(\"STOP_ID\", row_number.over(spec))\n    //.select(\"subscriber\", \"start_time_s\", \"end_time_s\", \"event_id\", \"duration_s\", \"STOP_ID\")\nfilteredStops.createOrReplaceTempView(\"filtered_stops\")\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-07 04:56:11.867",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "spec: org.apache.spark.sql.expressions.WindowSpec \u003d org.apache.spark.sql.expressions.WindowSpec@3dfdfad9\nfilteredStops: org.apache.spark.sql.DataFrame \u003d [subscriber: string, site_id: string ... 4 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1593884104779_-1161032800",
+      "id": "20200704-173504_1332208864",
+      "dateCreated": "2020-07-04 17:35:04.779",
+      "dateStarted": "2020-07-07 04:56:11.880",
+      "dateFinished": "2020-07-07 04:56:12.299",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\nselect * from filtered_stops where subscriber \u003d \"00004B6AB9F25A6973379CEA85B1E46C\"",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-07 04:56:15.330",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {
+                    "columns": [
+                      {
+                        "name": "subscriber",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "site_id",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "STOP_ID",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "start_time",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "end_time",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {
+                          "priority": 0.0,
+                          "direction": "asc"
+                        },
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "duration",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      }
+                    ],
+                    "scrollFocus": {},
+                    "selection": [],
+                    "grouping": {
+                      "grouping": [],
+                      "aggregations": [],
+                      "rowExpandedStates": {}
+                    },
+                    "treeView": {},
+                    "pagination": {
+                      "paginationCurrentPage": 1.0,
+                      "paginationPageSize": 250.0
+                    }
+                  },
+                  "tableColumnTypeState": {
+                    "names": {
+                      "subscriber": "string",
+                      "site_id": "string",
+                      "STOP_ID": "string",
+                      "start_time": "string",
+                      "end_time": "string",
+                      "duration": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "subscriber\tsite_id\tSTOP_ID\tstart_time\tend_time\tduration\n00004B6AB9F25A6973379CEA85B1E46C\t1210\t1\t2020-04-03 15:26:51.0\t2020-04-03 16:27:22.0\t3631\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1593957512391_794748912",
+      "id": "20200705-135832_1576623746",
+      "dateCreated": "2020-07-05 13:58:32.391",
+      "dateStarted": "2020-07-07 04:56:15.348",
+      "dateFinished": "2020-07-07 04:56:48.504",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\nselect * from calls where subscriber \u003d \"00004B6AB9F25A6973379CEA85B1E46C\"",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-07 17:49:22.047",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": false,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "antenna_id": "string",
+                      "time": "string",
+                      "direction": "string",
+                      "source": "string",
+                      "target": "string",
+                      "duration": "string",
+                      "subscriber": "string",
+                      "msisdn": "string",
+                      "call_datetime": "string",
+                      "call_date": "string",
+                      "end_time": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "antenna_id\ttime\tdirection\tsource\ttarget\tduration\tsubscriber\tmsisdn\tcall_datetime\tcall_date\tend_time\n12161\t2020-04-03 14:32:22.0\tOutgoing call\t00004B6AB9F25A6973379CEA85B1E46C\tD42E6740B727684A545A0911AF1FE4AA\t4\t00004B6AB9F25A6973379CEA85B1E46C\t00004B6AB9F25A6973379CEA85B1E46C\t2020-04-03 14:32:22.0\t2020-04-03\t2020-04-03 14:32:26.0\n12101\t2020-04-03 14:41:14.0\tOutgoing call\t00004B6AB9F25A6973379CEA85B1E46C\tD42E6740B727684A545A0911AF1FE4AA\t4\t00004B6AB9F25A6973379CEA85B1E46C\t00004B6AB9F25A6973379CEA85B1E46C\t2020-04-03 14:41:14.0\t2020-04-03\t2020-04-03 14:41:18.0\n12101\t2020-04-03 15:10:18.0\tOutgoing call\t00004B6AB9F25A6973379CEA85B1E46C\tD42E6740B727684A545A0911AF1FE4AA\t4\t00004B6AB9F25A6973379CEA85B1E46C\t00004B6AB9F25A6973379CEA85B1E46C\t2020-04-03 15:10:18.0\t2020-04-03\t2020-04-03 15:10:22.0\n12161\t2020-04-03 15:24:06.0\tOutgoing call\t00004B6AB9F25A6973379CEA85B1E46C\tDCEE399085B47429B93796AC7886CE5D\t3\t00004B6AB9F25A6973379CEA85B1E46C\t00004B6AB9F25A6973379CEA85B1E46C\t2020-04-03 15:24:06.0\t2020-04-03\t2020-04-03 15:24:09.0\n12101\t2020-04-03 15:26:51.0\tOutgoing call\t00004B6AB9F25A6973379CEA85B1E46C\tD42E6740B727684A545A0911AF1FE4AA\t1\t00004B6AB9F25A6973379CEA85B1E46C\t00004B6AB9F25A6973379CEA85B1E46C\t2020-04-03 15:26:51.0\t2020-04-03\t2020-04-03 15:26:52.0\n12101\t2020-04-03 16:27:18.0\tOutgoing call\t00004B6AB9F25A6973379CEA85B1E46C\tD42E6740B727684A545A0911AF1FE4AA\t4\t00004B6AB9F25A6973379CEA85B1E46C\t00004B6AB9F25A6973379CEA85B1E46C\t2020-04-03 16:27:18.0\t2020-04-03\t2020-04-03 16:27:22.0\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1593966740241_1771467217",
+      "id": "20200705-163220_1784288791",
+      "dateCreated": "2020-07-05 16:32:20.241",
+      "dateStarted": "2020-07-05 16:34:35.112",
+      "dateFinished": "2020-07-05 16:35:15.434",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "filteredStops.coalesce(6).write.format(\"csv\").option(\"header\", \"true\").save(pathToOutput)",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-07 17:50:29.706",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1593966875088_1577377794",
+      "id": "20200705-163435_204832000",
+      "dateCreated": "2020-07-05 16:34:35.088",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "MIT/generate_stops",
+  "id": "2FDFKFEM6",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "python:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

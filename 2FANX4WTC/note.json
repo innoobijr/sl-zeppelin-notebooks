@@ -1,0 +1,491 @@
+{
+  "paragraphs": [
+    {
+      "text": "sc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))",
+      "user": "innocent",
+      "dateUpdated": "2020-06-23 00:57:05.195",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592691295426_2007594180",
+      "id": "paragraph_1592691295426_2007594180",
+      "dateCreated": "2020-06-20 22:14:55.426",
+      "dateStarted": "2020-06-23 00:57:05.826",
+      "dateFinished": "2020-06-23 00:57:18.006",
+      "status": "FINISHED"
+    },
+    {
+      "text": "import org.apache.spark.sql.functions.input_file_name\nimport org.apache.spark.sql.functions.{lag, split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\n\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql._\nimport spark.implicits._\nimport org.apache.spark.sql.expressions._\n",
+      "user": "innocent",
+      "dateUpdated": "2020-06-23 00:57:10.855",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.spark.sql.functions.input_file_name\nimport org.apache.spark.sql.functions.{lag, split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql._\nimport spark.implicits._\nimport org.apache.spark.sql.expressions._\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592691351142_138597012",
+      "id": "paragraph_1592691351142_138597012",
+      "dateCreated": "2020-06-20 22:15:51.142",
+      "dateStarted": "2020-06-23 00:57:10.871",
+      "dateFinished": "2020-06-23 00:57:19.044",
+      "status": "FINISHED"
+    },
+    {
+      "text": " val path_to_towers \u003d \"s3n://sierra-leone-lake/blob/towers/tower_district_secton.csv\"\n\n val cdrs \u003d spark.read.format(\"csv\")\n    .option(\"header\",\"false\")\n    .load(\"s3n://sierra-leone-lake/blob/cdrs/africell-raw/2020*.csv\")\n    .withColumnRenamed(\"_c0\", \"antenna_id\")\n    .withColumnRenamed(\"_c1\", \"time\")\n    .withColumnRenamed(\"_c2\", \"direction\")\n    .withColumnRenamed(\"_c3\", \"source\")\n    .withColumnRenamed(\"_c4\", \"target\")\n    .withColumnRenamed(\"_c5\", \"duration\")\n    \nval calls \u003d cdrs.withColumn(\"msisdn\", when(col(\"direction\").contains(\"Outgoing\"), col(\"source\")).otherwise(col(\"source\")))\n    .withColumn(\"call_datetime\", to_timestamp($\"time\"))\n    .withColumn(\"call_date\", to_date($\"call_datetime\"))\n    \ncalls.unpersist()\n//cache()\n    \nval cells \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(path_to_towers)\n  .withColumnRenamed(\"New_Dist_1\", \"locality\")\n  .withColumnRenamed(\"CI\", \"cell_id\")\n//cells.cache()\ncells.unpersist()\n\n// (3) Saving the dataframes as a temporary view\ncalls.createOrReplaceTempView(\"calls\")\ncells.createOrReplaceTempView(\"cells\") ",
+      "user": "innocent",
+      "dateUpdated": "2020-06-23 00:58:11.810",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mpath_to_towers\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m \u003d s3n://sierra-leone-lake/blob/towers/tower_district_secton.csv\n\u001b[1m\u001b[34mcdrs\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m \u003d [antenna_id: string, time: string ... 4 more fields]\n\u001b[1m\u001b[34mcalls\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m \u003d [antenna_id: string, time: string ... 7 more fields]\n\u001b[1m\u001b[34mcells\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m \u003d [cell_id: int, BTSNAME: string ... 8 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592691981024_-1318444927",
+      "id": "paragraph_1592691981024_-1318444927",
+      "dateCreated": "2020-06-20 22:26:21.024",
+      "dateStarted": "2020-06-23 00:58:11.814",
+      "dateFinished": "2020-06-23 01:00:33.954",
+      "status": "FINISHED"
+    },
+    {
+      "text": "val sample \u003d calls.limit(1000)\n",
+      "user": "innocent",
+      "dateUpdated": "2020-06-23 01:02:34.589",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34msample\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.Dataset[org.apache.spark.sql.Row]\u001b[0m \u003d [antenna_id: string, time: string ... 7 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592692090932_-877382248",
+      "id": "paragraph_1592692090932_-877382248",
+      "dateCreated": "2020-06-20 22:28:10.932",
+      "dateStarted": "2020-06-23 01:02:34.597",
+      "dateFinished": "2020-06-23 01:02:35.035",
+      "status": "FINISHED"
+    },
+    {
+      "text": "sample.unpersist()\nsample.show()",
+      "user": "innocent",
+      "dateUpdated": "2020-06-23 00:52:27.019",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Interpreter process is not running\nInterpreter launch command:  /usr/local/spark/bin/spark-submit --class org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer --driver-class-path \":/usr/local/zeppelin/interpreter/spark/*::/usr/local/zeppelin/interpreter/zeppelin-interpreter-shaded-0.9.0-preview1.jar:/usr/local/zeppelin/interpreter/spark/spark-interpreter-0.9.0-preview1.jar:/usr/local/hadoop/etc/hadoop\" --driver-java-options \" -Dfile.encoding\u003dUTF-8 -Dlog4j.configuration\u003dfile:///usr/local/zeppelin/conf/log4j.properties -Dzeppelin.log.file\u003d\u0027/usr/local/zeppelin/logs/zeppelin-interpreter-spark-shared_process-root-ip-172-31-28-57.log\u0027\" --master local\\[\\*\\] --conf spark\\.driver\\.cores\\\u003d1 --conf spark\\.executor\\.memory\\\u003d1g --conf spark\\.executor\\.cores\\\u003d1 --conf spark\\.webui\\.yarn\\.useProxy\\\u003dfalse --conf spark\\.app\\.name\\\u003dZeppelin --conf spark\\.driver\\.memory\\\u003d1g /usr/local/zeppelin/interpreter/spark/spark-interpreter-0.9.0-preview1.jar 172.31.28.57 39753 \"spark-shared_process\" :\nSLF4J: Class path contains multiple SLF4J bindings.\nSLF4J: Found binding in [jar:file:/usr/local/zeppelin-0.9.0-preview1-bin-all/interpreter/spark/spark-interpreter-0.9.0-preview1.jar!/org/slf4j/impl/StaticLoggerBinder.class]\nSLF4J: Found binding in [jar:file:/usr/local/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.10.jar!/org/slf4j/impl/StaticLoggerBinder.class]\nSLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.\nSLF4J: Actual binding is of type [org.slf4j.impl.Log4jLoggerFactory]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592873411536_-1595542915",
+      "id": "paragraph_1592873411536_-1595542915",
+      "dateCreated": "2020-06-23 00:50:11.536",
+      "dateStarted": "2020-06-23 00:52:27.022",
+      "dateFinished": "2020-06-23 00:52:27.024",
+      "status": "ERROR"
+    },
+    {
+      "text": "sample.printSchema",
+      "user": "innocent",
+      "dateUpdated": "2020-06-23 01:02:40.989",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "root\n |-- antenna_id: string (nullable \u003d true)\n |-- time: string (nullable \u003d true)\n |-- direction: string (nullable \u003d true)\n |-- source: string (nullable \u003d true)\n |-- target: string (nullable \u003d true)\n |-- duration: string (nullable \u003d true)\n |-- msisdn: string (nullable \u003d true)\n |-- call_datetime: timestamp (nullable \u003d true)\n |-- call_date: date (nullable \u003d true)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592692861157_2135630506",
+      "id": "paragraph_1592692861157_2135630506",
+      "dateCreated": "2020-06-20 22:41:01.157",
+      "dateStarted": "2020-06-23 01:02:40.992",
+      "dateFinished": "2020-06-23 01:02:41.445",
+      "status": "FINISHED"
+    },
+    {
+      "text": "// Defining and Aggregation Function for Finding Call Switches\nclass CheckSequenceMatch extends UserDefinedAggregateFunction {\n  // This is the input fields for your aggregate function.\n  override def inputSchema:StructType \u003d\n    StructType(\n        StructField(\"src_tar\", StringType) :: \n        StructField(\"pre_src_tar\", StringType) ::\n        StructField(\"antenna_id\", IntegerType) ::\n        StructField(\"pre_antenna_id\", IntegerType) ::\n        Nil)\n\n  // This is the internal fields you keep for computing your aggregate.\n  override def bufferSchema: StructType \u003d StructType(\n    StructField(\"state\", BooleanType) :: Nil\n  )\n\n  // This is the output type of your aggregatation function.\n  override def dataType: DataType \u003d BooleanType\n\n  override def deterministic: Boolean \u003d true\n\n  // This is the initial value for your buffer schema.\n  override def initialize(buffer: MutableAggregationBuffer): Unit \u003d {\n    buffer(0) \u003d true\n  }\n\n  // This is how to update your buffer schema given an input.\n  override def update(buffer: MutableAggregationBuffer, input: Row): Unit \u003d {\n    buffer(0) \u003d input match {\n        case Row(a, b, c, d) if a \u003d\u003d b \u003d\u003e c \u003d\u003d d\n        case _ \u003d\u003e true\n    }\n  }\n\n  // This is how to merge two objects with the bufferSchema type.\n  override def merge(buffer1: MutableAggregationBuffer, buffer2: Row): Unit \u003d {\n    buffer1(0) \u003d buffer1.getAs[Boolean](0) \u0026 buffer2.getAs[Boolean](0)\n  }\n\n  // This is where you output the final value, given the final value of your bufferSchema.\n  override def evaluate(buffer: Row): Any \u003d buffer.getBoolean(0)\n}",
+      "user": "innocent",
+      "dateUpdated": "2020-06-22 11:23:23.360",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "defined class CheckSequenceMatch\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592705548478_58348117",
+      "id": "paragraph_1592705548478_58348117",
+      "dateCreated": "2020-06-21 02:12:28.478",
+      "dateStarted": "2020-06-22 11:23:23.365",
+      "dateFinished": "2020-06-22 11:23:24.181",
+      "status": "FINISHED"
+    },
+    {
+      "text": "import org.apache.spark.sql.functions.{concat, lit, hour}\n\nval cm \u003d new CheckSequenceMatch\nval checkSpec \u003d Window.partitionBy(\"source\").orderBy(\"source\", \"time\")\n\nsample\n.withColumn(\"src_tar\", concat($\"source\", lit(\"-\"), $\"target\", lit(\"-\")))\n.withColumn(\"pre_antenna_id\", lag(col(\"antenna_id\"), 1).over(checkSpec))\n.withColumn(\"pre_src_tar\", lag(col(\"src_tar\"), 1).over(checkSpec))\n.withColumn(\"check\", cm(col(\"src_tar\"), col(\"pre_src_tar\"), col(\"antenna_id\"), col(\"pre_antenna_id\")).over(checkSpec))\n.where(col(\"check\") \u003d\u003d\u003d false).show()\n\n// Probably highly unlikely that we are getting switch over\n// We do not capture switch over during call. So maybe will need to proxy calls that are extremely long where the next call within a range is extremely far from previous point\n// Need clarity around the source - target definition\n",
+      "user": "innocent",
+      "dateUpdated": "2020-06-25 18:58:27.997",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 398.0,
+              "optionOpen": false
+            }
+          }
+        },
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+----------+--------------------+-------------+--------------------+--------------------+--------+--------------------+-------------------+----------+--------------------+--------------+--------------------+-----+\n|antenna_id|                time|    direction|              source|              target|duration|              msisdn|      call_datetime| call_date|             src_tar|pre_antenna_id|         pre_src_tar|check|\n+----------+--------------------+-------------+--------------------+--------------------+--------+--------------------+-------------------+----------+--------------------+--------------+--------------------+-----+\n|     12826|2020-03-01 08:00:...|Outgoing call|1D2D9D836944CE797...|81BECDCB0B82A7D7F...|       4|1D2D9D836944CE797...|2020-03-01 08:00:24|2020-03-01|1D2D9D836944CE797...|         12072|1D2D9D836944CE797...|false|\n+----------+--------------------+-------------+--------------------+--------------------+--------+--------------------+-------------------+----------+--------------------+--------------+--------------------+-----+\n\nimport org.apache.spark.sql.functions.{concat, lit}\n\u001b[1m\u001b[34mcm\u001b[0m: \u001b[1m\u001b[32mCheckSequenceMatch\u001b[0m \u003d CheckSequenceMatch@733bda9c\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592694028008_-190611097",
+      "id": "paragraph_1592694028008_-190611097",
+      "dateCreated": "2020-06-20 23:00:28.008",
+      "dateStarted": "2020-06-21 02:52:53.360",
+      "dateFinished": "2020-06-21 02:52:53.988",
+      "status": "FINISHED"
+    },
+    {
+      "text": "\nval dailySubscriberEvents \u003d sample.groupBy(\"source\", \"call_date\").count()\n//sample.groupBy(\"source\", \"call_date\").count()\n//hourlySubscriberEvents \u003d sample.groupBy(\"source\", hour(col(\"call_datetime\"))).count()\nval dailySubscriberEventsByAntenna \u003d sample.groupBy(\"source\", \"call_date\", \"antenna_id\").count()\n",
+      "user": "innocent",
+      "dateUpdated": "2020-06-23 01:02:52.936",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mdailySubscriberEvents\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m \u003d [source: string, call_date: date ... 1 more field]\n\u001b[1m\u001b[34mdailySubscriberEventsByAntenna\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m \u003d [source: string, call_date: date ... 2 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592793277573_-1499018032",
+      "id": "paragraph_1592793277573_-1499018032",
+      "dateCreated": "2020-06-22 02:34:37.573",
+      "dateStarted": "2020-06-23 01:02:52.940",
+      "dateFinished": "2020-06-23 01:02:53.341",
+      "status": "FINISHED"
+    },
+    {
+      "text": "dailySubscriberEventsByAntenna.show()",
+      "user": "innocent",
+      "dateUpdated": "2020-06-23 01:59:40.481",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+----------+----------+-----+\n|              source| call_date|antenna_id|count|\n+--------------------+----------+----------+-----+\n|482CFDA9904D2ABD5...|2020-03-01|     12011|    1|\n|1E9A3CC10D2FDC776...|2020-03-01|     20121|    1|\n|EFC8807C0F739AE48...|2020-03-01|     40554|    1|\n|D2E6DBD2C6B471057...|2020-03-01|     34079|    1|\n|DC56D49C0B6BF9F5C...|2020-03-01|     12022|    1|\n|473C201ED8A0A0675...|2020-03-01|     14193|    1|\n|412AC1532D65BFC32...|2020-03-01|     12201|    1|\n|EB0E230823BEA5D43...|2020-03-01|     14203|    1|\n|C0FD929DB18C997CF...|2020-03-01|     14112|    1|\n|D4DAD2063328DC135...|2020-03-01|     12011|    1|\n|EC5C49A1B58E386C1...|2020-03-01|     35598|    1|\n|926D3211689E64927...|2020-03-01|     20762|    1|\n|B12DD789B7B98D8ED...|2020-03-01|     10401|    1|\n|B01AFF37CDBEAF4D8...|2020-03-01|     10037|    1|\n|869C7D41124EC9FF3...|2020-03-01|     20762|    1|\n|7785676CF3069B0B0...|2020-03-01|     20552|    2|\n|9498ACB3AD0CFCA40...|2020-03-01|     35347|    1|\n|84BA935CE4FCB16F1...|2020-03-01|     22422|    1|\n|7F3264BC0B3EAA558...|2020-03-01|     20472|    1|\n|5B37C8DD95E7BC7A0...|2020-03-01|     20601|    1|\n+--------------------+----------+----------+-----+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592823949483_5006985",
+      "id": "paragraph_1592823949483_5006985",
+      "dateCreated": "2020-06-22 11:05:49.483",
+      "dateStarted": "2020-06-23 01:59:40.484",
+      "dateFinished": "2020-06-23 02:24:51.069",
+      "status": "FINISHED"
+    },
+    {
+      "text": "averageDailyEvents \u003d dailySubscriberEvents.groupBy(\"call_date\")avg()\naverageDailyEventsbyAntenna \u003d dailySubscriberEventsByAntenna.groupBy(\"call_date\", \"antenna_id\").avg()",
+      "user": "innocent",
+      "dateUpdated": "2020-06-22 03:17:36.068",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592795827414_515015764",
+      "id": "paragraph_1592795827414_515015764",
+      "dateCreated": "2020-06-22 03:17:07.414",
+      "status": "READY"
+    },
+    {
+      "text": "",
+      "user": "innocent",
+      "dateUpdated": "2020-06-20 22:51:40.819",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003cconsole\u003e:1: \u001b[31merror: \u001b[0midentifier expected but string literal found.\n       df[col/(\"value\")]\n               ^\n"
+          }
+        ]
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592692373151_-159659004",
+      "id": "paragraph_1592692373151_-159659004",
+      "dateCreated": "2020-06-20 22:32:53.151",
+      "dateStarted": "2020-06-20 22:51:31.382",
+      "dateFinished": "2020-06-20 22:51:31.390",
+      "status": "ERROR"
+    },
+    {
+      "text": "",
+      "user": "innocent",
+      "dateUpdated": "2020-06-20 23:59:42.263",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1592693471404_615826246",
+      "id": "paragraph_1592693471404_615826246",
+      "dateCreated": "2020-06-20 22:51:11.404",
+      "status": "READY"
+    }
+  ],
+  "name": "CountTowerMisdirects",
+  "id": "2FANX4WTC",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.8.2",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
