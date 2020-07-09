@@ -1,0 +1,268 @@
+{
+  "paragraphs": [
+    {
+      "text": "%spark.pyspark\r\n\r\nimport os\r\nfrom datetime import datetime\r\nimport matplotlib.pyplot as plt\r\nfrom pyspark.sql import SQLContext\r\n\r\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\r\nfrom pyspark.sql.functions import split, lower\r\nimport pyspark.sql.functions as F\r\nfrom pyspark.sql.window import Window\r\nfrom pyspark import StorageLevel",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-08 20:25:30.690",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594224959072_789358027",
+      "id": "20200708-161559_1145660513",
+      "dateCreated": "2020-07-08 16:15:59.072",
+      "dateStarted": "2020-07-08 20:25:18.860",
+      "dateFinished": "2020-07-08 20:25:18.865",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)\n\ndailyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/user_queries-daily\"\nweeklyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/user_queries-weekly\"",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-08 20:21:12.692",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594225397346_-1982597034",
+      "id": "20200708-162317_1250270320",
+      "dateCreated": "2020-07-08 16:23:17.346",
+      "dateStarted": "2020-07-08 20:21:12.702",
+      "dateFinished": "2020-07-08 20:21:12.708",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nnames\u003d{\u0027antenna_id\u0027: StringType(),\u0027time\u0027: StringType(),\u0027cdr_type\u0027: StringType(),\u0027source\u0027: StringType(),\u0027target\u0027: StringType(),\u0027duration\u0027: IntegerType()}\nfields\u003d[]\nfor header in names:\n    fields.append(StructField(header, names[header], False))\nschema \u003d StructType(fields)\n# df \u003d sq.read.csv(\u0027./data/20200321_20.csv\u0027, schema\u003dschema)\ndf \u003d sq.read.csv(\u0027s3n://sierra-leone-lake/blob/cdrs/africell-raw/2020042[1-3]_1[0-2].csv\u0027, schema\u003dschema)\n\ndf \u003d df.withColumn(\u0027direction\u0027, lower(split(df[\u0027cdr_type\u0027], \u0027 \u0027).getItem(0)))\\\n        .withColumn(\u0027subscriber\u0027, F.when(F.col(\u0027direction\u0027)\u003d\u003d\u0027incoming\u0027, df.target).otherwise(df.source))\\\n        .withColumn(\"call_datetime\", F.to_timestamp(\"time\"))\\\n        .withColumn(\"call_date\", F.to_date(\"call_datetime\"))\\\n        .withColumn(\"week\", F.weekofyear(\"call_date\"))\\\n        .withColumn(\"month\", F.month(\"call_date\"))\\\n        .withColumn(\"site\", F.expr(\"substring(antenna_id, 1, length(antenna_id)-1)\"))\ndf \u003d df.drop(\u0027time\u0027, \u0027cdr_type\u0027, \u0027source\u0027, \u0027target\u0027, \u0027direction\u0027, \u0027antenna_id\u0027)",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-08 20:21:15.328",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594225413361_-1463632856",
+      "id": "20200708-162333_433705629",
+      "dateCreated": "2020-07-08 16:23:33.361",
+      "dateStarted": "2020-07-08 20:21:15.343",
+      "dateFinished": "2020-07-08 20:21:18.400",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# daily \u003d Window.partitionBy(\"subscriber\", \"call_date\").orderBy(\"subscriber\")\n# query \u003d df.withColumn(\u0027count\u0027, F.approx_count_distinct(\u0027call_date\u0027).over(daily))\ndaily \u003d df.groupBy(\u0027subscriber\u0027, \u0027call_date\u0027).count()\ndaily.persist(StorageLevel.MEMORY_AND_DISK)\n\nweekly \u003d daily\\\n        .withColumn(\"week\", F.weekofyear(\"call_date\"))\\\n        .groupBy(\u0027subscriber\u0027, \u0027week\u0027)\\\n        .agg(F.sum(\u0027count\u0027).alias(\u0027count\u0027))",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-08 20:25:25.169",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594225432996_709827718",
+      "id": "20200708-162352_1876247922",
+      "dateCreated": "2020-07-08 16:23:52.997",
+      "dateStarted": "2020-07-08 20:25:25.180",
+      "dateFinished": "2020-07-08 20:25:25.298",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nweekly.show()",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-08 20:25:32.874",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+----+-----+\n|          subscriber|week|count|\n+--------------------+----+-----+\n|77E1FE171CA261D5B...|  17|    1|\n|A387B474ED0C87A8C...|  17|    9|\n|4F66529AB182D9ADE...|  17|   16|\n|F1005C3E108BB2B7C...|  17|    2|\n|CD5E163A75B7A949E...|  17|    5|\n|3A741823682E11C7F...|  17|    4|\n|F64C08284016F9818...|  17|    2|\n|BB571DB5E84CA1797...|  17|    1|\n|6DD27DA3F0ECFF2FC...|  17|   12|\n|69DECF65D2C3FC427...|  17|   10|\n|78D682B6138CE7048...|  17|   11|\n|D8932016EF864365F...|  17|    3|\n|68A17639EEE01E98A...|  17|   11|\n|1A8D6ACFA45A852BC...|  17|    1|\n|BD6A8827FE1D8C1F0...|  17|    3|\n|C6AC622B526ABFA94...|  17|    1|\n|A592E35D245B89288...|  17|    4|\n|FEC97EABE9674E2E3...|  17|   20|\n|A3A226D9F207F650E...|  17|    5|\n|8E4CFEE0162939780...|  17|    3|\n+--------------------+----+-----+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594227316616_883492222",
+      "id": "20200708-165516_706035272",
+      "dateCreated": "2020-07-08 16:55:16.616",
+      "dateStarted": "2020-07-08 20:25:32.903",
+      "dateFinished": "2020-07-08 20:26:02.644",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndaily.coalesce(5).write.format(\"csv\").option(\"header\", \"true\").save(dailyPath)",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-08 20:28:51.909",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594228037845_-1722918678",
+      "id": "20200708-170717_2103919054",
+      "dateCreated": "2020-07-08 17:07:17.845",
+      "dateStarted": "2020-07-08 20:28:51.919",
+      "dateFinished": "2020-07-08 20:29:14.663",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nweekly.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(weeklyPath)",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-08 18:11:08.804",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594231847284_1582439521",
+      "id": "20200708-181047_15831177",
+      "dateCreated": "2020-07-08 18:10:47.285",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-08 17:36:16.420",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594229776419_-1379295449",
+      "id": "20200708-173616_2084933677",
+      "dateCreated": "2020-07-08 17:36:16.419",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "MIT/userQueries",
+  "id": "2FE1UCFHE",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

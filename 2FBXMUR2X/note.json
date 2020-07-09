@@ -3,7 +3,7 @@
     {
       "text": "%spark.pyspark\r\n\r\nimport os\r\nfrom datetime import datetime\r\nimport matplotlib.pyplot as plt\r\nfrom pyspark.sql import SQLContext\r\n\r\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\r\nfrom pyspark.sql.functions import split, lower\r\nimport pyspark.sql.functions as F",
       "user": "anonymous",
-      "dateUpdated": "2020-07-07 03:13:21.333",
+      "dateUpdated": "2020-07-08 17:43:04.629",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -29,27 +29,27 @@
       "jobName": "paragraph_1594090475029_-284604824",
       "id": "20200707-025435_458548033",
       "dateCreated": "2020-07-07 02:54:35.029",
-      "dateStarted": "2020-07-07 03:13:21.339",
-      "dateFinished": "2020-07-07 03:13:21.346",
+      "dateStarted": "2020-07-08 17:43:04.641",
+      "dateFinished": "2020-07-08 17:43:04.646",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)",
+      "text": "%spark.pyspark\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)\n\noutputPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/tower_queries\"\nmissingOutput \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/missing_towers\"",
       "user": "anonymous",
-      "dateUpdated": "2020-07-07 03:13:23.461",
+      "dateUpdated": "2020-07-08 17:55:17.011",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
         "enabled": true,
         "results": {},
         "editorSetting": {
-          "language": "scala",
+          "language": "python",
           "editOnDblClick": false,
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/scala"
+        "editorMode": "ace/mode/python"
       },
       "settings": {
         "params": {},
@@ -63,27 +63,27 @@
       "jobName": "paragraph_1594090504556_-543082466",
       "id": "20200707-025504_1479551371",
       "dateCreated": "2020-07-07 02:55:04.557",
-      "dateStarted": "2020-07-07 03:13:23.466",
-      "dateFinished": "2020-07-07 03:13:23.473",
+      "dateStarted": "2020-07-08 17:51:07.055",
+      "dateFinished": "2020-07-08 17:51:07.062",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\nnames\u003d{\u0027antenna_id\u0027: StringType(),\u0027time\u0027: StringType(),\u0027cdr_type\u0027: StringType(),\u0027source\u0027: StringType(),\u0027target\u0027: StringType(),\u0027duration\u0027: IntegerType()}\nfields\u003d[]\nfor header in names:\n    fields.append(StructField(header, names[header], False))\nschema \u003d StructType(fields)\n# df \u003d sq.read.csv(\u0027./data/20200321_20.csv\u0027, schema\u003dschema)\ndf \u003d sq.read.csv(\u0027s3n://sierra-leone-lake/blob/cdrs/africell-raw/2020042[1-3]_01.csv\u0027, schema\u003dschema)\n\ndf \u003d df.withColumn(\u0027direction\u0027, lower(split(df[\u0027cdr_type\u0027], \u0027 \u0027).getItem(0)))\\\n        .withColumn(\u0027subscriber\u0027, F.when(F.col(\u0027direction\u0027)\u003d\u003d\u0027incoming\u0027, df.target).otherwise(df.source))\\\n        .withColumn(\"call_datetime\", F.to_timestamp(\"time\"))\\\n        .withColumn(\"call_date\", F.to_date(\"call_datetime\"))\ndf \u003d df.drop(\u0027time\u0027, \u0027cdr_type\u0027, \u0027source\u0027, \u0027target\u0027, \u0027direction\u0027)",
+      "text": "%spark.pyspark\nnames\u003d{\u0027antenna_id\u0027: StringType(),\u0027time\u0027: StringType(),\u0027cdr_type\u0027: StringType(),\u0027source\u0027: StringType(),\u0027target\u0027: StringType(),\u0027duration\u0027: IntegerType()}\nfields\u003d[]\nfor header in names:\n    fields.append(StructField(header, names[header], False))\nschema \u003d StructType(fields)\n# df \u003d sq.read.csv(\u0027./data/20200321_20.csv\u0027, schema\u003dschema)\ndf \u003d sq.read.csv(\u0027s3n://sierra-leone-lake/blob/cdrs/africell-raw/2020042[1-3]_*.csv\u0027, schema\u003dschema)\n\ndf \u003d df.withColumn(\u0027direction\u0027, lower(split(df[\u0027cdr_type\u0027], \u0027 \u0027).getItem(0)))\\\n        .withColumn(\u0027subscriber\u0027, F.when(F.col(\u0027direction\u0027)\u003d\u003d\u0027incoming\u0027, df.target).otherwise(df.source))\\\n        .withColumn(\"call_datetime\", F.to_timestamp(\"time\"))\\\n        .withColumn(\"call_date\", F.to_date(\"call_datetime\"))\\\n        .withColumn(\"site\", F.expr(\"substring(antenna_id, 1, length(antenna_id)-1)\"))\ndf \u003d df.drop(\u0027time\u0027, \u0027cdr_type\u0027, \u0027source\u0027, \u0027target\u0027, \u0027direction\u0027, \u0027antenna_id\u0027)",
       "user": "anonymous",
-      "dateUpdated": "2020-07-07 03:25:52.245",
+      "dateUpdated": "2020-07-08 17:43:32.061",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
         "enabled": true,
         "results": {},
         "editorSetting": {
-          "language": "scala",
+          "language": "python",
           "editOnDblClick": false,
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/scala"
+        "editorMode": "ace/mode/python"
       },
       "settings": {
         "params": {},
@@ -97,66 +97,27 @@
       "jobName": "paragraph_1594090526582_-2099422552",
       "id": "20200707-025526_193546216",
       "dateCreated": "2020-07-07 02:55:26.582",
-      "dateStarted": "2020-07-07 03:19:35.462",
-      "dateFinished": "2020-07-07 03:19:37.967",
+      "dateStarted": "2020-07-08 17:43:32.074",
+      "dateFinished": "2020-07-08 17:43:36.329",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\ndf.show()",
+      "text": "%spark.pyspark\nper_towers_day \u003d df.groupBy(\u0027subscriber\u0027, \u0027site\u0027, \u0027call_date\u0027).count()\\\n        .groupBy(\u0027site\u0027, \u0027call_date\u0027).agg(F.count(\u0027count\u0027).alias(\u0027users_per_day\u0027), F.avg(\u0027count\u0027).alias(\u0027calls_per_user\u0027))\n\n# To compare mobile phone usage to general census data for a district\ntowers_avg \u003d per_towers_day.groupBy(\u0027site\u0027).agg(F.avg(\u0027users_per_day\u0027).alias(\u0027users_per_day\u0027), F.avg(\u0027calls_per_user\u0027).alias(\u0027calls_per_user\u0027))",
       "user": "anonymous",
-      "dateUpdated": "2020-07-07 03:19:47.333",
+      "dateUpdated": "2020-07-08 17:43:39.377",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
         "enabled": true,
         "results": {},
         "editorSetting": {
-          "language": "scala",
+          "language": "python",
           "editOnDblClick": false,
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/scala"
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "+----------+--------+--------------------+-------------------+----------+\n|antenna_id|duration|          subscriber|      call_datetime| call_date|\n+----------+--------+--------------------+-------------------+----------+\n|     34909|       0|6FF692AD134D90D34...|2020-04-22 01:00:17|2020-04-22|\n|     14112|       0|107F8B8C9DCDFBF82...|2020-04-22 01:00:17|2020-04-22|\n|     40115|       0|6FF692AD134D90D34...|2020-04-22 01:00:18|2020-04-22|\n|     22312|       4|FD9D57181BD0A7C31...|2020-04-22 01:00:13|2020-04-22|\n|     12012|       3|4AFF81B020BEEB9CC...|2020-04-22 01:00:15|2020-04-22|\n|     14234|      10|2467294507C524DD6...|2020-04-22 01:00:07|2020-04-22|\n|     34759|      10|2467294507C524DD6...|2020-04-22 01:00:07|2020-04-22|\n|     14263|       0|6FF692AD134D90D34...|2020-04-22 01:00:17|2020-04-22|\n|     21183|       4|ED179A3FCE9E6C611...|2020-04-22 01:00:14|2020-04-22|\n|     40990|       0|A685F353D568E7622...|2020-04-22 01:00:16|2020-04-22|\n|     34222|       4|BE839DAB3249532C0...|2020-04-22 01:00:13|2020-04-22|\n|     10254|       4|BE839DAB3249532C0...|2020-04-22 01:00:13|2020-04-22|\n|     14396|       0|107F8B8C9DCDFBF82...|2020-04-22 01:00:18|2020-04-22|\n|     10202|       4|1E1179734F19E131A...|2020-04-22 01:00:14|2020-04-22|\n|     20393|       0|14BDD5E7024AA7BA8...|2020-04-22 01:00:18|2020-04-22|\n|     12041|       0|AB3CC3961E3262A28...|2020-04-22 01:00:19|2020-04-22|\n|     12222|       0|6FF692AD134D90D34...|2020-04-22 01:00:18|2020-04-22|\n|     34705|       0|4B9B9B0FFBF30D71C...|2020-04-22 01:00:18|2020-04-22|\n|     34705|       0|4B9B9B0FFBF30D71C...|2020-04-22 01:00:19|2020-04-22|\n|     20153|       4|D99B3D1BBE1302C41...|2020-04-22 01:00:15|2020-04-22|\n+----------+--------+--------------------+-------------------+----------+\nonly showing top 20 rows\n\n"
-          }
-        ]
-      },
-      "apps": [],
-      "jobName": "paragraph_1594091864861_-325281725",
-      "id": "20200707-031744_571711245",
-      "dateCreated": "2020-07-07 03:17:44.861",
-      "dateStarted": "2020-07-07 03:19:47.339",
-      "dateFinished": "2020-07-07 03:19:48.794",
-      "status": "FINISHED",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "text": "%spark.pyspark\nper_towers \u003d df.groupBy(\u0027subscriber\u0027, \u0027antenna_id\u0027).count()\\\n        .groupBy(\u0027antenna_id\u0027).agg(F.sum(\u0027count\u0027).alias(\u0027total_records\u0027), F.avg(\u0027count\u0027).alias(\u0027per_subscriber\u0027))",
-      "user": "anonymous",
-      "dateUpdated": "2020-07-07 03:24:19.170",
-      "config": {
-        "colWidth": 12.0,
-        "fontSize": 9.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "scala",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "editorMode": "ace/mode/scala"
+        "editorMode": "ace/mode/python"
       },
       "settings": {
         "params": {},
@@ -167,18 +128,18 @@
         "msg": []
       },
       "apps": [],
-      "jobName": "paragraph_1594091317306_2054994520",
-      "id": "20200707-030837_1766143033",
-      "dateCreated": "2020-07-07 03:08:37.306",
-      "dateStarted": "2020-07-07 03:24:19.178",
-      "dateFinished": "2020-07-07 03:24:19.216",
+      "jobName": "paragraph_1594217200311_-47201902",
+      "id": "20200708-140640_220765271",
+      "dateCreated": "2020-07-08 14:06:40.311",
+      "dateStarted": "2020-07-08 17:43:39.389",
+      "dateFinished": "2020-07-08 17:43:39.479",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\nper_towers.show()",
+      "text": "%spark.pyspark\ntowers_avg.show()",
       "user": "anonymous",
-      "dateUpdated": "2020-07-07 03:24:31.850",
+      "dateUpdated": "2020-07-08 16:42:22.835",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -201,74 +162,35 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "+----------+-------------+------------------+\n|antenna_id|total_records|    per_subscriber|\n+----------+-------------+------------------+\n|     35374|         1987| 55.19444444444444|\n|     22254|            5|1.6666666666666667|\n|     22596|            8|               1.6|\n|     34635|           57|2.4782608695652173|\n|     35444|           19|2.7142857142857144|\n|     35670|           21|               2.1|\n|     20512|           66|2.5384615384615383|\n|     35640|           47|3.1333333333333333|\n|     40340|           33|              2.75|\n|     35350|           18|2.5714285714285716|\n|     36526|           22|3.6666666666666665|\n|     40874|           12|               2.4|\n|     34657|           11|              2.75|\n|     34829|           48| 2.823529411764706|\n|     40512|           22| 3.142857142857143|\n|     34404|            6|               2.0|\n|     14218|           83|2.3714285714285714|\n|     35089|            8|               1.6|\n|     35771|            9|              2.25|\n|     20141|           81|           2.53125|\n+----------+-------------+------------------+\nonly showing top 20 rows\n\n"
+            "data": "+----+------------------+------------------+\n|site|     users_per_day|    calls_per_user|\n+----+------------------+------------------+\n|4032| 705.6666666666666|  2.55945889781138|\n|1436|             686.0| 1.875372571571501|\n|3606|            1877.0|  1.93357336459089|\n|2069|             467.0|2.7263872343574937|\n|3414|199.66666666666666| 1.931917223669801|\n|2088|            1248.0|3.0262237279457156|\n|3441|2147.6666666666665|2.2835735622618585|\n|2110| 438.3333333333333|2.4337366574070978|\n|3650|             987.0|2.0022917576600694|\n|3517|1126.6666666666667| 1.926278388761732|\n|3526|2521.3333333333335|2.0335987828021946|\n|1280|11147.333333333334|2.6147482296920637|\n|3652|2530.3333333333335|1.8521927340199913|\n|2034| 8713.666666666666|2.4106790309909765|\n|3491|            1301.0|1.8686432948870497|\n|3553|            1239.0|2.4234022441603273|\n|1425| 5247.666666666667| 2.529131929774973|\n|3656|2306.6666666666665|1.8900126360313285|\n|2249|1200.6666666666667|3.0310595837624272|\n|4078|             339.0| 2.125473459151458|\n+----+------------------+------------------+\nonly showing top 20 rows\n\n"
           }
         ]
       },
       "apps": [],
-      "jobName": "paragraph_1594092259170_181786192",
-      "id": "20200707-032419_1143685178",
-      "dateCreated": "2020-07-07 03:24:19.170",
-      "dateStarted": "2020-07-07 03:24:31.862",
-      "dateFinished": "2020-07-07 03:24:35.180",
-      "status": "FINISHED",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "text": "%spark.pyspark\nper_towers.count()",
-      "user": "anonymous",
-      "dateUpdated": "2020-07-07 03:42:17.525",
-      "config": {
-        "colWidth": 12.0,
-        "fontSize": 9.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "scala",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "editorMode": "ace/mode/scala"
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "3763\n"
-          }
-        ]
-      },
-      "apps": [],
-      "jobName": "paragraph_1594093326601_-338058234",
-      "id": "20200707-034206_382857889",
-      "dateCreated": "2020-07-07 03:42:06.601",
-      "dateStarted": "2020-07-07 03:42:17.535",
-      "dateFinished": "2020-07-07 03:42:22.276",
+      "jobName": "paragraph_1594222181928_-132061030",
+      "id": "20200708-152941_298599561",
+      "dateCreated": "2020-07-08 15:29:41.928",
+      "dateStarted": "2020-07-08 16:42:22.849",
+      "dateFinished": "2020-07-08 16:42:54.806",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\ntowers \u003d sq.read.csv(\"s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07*.csv\", header\u003d\"true\")",
       "user": "anonymous",
-      "dateUpdated": "2020-07-07 04:07:43.511",
+      "dateUpdated": "2020-07-08 17:43:43.631",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
         "enabled": true,
         "results": {},
         "editorSetting": {
-          "language": "scala",
+          "language": "python",
           "editOnDblClick": false,
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/scala"
+        "editorMode": "ace/mode/python"
       },
       "settings": {
         "params": {},
@@ -282,15 +204,15 @@
       "jobName": "paragraph_1594092271850_-657875817",
       "id": "20200707-032431_1042492022",
       "dateCreated": "2020-07-07 03:24:31.850",
-      "dateStarted": "2020-07-07 04:07:43.521",
-      "dateFinished": "2020-07-07 04:07:45.408",
+      "dateStarted": "2020-07-08 17:43:43.641",
+      "dateFinished": "2020-07-08 17:43:45.545",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\ntowers_list \u003d towers.select(\u0027CI\u0027).rdd.flatMap(lambda x: x).collect()",
+      "text": "%spark.pyspark\n# Assuming we have population data in district level, should be interesting to see the pattern of mobile usage across districts\ndistrict \u003d per_towers_day\\\n        .join(towers, towers.site_id\u003d\u003dtowers_avg.site)\\\n        .drop(\u0027site\u0027)\\\n        .groupBy(\u0027New_Dist_1\u0027, \u0027call_date\u0027)\\\n        .agg(F.sum(\u0027users_per_day\u0027).alias(\u0027users_per_day\u0027), F.avg(\u0027calls_per_user\u0027).alias(\u0027calls_per_user\u0027))\ndistrict.createOrReplaceTempView(\"district\")",
       "user": "anonymous",
-      "dateUpdated": "2020-07-07 04:08:49.848",
+      "dateUpdated": "2020-07-08 17:43:49.286",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -313,30 +235,195 @@
         "msg": []
       },
       "apps": [],
+      "jobName": "paragraph_1594223035953_2103615574",
+      "id": "20200708-154355_1930517353",
+      "dateCreated": "2020-07-08 15:43:55.953",
+      "dateStarted": "2020-07-08 17:43:49.298",
+      "dateFinished": "2020-07-08 17:43:49.364",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\nselect * from district",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-08 16:40:03.389",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "New_Dist_1": "string",
+                      "call_date": "string",
+                      "users_per_day": "string",
+                      "calls_per_user": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default",
+                  "stacked": false
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [],
+              "groups": [],
+              "values": []
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "New_Dist_1\tcall_date\tusers_per_day\tcalls_per_user\nPujehun\t2020-04-21\t10492\t3.0174325387035785\nMoyamba\t2020-04-22\t11307\t2.681412756485004\nKarene\t2020-04-23\t16850\t2.849241314630855\nBonthe\t2020-04-22\t8043\t2.4846331128312458\nTonkolili\t2020-04-21\t43695\t2.7476855498915387\nnull\t2020-04-21\t1535\t3.0921238402581688\nKoinadugu\t2020-04-23\t18891\t2.7216240665462763\nBo\t2020-04-21\t40111\t2.4145415096476603\nPort Loko\t2020-04-21\t62230\t2.5377989508835355\nTonkolili\t2020-04-22\t42031\t2.7748332920685947\nKono\t2020-04-22\t57400\t2.442229696806881\nBo\t2020-04-23\t40581\t2.3879380465306834\nKailahun\t2020-04-23\t15446\t2.7452567747655103\nKambia\t2020-04-21\t19556\t2.6718028721861726\nFalaba\t2020-04-22\t1887\t2.8191002501599\nPujehun\t2020-04-22\t10528\t3.0476835750857894\nWestern Area Urb\t2020-04-23\t530949\t2.2618208780494666\nnull\t2020-04-23\t1654\t3.270371307031878\nFalaba\t2020-04-23\t1922\t2.9029667949436635\nMoyamba\t2020-04-23\t11769\t2.7177497170435534\nKenema\t2020-04-21\t45242\t2.676915181816133\nBombali\t2020-04-21\t87065\t2.410830582593644\nKono\t2020-04-23\t58736\t2.4404296826389817\nTonkolili\t2020-04-23\t43445\t2.736944203301154\nWestern Area Urb\t2020-04-21\t540914\t2.091471386394166\nPujehun\t2020-04-23\t11023\t2.8830864717660223\nBombali\t2020-04-22\t85120\t2.3971898821340707\nKarene\t2020-04-21\t16752\t2.862692156954834\nBo\t2020-04-22\t39061\t2.420854940087336\nKailahun\t2020-04-21\t15029\t2.7874139886803793\nBombali\t2020-04-23\t86246\t2.35677458133613\nBonthe\t2020-04-21\t8379\t2.508181051388482\nKambia\t2020-04-23\t19650\t2.6514019532827158\nWestern Area Rur\t2020-04-22\t219024\t2.2319598334250865\nKono\t2020-04-21\t60034\t2.435631866783049\nKambia\t2020-04-22\t19345\t2.6897145504007076\nWestern Area Urb\t2020-04-22\t528188\t2.056695159323854\nKarene\t2020-04-22\t16209\t2.8776779975453604\nWestern Area Rur\t2020-04-23\t224859\t2.407566471030518\nBonthe\t2020-04-23\t8543\t2.477951061301303\nPort Loko\t2020-04-22\t63336\t2.5548602663713047\nKoinadugu\t2020-04-22\t17749\t2.689687824941212\nFalaba\t2020-04-21\t2020\t2.941545415747083\nKenema\t2020-04-23\t44278\t2.6710821531885665\nPort Loko\t2020-04-23\t63106\t2.6535349414585747\nWestern Area Rur\t2020-04-21\t224729\t2.2544157575750456\nKenema\t2020-04-22\t43116\t2.640409027881933\nKailahun\t2020-04-22\t14107\t2.773207481868112\nKoinadugu\t2020-04-21\t18355\t2.7689127483122884\nnull\t2020-04-22\t1443\t3.3235047886257796\nMoyamba\t2020-04-21\t11584\t2.6932350659499034\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594223976340_-339806113",
+      "id": "20200708-155936_2018327706",
+      "dateCreated": "2020-07-08 15:59:36.340",
+      "dateStarted": "2020-07-08 16:38:26.069",
+      "dateFinished": "2020-07-08 16:38:59.040",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndistrict.coalesce(2).write.format(\"csv\").option(\"header\", \"true\").save(outputPath)",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-08 17:51:14.481",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594223615299_1913435327",
+      "id": "20200708-155335_1355773596",
+      "dateCreated": "2020-07-08 15:53:35.299",
+      "dateStarted": "2020-07-08 17:51:14.498",
+      "dateFinished": "2020-07-08 17:53:57.547",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ntowers_list \u003d towers.select(\u0027site_id\u0027).rdd.flatMap(lambda x: x).collect()\nmissing_towers \u003d towers_avg.filter(~F.col(\u0027site\u0027).isin(*towers_list)).select(\u0027site\u0027)",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-08 18:40:16.152",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
       "jobName": "paragraph_1594092417699_-844652714",
       "id": "20200707-032657_1803730694",
       "dateCreated": "2020-07-07 03:26:57.699",
-      "dateStarted": "2020-07-07 04:08:49.859",
-      "dateFinished": "2020-07-07 04:08:50.607",
+      "dateStarted": "2020-07-08 18:40:16.169",
+      "dateFinished": "2020-07-08 18:40:19.363",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\ntowers.show()",
+      "text": "%spark.pyspark\nmissing_towers.show()",
       "user": "anonymous",
-      "dateUpdated": "2020-07-07 03:43:54.347",
+      "dateUpdated": "2020-07-08 18:40:29.278",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
         "enabled": true,
         "results": {},
         "editorSetting": {
-          "language": "scala",
+          "language": "python",
           "editOnDblClick": false,
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/scala"
+        "editorMode": "ace/mode/python"
       },
       "settings": {
         "params": {},
@@ -347,71 +434,32 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "+-------+-----+----------------+----------------+--------+----------+----------+----------------+----------------+--------------+\n|site_id|   CI|         BTSNAME|            Name|Latitude| longitude|  location|        New_Dist|      New_Dist_1|     New_Chief|\n+-------+-----+----------------+----------------+--------+----------+----------+----------------+----------------+--------------+\n|   1000|10008|  MOUNTAUREOL_II|  MOUNTAUREOL_II|8.480993|-13.218795|FT CENTRAL|Western Area Urb|Western Area Urb|       East II|\n|   1001|10018|       CONGOTOWN|       CONGOTOWN|8.483741|-13.256992|   FT WEST|Western Area Urb|Western Area Urb|       West II|\n|   1002|10028|SPURROADMILITARY|SPURROADMILITARY| 8.47093| -13.27157|   FT WEST|Western Area Urb|Western Area Urb|      West III|\n|   1003|10039|       DEVILHOLE|       DEVILHOLE| 8.36205|  -13.0783|   FT EAST|Western Area Rur|Western Area Rur|Waterloo Rural|\n|   1004|10047|      KISSYHOUSE|      KISSYHOUSE| 8.48401|  -13.2384|FT CENTRAL|Western Area Urb|Western Area Urb|    Central II|\n|   1005|10058|         SLCB_II|         SLCB_II| 8.48795|  -13.2352|FT CENTRAL|Western Area Urb|Western Area Urb|    Central II|\n|   1006|10069|      ROCKELBANK|      ROCKELBANK| 8.48867|  -13.2315|FT CENTRAL|Western Area Urb|Western Area Urb|     Central I|\n|   1007|10078|       KISSYROAD|       KISSYROAD| 8.48721|  -13.2225|FT CENTRAL|Western Area Urb|Western Area Urb|        East I|\n|   1008|10088|       CLINETOWN|       CLINETOWN|8.491377|-13.209388|FT CENTRAL|Western Area Urb|Western Area Urb|        East I|\n|   1009|10092|       BARMHOTEL|       BARMHOTEL| 8.49561| -13.29665|   FT WEST|Western Area Urb|Western Area Urb|      West III|\n|   1010|10106|       BINTUMANI|       BINTUMANI| 8.49647| -13.28725|   FT WEST|Western Area Urb|Western Area Urb|      West III|\n|   1011|10118|          MAHERA|          MAHERA|8.605081|-13.198528| Air Port-|       Port Loko|       Port Loko|  Kaffu Bullom|\n|   1012|10128|          TAGRIN|          TAGRIN|8.522981|-13.148938| Air Port-|       Port Loko|       Port Loko|  Kaffu Bullom|\n|   1013|10138|    LUNGIAIRPORT|    LUNGIAIRPORT|8.615386|-13.202306| Air Port-|       Port Loko|       Port Loko|  Kaffu Bullom|\n|   1014|10148|     HAGANSTREET|     HAGANSTREET| 8.48832| -13.22643|FT CENTRAL|Western Area Urb|Western Area Urb|       East II|\n|   1015|10159|   KENNEDYSTREET|   KENNEDYSTREET| 8.48441| -13.21461|FT CENTRAL|Western Area Urb|Western Area Urb|        East I|\n|   1016|10166|   MOUNTAINCOURT|   MOUNTAINCOURT| 8.48111| -13.22819|FT CENTRAL|Western Area Urb|Western Area Urb|     Central I|\n|   1017|10182|   GODRECHSTREET|         ADONKIA|8.413635|-13.264048|FT CENTRAL|Western Area Rur|Western Area Rur|    York Rural|\n|   1018|10201|      KINGHARMAN|   GODRECHSTREET| 8.48674|  -13.2289|   FT WEST|Western Area Urb|Western Area Urb|     Central I|\n|   1019|10202|      KINGHARMAN|    BATHURSTREET| 8.48599|  -13.2375|   FT WEST|Western Area Urb|Western Area Urb|    Central II|\n+-------+-----+----------------+----------------+--------+----------+----------+----------------+----------------+--------------+\nonly showing top 20 rows\n\n"
+            "data": "+----+\n|site|\n+----+\n|3650|\n|3652|\n|3656|\n|4078|\n|3641|\n|3661|\n|3660|\n|3646|\n|3662|\n|3615|\n|4094|\n|3642|\n|3636|\n|4104|\n|4080|\n|3630|\n|4088|\n|3663|\n|3649|\n|4086|\n+----+\nonly showing top 20 rows\n\n"
           }
         ]
       },
       "apps": [],
-      "jobName": "paragraph_1594092423809_-1140391597",
-      "id": "20200707-032703_1916027880",
-      "dateCreated": "2020-07-07 03:27:03.809",
-      "dateStarted": "2020-07-07 03:43:54.363",
-      "dateFinished": "2020-07-07 03:43:54.655",
-      "status": "FINISHED",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "text": "%spark.pyspark\nper_towers.filter(~F.col(\u0027antenna_id\u0027).isin(*towers_list)).count()",
-      "user": "anonymous",
-      "dateUpdated": "2020-07-07 04:09:28.920",
-      "config": {
-        "colWidth": 12.0,
-        "fontSize": 9.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "scala",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "editorMode": "ace/mode/scala"
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "3250\n"
-          }
-        ]
-      },
-      "apps": [],
-      "jobName": "paragraph_1594093395881_1401748239",
-      "id": "20200707-034315_93159",
-      "dateCreated": "2020-07-07 03:43:15.881",
-      "dateStarted": "2020-07-07 04:09:28.933",
-      "dateFinished": "2020-07-07 04:09:34.758",
+      "jobName": "paragraph_1594094879444_1027826665",
+      "id": "20200707-040759_85523080",
+      "dateCreated": "2020-07-07 04:07:59.444",
+      "dateStarted": "2020-07-08 18:40:29.293",
+      "dateFinished": "2020-07-08 18:42:16.560",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\n",
       "user": "anonymous",
-      "dateUpdated": "2020-07-07 04:07:59.445",
+      "dateUpdated": "2020-07-08 16:26:12.528",
       "config": {},
       "settings": {
         "params": {},
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1594094879444_1027826665",
-      "id": "20200707-040759_85523080",
-      "dateCreated": "2020-07-07 04:07:59.444",
+      "jobName": "paragraph_1594225572528_-1134762454",
+      "id": "20200708-162612_1376997843",
+      "dateCreated": "2020-07-08 16:26:12.528",
       "status": "READY",
       "progressUpdateIntervalMs": 500
     }
@@ -421,7 +469,6 @@
   "noteParams": {},
   "noteForms": {},
   "angularObjects": {
-    "python:shared_process": [],
     "spark:shared_process": []
   },
   "config": {
