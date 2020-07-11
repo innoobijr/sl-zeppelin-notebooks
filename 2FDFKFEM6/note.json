@@ -1,9 +1,9 @@
 {
   "paragraphs": [
     {
-      "text": "/**\n * title:generate_stops\n * author: Innocent Obi Jr\n * description: \n */\n \n//Default configurations (Remove in production)\nsc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))\nval pathToCdrs \u003d \"s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\"\nval pathToTowers \u003d \"s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\"\nval pathToOutput \u003d \"s3n://sierra-leone-lake/blob/AGGEGATED_CDRS/africell/stops\"",
+      "text": "/**\n * title:generate_stops\n * author: Innocent Obi Jr\n * description: \n */\n \n//Default configurations (Remove in production)\nsc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))\nval pathToCdrs \u003d \"s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_0[7-8].csv\"\nval pathToTowers \u003d \"s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\"\nval pathToOutput \u003d \"s3n://sierra-leone-lake/blob/AGGEGATED_CDRS/africell/stops\"",
       "user": "anonymous",
-      "dateUpdated": "2020-07-07 17:51:19.788",
+      "dateUpdated": "2020-07-11 01:43:15.488",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -26,7 +26,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "pathToCdrs: String \u003d s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\npathToTowers: String \u003d s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\n"
+            "data": "pathToCdrs: String \u003d s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_0[7-8].csv\npathToTowers: String \u003d s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\npathToOutput: String \u003d s3n://sierra-leone-lake/blob/AGGEGATED_CDRS/africell/stops\n"
           }
         ]
       },
@@ -34,15 +34,15 @@
       "jobName": "paragraph_1593813481725_-1206439162",
       "id": "20200703-215801_239465495",
       "dateCreated": "2020-07-03 21:58:01.726",
-      "dateStarted": "2020-07-07 04:50:30.239",
-      "dateFinished": "2020-07-07 04:50:30.623",
+      "dateStarted": "2020-07-11 01:43:03.832",
+      "dateFinished": "2020-07-11 01:43:04.058",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "import org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\n//import org.apache.spark.sql._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\n\n val calls \u003d spark.read.format(\"csv\")\n    .option(\"header\",\"false\")\n    .option(\"inferSchema\", \"true\")\n    .load(pathToCdrs)\n    .withColumnRenamed(\"_c0\", \"antenna_id\")\n    .withColumnRenamed(\"_c1\", \"time\")\n    .withColumnRenamed(\"_c2\", \"direction\")\n    .withColumnRenamed(\"_c3\", \"source\")\n    .withColumn(\"subscriber\", col(\"source\"))\n    .withColumnRenamed(\"_c4\", \"target\")\n    .withColumnRenamed(\"_c5\", \"duration\")\n    .withColumn(\"site_id\", substring(col(\"antenna_id\"), 0, 4))\n    .withColumn(\"call_datetime\", to_timestamp($\"time\"))\n    .withColumn(\"call_date\", to_date($\"call_datetime\"))\n    .withColumn(\"end_time\",  to_timestamp(unix_timestamp($\"call_datetime\") + ($\"duration\")))\n    \n\nval cells \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(pathToTowers)\n  .withColumnRenamed(\"New_Dist\", \"locality\")\n  .withColumnRenamed(\"CI\", \"cell_id\")\n\ncells.persist(StorageLevel.MEMORY_AND_DISK)\ncells.createOrReplaceTempView(\"cells\")\n\ncalls.persist(StorageLevel.MEMORY_AND_DISK)\ncalls.createOrReplaceTempView(\"calls\")\n    ",
       "user": "anonymous",
-      "dateUpdated": "2020-07-07 04:50:32.716",
+      "dateUpdated": "2020-07-11 01:44:20.700",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -73,8 +73,8 @@
       "jobName": "paragraph_1593820049883_-1639976509",
       "id": "20200703-234729_1101739060",
       "dateCreated": "2020-07-03 23:47:29.883",
-      "dateStarted": "2020-07-07 04:50:32.739",
-      "dateFinished": "2020-07-07 04:51:17.327",
+      "dateStarted": "2020-07-11 01:44:20.727",
+      "dateFinished": "2020-07-11 01:44:54.838",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -449,9 +449,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "/** 3. Generate All Stops\n// Window over the user\n// sortby time\n// generate index \u003d\u003e called event_id\n// Aggregation function will create a list of stops\n// groupby anetnna_id\n*/\n\n/** Specs for window function\n * userSpec :\u003d  this will run our aggregation + analytic function on the key (subscrber, call_date)\n * userSiteSpec :\u003d  this will run our aggregation + analytic function on the key (subscriber, call_date, site_id)\n * eventSiteSpec :\u003d  this will run our aggregation + analytic function on the key (subscrber, call_date, group)\n * @param group  the stops ids \n * @param event_id the index for row in `userSpec`\n * @param difference the difference between a rows event_id and the event_id the precedes it in the window\n * @param diffNotOne boolean representing whether the `difference` is not equal to one. True if not equal to one\n * @param diffValue assigns a 1 where `diffNotOne` is true and 0 otherwise\n * @param group cumulative sum of the `diffValue` in the specified window\n * @param stop_id gets the minimum event_id over the apppropriate window (eventSiteSpec)\n * \n * \n */ \nval userSpec \u003d Window.partitionBy(\"subscriber\", \"call_date\").orderBy(\"call_datetime\")\nval userSiteSpec \u003d Window.partitionBy(\"subscriber\", \"call_date\", \"site_id\").orderBy(\"call_datetime\")\nval eventSiteSpec \u003d Window.partitionBy(\"subscriber\", \"call_date\", \"group\").orderBy(\"call_datetime\")\n//val summSpec \u003d Window.partitionBy(\"subscriber\",\"site_id\",\"stop_id\").orderBy(\"call_datetime\")\n\nval stops \u003d calls\n                    .withColumn(\"site_count\", count(\"site_id\").over(userSiteSpec))\n                    .filter(col(\"site_count\") \u003e 1)\n                    .withColumn(\"event_id\", row_number.over(userSpec))\n                    .withColumn(\"difference\", $\"event_id\" - when((lag(\"event_id\", 1).over(userSiteSpec)).isNull, $\"event_id\").otherwise(lag(\"event_id\", 1).over(userSiteSpec)))\n                   .withColumn(\"diffNotOne\", ($\"event_id\" - when((lag(\"event_id\", 1).over(userSiteSpec)).isNull, $\"event_id\").otherwise(lag(\"event_id\", 1).over(userSiteSpec)))!\u003d\u003d 1)\n                   .withColumn(\"diffValue\", when(col(\"diffNotOne\") \u003d\u003d\u003d true, 1).otherwise(0))\n                   .withColumn(\"group\", sum(col(\"diffValue\")).over(userSiteSpec.rangeBetween(Window.unboundedPreceding, 0)))\n                   .withColumn(\"stop_id\", min(col(\"event_id\")).over(eventSiteSpec))\n                   // group by the subscriber, site_id and the stop id\n                   .groupBy(\"subscriber\",\"site_id\",\"stop_id\")\n                   // collect the minimum and maximum start and end time\n                   .agg(min(col(\"call_datetime\")).alias(\"start_time\"), max(col(\"end_time\")).alias(\"end_time\"))\n                   //calculates the duration between the start and end times.\n                   .withColumn(\"duration\", unix_timestamp(col(\"end_time\")) - unix_timestamp(col(\"start_time\")))\n\n// Registers a temporary view for the stops dataframe\nstops.createOrReplaceTempView(\"stops\")\n",
+      "text": "/** 3. Generate All Stops\n// Window over the user\n// sortby time\n// generate index \u003d\u003e called event_id\n// Aggregation function will create a list of stops\n// groupby anetnna_id\n*/\n\n/** Specs for window function\n * userSpec :\u003d  this will run our aggregation + analytic function on the key (subscrber, call_date)\n * userSiteSpec :\u003d  this will run our aggregation + analytic function on the key (subscriber, call_date, site_id)\n * eventSiteSpec :\u003d  this will run our aggregation + analytic function on the key (subscrber, call_date, group)\n * @param group  the stops ids \n * @param event_id the index for row in `userSpec`\n * @param difference the difference between a rows event_id and the event_id the precedes it in the window\n * @param diffNotOne boolean representing whether the `difference` is not equal to one. True if not equal to one\n * @param diffValue assigns a 1 where `diffNotOne` is true and 0 otherwise\n * @param group cumulative sum of the `diffValue` in the specified window\n * @param stop_id gets the minimum event_id over the apppropriate window (eventSiteSpec)\n * \n * \n */ \nval userSpec \u003d Window.partitionBy(\"subscriber\", \"call_date\").orderBy(\"call_datetime\")\nval userSiteSpec \u003d Window.partitionBy(\"subscriber\", \"call_date\", \"site_id\").orderBy(\"call_datetime\")\nval eventSiteSpec \u003d Window.partitionBy(\"subscriber\", \"call_date\", \"group\").orderBy(\"call_datetime\")\n//val summSpec \u003d Window.partitionBy(\"subscriber\",\"site_id\",\"stop_id\").orderBy(\"call_datetime\")\n\nval stops \u003d calls\n                    .withColumn(\"site_count\", count(\"site_id\").over(Window.partitionBy(\"subscriber\", \"call_date\", \"site_id\")))\n                    .filter(col(\"site_count\") \u003e 1)\n                    .withColumn(\"event_id\", row_number.over(userSpec))\n                    .withColumn(\"difference\", $\"event_id\" - when((lag(\"event_id\", 1).over(userSiteSpec)).isNull, $\"event_id\").otherwise(lag(\"event_id\", 1).over(userSiteSpec)))\n                    .withColumn(\"time_difference\",  unix_timestamp($\"call_datetime\") -  unix_timestamp(when((lag(\"end_time\", 1).over(userSiteSpec)).isNull, $\"call_datetime\").otherwise(lag(\"end_time\", 1).over(userSiteSpec))))\n                   .withColumn(\"diffNotOne\", when ((col(\"difference\") !\u003d\u003d 1) \u0026\u0026 (col(\"time_difference\") \u003c 4*60*60), true).otherwise(false))\n                   .withColumn(\"diffValue\", when(col(\"diffNotOne\") \u003d\u003d\u003d true, 1).otherwise(0))\n                   .withColumn(\"event_gap\", when(col(\"diffValue\") \u003d\u003d\u003d 0, col(\"time_difference\")).otherwise(lit(0)))\n                   .withColumn(\"group\", sum(col(\"diffValue\")).over(userSiteSpec.rangeBetween(Window.unboundedPreceding, 0)))\n                   .withColumn(\"stop_id\", min(col(\"event_id\")).over(eventSiteSpec))\n                   // group by the subscriber, site_id and the stop id\n                   .groupBy(\"subscriber\",\"site_id\", \"call_date\", \"stop_id\")\n                   // collect the minimum and maximum start and end time\n                   .agg(min(col(\"call_datetime\")).alias(\"start_time\"), max(col(\"end_time\")).alias(\"end_time\"), count(\"subscriber\").alias(\"frequency\"), max(\"event_gap\").alias(\"event_gap\"))\n                   //calculates the duration between the start and end times.\n                   .withColumn(\"duration\", unix_timestamp(col(\"end_time\")) - unix_timestamp(col(\"start_time\")))\n                   .withColumn(\"confidence\", col(\"event_gap\") / col(\"duration\"))\n\n// Registers a temporary view for the stops dataframe\nstops.createOrReplaceTempView(\"stops\")\n",
       "user": "anonymous",
-      "dateUpdated": "2020-07-07 04:56:00.086",
+      "dateUpdated": "2020-07-11 02:22:42.520",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -474,7 +474,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "warning: there was one deprecation warning; re-run with -deprecation for details\nuserSpec: org.apache.spark.sql.expressions.WindowSpec \u003d org.apache.spark.sql.expressions.WindowSpec@78561a79\nuserSiteSpec: org.apache.spark.sql.expressions.WindowSpec \u003d org.apache.spark.sql.expressions.WindowSpec@36d8374d\neventSiteSpec: org.apache.spark.sql.expressions.WindowSpec \u003d org.apache.spark.sql.expressions.WindowSpec@59196d5e\nstops: org.apache.spark.sql.DataFrame \u003d [subscriber: string, site_id: string ... 4 more fields]\n"
+            "data": "warning: there was one deprecation warning; re-run with -deprecation for details\nuserSpec: org.apache.spark.sql.expressions.WindowSpec \u003d org.apache.spark.sql.expressions.WindowSpec@55d62c22\nuserSiteSpec: org.apache.spark.sql.expressions.WindowSpec \u003d org.apache.spark.sql.expressions.WindowSpec@5d6e6cee\neventSiteSpec: org.apache.spark.sql.expressions.WindowSpec \u003d org.apache.spark.sql.expressions.WindowSpec@2936a3fe\nstops: org.apache.spark.sql.DataFrame \u003d [subscriber: string, site_id: string ... 7 more fields]\n"
           }
         ]
       },
@@ -482,27 +482,63 @@
       "jobName": "paragraph_1593820890654_1743104024",
       "id": "20200704-000130_514181174",
       "dateCreated": "2020-07-04 00:01:30.654",
-      "dateStarted": "2020-07-07 04:56:00.109",
-      "dateFinished": "2020-07-07 04:56:00.790",
+      "dateStarted": "2020-07-11 02:19:44.309",
+      "dateFinished": "2020-07-11 02:19:44.783",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "stops.where(col(\"subscriber\") \u003d\u003d\u003d \"00004B6AB9F25A6973379CEA85B1E46C\")",
+      "text": "%spark.sql\nselect * from stops where subscriber \u003d \"00004B6AB9F25A6973379CEA85B1E46C\"",
       "user": "anonymous",
-      "dateUpdated": "2020-07-07 17:48:55.499",
+      "dateUpdated": "2020-07-11 02:19:48.527",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
-        "enabled": false,
-        "results": {},
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "subscriber": "string",
+                      "site_id": "string",
+                      "stop_id": "string",
+                      "start_time": "string",
+                      "end_time": "string",
+                      "frequency": "string",
+                      "event_gap": "string",
+                      "duration": "string",
+                      "confidence": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
         "editorSetting": {
-          "language": "scala",
+          "language": "sql",
           "editOnDblClick": false,
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/scala"
+        "editorMode": "ace/mode/sql"
       },
       "settings": {
         "params": {},
@@ -512,8 +548,12 @@
         "code": "SUCCESS",
         "msg": [
           {
+            "type": "TABLE",
+            "data": "subscriber\tsite_id\tstop_id\tstart_time\tend_time\tfrequency\tevent_gap\tduration\tconfidence\n00004B6AB9F25A6973379CEA85B1E46C\t1210\t1\t2020-04-03 07:09:12.0\t2020-04-03 08:25:37.0\t4\t4544\t4585\t0.9910577971646674\n"
+          },
+          {
             "type": "TEXT",
-            "data": "+--------------------+-------+-------+-------------------+-------------------+--------+\n|          subscriber|site_id|stop_id|         start_time|           end_time|duration|\n+--------------------+-------+-------+-------------------+-------------------+--------+\n|00004B6AB9F25A697...|   1210|      4|2020-04-03 15:26:51|2020-04-03 16:27:22|    3631|\n|00004B6AB9F25A697...|   1216|      4|2020-04-03 15:24:06|2020-04-03 15:24:09|       3|\n|00004B6AB9F25A697...|   1210|      1|2020-04-03 14:41:14|2020-04-03 15:10:22|    1748|\n|00004B6AB9F25A697...|   1216|      1|2020-04-03 14:32:22|2020-04-03 14:32:26|       4|\n+--------------------+-------+-------+-------------------+-------------------+--------+\n\n"
+            "data": ""
           }
         ]
       },
@@ -521,8 +561,8 @@
       "jobName": "paragraph_1593984301053_1582789655",
       "id": "20200705-212501_1431610347",
       "dateCreated": "2020-07-05 21:25:01.053",
-      "dateStarted": "2020-07-05 21:45:13.957",
-      "dateFinished": "2020-07-05 21:45:51.589",
+      "dateStarted": "2020-07-11 02:19:48.551",
+      "dateFinished": "2020-07-11 02:20:06.885",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -922,7 +962,6 @@
   "noteParams": {},
   "noteForms": {},
   "angularObjects": {
-    "python:shared_process": [],
     "spark:shared_process": []
   },
   "config": {
