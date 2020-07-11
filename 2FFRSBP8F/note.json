@@ -1,0 +1,765 @@
+{
+  "paragraphs": [
+    {
+      "text": "/**\n * title:validate_towers\n * author: Innocent Obi Jr\n * description: \n */\n \n//Default configurations (Remove in production)\nsc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))\nval pathToUpdate \u003d \"s3n://sierra-leone-lake/blob/towers/africell/missing.csv\"\nval pathToTowers \u003d \"s3n://sierra-leone-lake/blob/towers/combined_towers_district_07_11.csv\"\nval pathToCDTTowers \u003d  \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/missing_sites\"",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 17:55:42.622",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "pathToUpdate: String \u003d s3n://sierra-leone-lake/blob/towers/africell/missing.csv\npathToTowers: String \u003d s3n://sierra-leone-lake/blob/towers/Africell-cell_id-some-lat-lon.csv\npathToCDTTowers: String \u003d s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/missing_sites\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594437042669_842439140",
+      "id": "20200711-031042_1610128552",
+      "dateCreated": "2020-07-11 03:10:42.669",
+      "dateStarted": "2020-07-11 12:23:08.267",
+      "dateFinished": "2020-07-11 12:23:08.416",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val missing \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(pathToCDTTowers)\n  //.withColumnRenamed(\"New_Dist\", \"locality\")\n  //.withColumnRenamed(\"CI\", \"cell_id\")\n\nval update \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(pathToUpdate)\n  .withColumn(\"site_id\", substring($\"CI\", 0, 4))\n  //.withColumnRenamed(\"New_Dist\", \"locality\")\n  //.withColumnRenamed(\"CI\", \"cell_id\")\n  \nval towers \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(pathToTowers)\n  .withColumnRenamed(\"New_Dist\", \"locality\")\n  .withColumnRenamed(\"CI\", \"cell_id\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 12:30:17.616",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "missing: org.apache.spark.sql.DataFrame \u003d [site_id: int]\nupdate: org.apache.spark.sql.DataFrame \u003d [CI: int, Name: string ... 4 more fields]\ntowers: org.apache.spark.sql.DataFrame \u003d [cell_id: double, BTSNAME: string ... 5 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594437201731_597980248",
+      "id": "20200711-031321_2004749268",
+      "dateCreated": "2020-07-11 03:13:21.731",
+      "dateStarted": "2020-07-11 12:30:17.626",
+      "dateFinished": "2020-07-11 12:30:27.456",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "update.show()",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 12:30:30.946",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-----+--------------------+--------+----------+-------------------+-------+\n|   CI|                Name|     LAT|      LONG|          Site Name|site_id|\n+-----+--------------------+--------+----------+-------------------+-------+\n|36489|      3G_ABERDEEN-42| 8.49072| -13.28337|        3G_ABERDEEN|   3648|\n|36484|      3G_ABERDEEN-43| 8.49072| -13.28337|        3G_ABERDEEN|   3648|\n|36289|       3G_ADONKIA-42|8.413635|-13.264048|         3G_ADONKIA|   3628|\n|36284|       3G_ADONKIA-43|8.413635|-13.264048|         3G_ADONKIA|   3628|\n|36285|       3G_ADONKIA-51|8.413635|-13.264048|         3G_ADONKIA|   3628|\n|36286|       3G_ADONKIA-52|8.413635|-13.264048|         3G_ADONKIA|   3628|\n|36287|       3G_ADONKIA-53|8.413635|-13.264048|         3G_ADONKIA|   3628|\n|35911|         3G_AFCOM-11|8.460296|-13.277568|           3G_AFCOM|   3591|\n|35916|         3G_AFCOM-12|8.460296|-13.277568|           3G_AFCOM|   3591|\n|35910|         3G_AFCOM-13|8.460296|-13.277568|           3G_AFCOM|   3591|\n|35912|         3G_AFCOM-21|8.460296|-13.277568|           3G_AFCOM|   3591|\n|35917|         3G_AFCOM-22|8.460296|-13.277568|           3G_AFCOM|   3591|\n|35915|         3G_AFCOM-23|8.460296|-13.277568|           3G_AFCOM|   3591|\n|35913|         3G_AFCOM-31|8.460296|-13.277568|           3G_AFCOM|   3591|\n|35918|         3G_AFCOM-32|8.460296|-13.277568|           3G_AFCOM|   3591|\n|35919|         3G_AFCOM-33|8.460296|-13.277568|           3G_AFCOM|   3591|\n|36581|3G_BLACKHALLROAD_...| 8.47767|  -13.2069|3G_BLACKHALLROAD_II|   3658|\n|36582|3G_BLACKHALLROAD_...| 8.47767|  -13.2069|3G_BLACKHALLROAD_II|   3658|\n|36583|3G_BLACKHALLROAD_...| 8.47767|  -13.2069|3G_BLACKHALLROAD_II|   3658|\n|36584|3G_BLACKHALLROAD_...| 8.47767|  -13.2069|3G_BLACKHALLROAD_II|   3658|\n+-----+--------------------+--------+----------+-------------------+-------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594470214505_1543761830",
+      "id": "20200711-122334_1151707160",
+      "dateCreated": "2020-07-11 12:23:34.505",
+      "dateStarted": "2020-07-11 12:30:30.968",
+      "dateFinished": "2020-07-11 12:30:31.477",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "//val matches \u003d missing.join(update, missing.col(\"antenna_id\") \u003d\u003d\u003d update.col(\"CI\"), \"leftanti\")\nval sites \u003d towers.select($\"site_id\").distinct\nval tower_matches \u003d sites.join(missing, missing.col(\"site_id\") \u003d\u003d\u003d sites.col(\"site_id\"), \"leftanti\")\nval ms_matches \u003d missing.join(sites, missing.col(\"site_id\") \u003d\u003d\u003d sites.col(\"site_id\"), \"leftanti\")\nval update_matches \u003d update.join(missing, missing.col(\"site_id\") \u003d\u003d\u003d update.col(\"site_id\"), \"leftanti\")\nval mu_matches \u003d missing.join(update, missing.col(\"site_id\") \u003d\u003d\u003d update.col(\"site_id\"), \"leftanti\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 12:31:48.880",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "sites: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] \u003d [site_id: string]\ntower_matches: org.apache.spark.sql.DataFrame \u003d [site_id: string]\nms_matches: org.apache.spark.sql.DataFrame \u003d [site_id: int]\nupdate_matches: org.apache.spark.sql.DataFrame \u003d [CI: int, Name: string ... 4 more fields]\nmu_matches: org.apache.spark.sql.DataFrame \u003d [site_id: int]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594437413226_-305109926",
+      "id": "20200711-031653_1652041168",
+      "dateCreated": "2020-07-11 03:16:53.226",
+      "dateStarted": "2020-07-11 12:31:48.894",
+      "dateFinished": "2020-07-11 12:31:49.168",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "s\"${update.count} ${missing.count} ${sites.count} ${tower_matches.count} ${ms_matches.count} ${update_matches.count} ${mu_matches.count}\"",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 12:31:50.834",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "res111: String \u003d 583 133 532 532 133 8 28\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594437491211_1844809063",
+      "id": "20200711-031811_703706072",
+      "dateCreated": "2020-07-11 03:18:11.211",
+      "dateStarted": "2020-07-11 12:31:50.844",
+      "dateFinished": "2020-07-11 12:32:02.372",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "ms_matches.select($\"antenna_id\", substring($\"antenna_id\", 0, 4).alias(\"site\")).select(col(\"site\")).distinct().count",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 12:20:45.462",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "res100: Long \u003d 79\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594469789404_-1347468504",
+      "id": "20200711-121629_858783211",
+      "dateCreated": "2020-07-11 12:16:29.405",
+      "dateStarted": "2020-07-11 12:20:45.473",
+      "dateFinished": "2020-07-11 12:20:49.184",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "ms_matches.select($\"antenna_id\", substring($\"antenna_id\", 0, 4).alias(\"site\")).distinct().show",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 12:21:43.412",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+----------+----+\n|antenna_id|site|\n+----------+----+\n|     36842|3684|\n|     36821|3682|\n|     40289|4028|\n|     36859|3685|\n|     36969|3696|\n|     36811|3681|\n|     36820|3682|\n|     21258|2125|\n|     36741|3674|\n|     36696|3669|\n|     10167|1016|\n|     14026|1402|\n|     36736|3673|\n|     36887|3688|\n|     36114|3611|\n|     36836|3683|\n|     36697|3669|\n|     36839|3683|\n|     10417|1041|\n|     36863|3686|\n+----------+----+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594437585879_-1369390064",
+      "id": "20200711-031945_937554397",
+      "dateCreated": "2020-07-11 03:19:45.879",
+      "dateStarted": "2020-07-11 12:21:43.422",
+      "dateFinished": "2020-07-11 12:21:46.400",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "towers.filter(!(col(\"longitude\").isNotNull || col(\"longitude\").isNotNull)).count()",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 03:34:38.102",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "res66: Long \u003d 583\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594437775163_1273467100",
+      "id": "20200711-032255_1871642160",
+      "dateCreated": "2020-07-11 03:22:55.163",
+      "dateStarted": "2020-07-11 03:34:38.110",
+      "dateFinished": "2020-07-11 03:34:39.130",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "towers.where(col(\"cell_id\") \u003d\u003d\u003d \"41047\").show()",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 03:34:03.349",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------+---------+----+-------+--------+---------+--------+\n|cell_id|  BTSNAME|Name|site_id|Latitude|longitude|location|\n+-------+---------+----+-------+--------+---------+--------+\n|41047.0|3G_CKC_BO|null|   null|    null|     null|     BO |\n+-------+---------+----+-------+--------+---------+--------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594437887875_1334880049",
+      "id": "20200711-032447_51818983",
+      "dateCreated": "2020-07-11 03:24:47.875",
+      "dateStarted": "2020-07-11 03:34:03.358",
+      "dateFinished": "2020-07-11 03:34:04.669",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val towers \u003d sc.parallelize(List(1, 2, 3, 4)).toDF()\nval missing \u003d sc.parallelize(List(2, 5, 6)).toDF().withColumnRenamed(\"value\", \"value_r\")\nh.join(g, g.col(\"value_r\") \u003d\u003d\u003d h.col(\"value\"), \"leftanti\").show()",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 12:16:03.837",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-----+\n|value|\n+-----+\n|    1|\n|    3|\n|    4|\n+-----+\n\nh: org.apache.spark.sql.DataFrame \u003d [value: int]\ng: org.apache.spark.sql.DataFrame \u003d [value_r: int]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594438161199_-1693630928",
+      "id": "20200711-032921_2114488607",
+      "dateCreated": "2020-07-11 03:29:21.199",
+      "dateStarted": "2020-07-11 03:45:32.133",
+      "dateFinished": "2020-07-11 03:45:33.099",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "g.join(h, g.col(\"value_r\") \u003d\u003d\u003d h.col(\"value\"), \"leftanti\").show()",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 03:45:28.980",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------+\n|value_r|\n+-------+\n|      6|\n|      5|\n+-------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594438844153_22113683",
+      "id": "20200711-034044_24043073",
+      "dateCreated": "2020-07-11 03:40:44.153",
+      "dateStarted": "2020-07-11 03:45:28.988",
+      "dateFinished": "2020-07-11 03:45:29.799",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val t \u003d towers\n        .filter((col(\"longitude\").isNotNull || col(\"Latitude\").isNotNull))\n        .withColumn(\"CI\", col(\"cell_id\").cast(IntegerType)).drop(\"location\", \"cell_id\", \"BTSNAME\").select(\"site_id\", \"Name\", \"Latitude\", \"longitude\"\n, \"CI\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 13:02:31.321",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "t: org.apache.spark.sql.DataFrame \u003d [site_id: string, Name: string ... 3 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594439128980_-1657792406",
+      "id": "20200711-034528_1554056134",
+      "dateCreated": "2020-07-11 03:45:28.980",
+      "dateStarted": "2020-07-11 13:02:31.341",
+      "dateFinished": "2020-07-11 13:02:31.578",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "t.show()",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 13:02:33.429",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------+---------------+------------------+-------------------+-----+\n|site_id|           Name|          Latitude|          longitude|   CI|\n+-------+---------------+------------------+-------------------+-----+\n|   2082|         SULIMA| 6.968439999999999|          -11.57535|20823|\n|   2082|         SULIMA| 6.968439999999999|          -11.57535|20822|\n|   2082|         SULIMA| 6.968439999999999|          -11.57535|20821|\n|   2080|         MALEMA|           7.02457|          -11.38846|20804|\n|   2080|         MALEMA|           7.02457|          -11.38846|20803|\n|   2080|         MALEMA|           7.02457|          -11.38846|20802|\n|   2080|         MALEMA|           7.02457|          -11.38846|20801|\n|   2081|MALEMA_REPEATER|           7.15579|-11.374310000000001|20814|\n|   2081|MALEMA_REPEATER|           7.15579|-11.374310000000001|20813|\n|   2081|MALEMA_REPEATER|           7.15579|-11.374310000000001|20812|\n|   2081|MALEMA_REPEATER|           7.15579|-11.374310000000001|20811|\n|   2238|       ZIMMI_II|          7.315155|         -11.306095|22384|\n|   2238|       ZIMMI_II|          7.315155|         -11.306095|22383|\n|   2238|       ZIMMI_II|          7.315155|         -11.306095|22382|\n|   2238|       ZIMMI_II|          7.315155|         -11.306095|22381|\n|   2070|       GBUNDAPI|7.3185899999999995|          -11.84826|20703|\n|   2070|       GBUNDAPI|7.3185899999999995|          -11.84826|20702|\n|   2070|       GBUNDAPI|7.3185899999999995|          -11.84826|20701|\n|   4033|     PUJEHUN_II|          7.350478|         -11.717965|40338|\n|   4033|     PUJEHUN_II|          7.350478|         -11.717965|40337|\n+-------+---------------+------------------+-------------------+-----+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594472073531_1071197865",
+      "id": "20200711-125433_367746178",
+      "dateCreated": "2020-07-11 12:54:33.531",
+      "dateStarted": "2020-07-11 13:02:33.463",
+      "dateFinished": "2020-07-11 13:02:34.427",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val u \u003d update.select($\"site_id\", $\"Name\", $\"LAT\".alias(\"Latitiude\"), $\"LONG\".alias(\"longitude\"), $\"CI\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 12:58:37.795",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "u: org.apache.spark.sql.DataFrame \u003d [site_id: string, Name: string ... 3 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594471761821_-900504689",
+      "id": "20200711-124921_240473511",
+      "dateCreated": "2020-07-11 12:49:21.821",
+      "dateStarted": "2020-07-11 12:58:37.810",
+      "dateFinished": "2020-07-11 12:58:38.047",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val combined_towers \u003d t.union(u)",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 13:02:39.756",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "combined_towers: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] \u003d [site_id: string, Name: string ... 3 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594471767815_-1458849347",
+      "id": "20200711-124927_1299487031",
+      "dateCreated": "2020-07-11 12:49:27.815",
+      "dateStarted": "2020-07-11 13:02:39.774",
+      "dateFinished": "2020-07-11 13:02:39.934",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "combined_towers.select(\"CI\").distinct.count",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 13:02:44.229",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "res146: Long \u003d 3824\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594472024243_1430531766",
+      "id": "20200711-125344_1773450386",
+      "dateCreated": "2020-07-11 12:53:44.243",
+      "dateStarted": "2020-07-11 13:02:44.254",
+      "dateFinished": "2020-07-11 13:02:46.170",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "combined_towers.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(\"s3n://sierra-leone-lake/blob/towers/africell_full_nolocality\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 13:22:28.428",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594472264908_-1201163666",
+      "id": "20200711-125744_271248386",
+      "dateCreated": "2020-07-11 12:57:44.908",
+      "dateStarted": "2020-07-11 13:22:28.447",
+      "dateFinished": "2020-07-11 13:22:37.044",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "towers.filter((col(\"longitude\").isNotNull || col(\"Latitude\").isNotNull)).count()",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 13:01:56.581",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "res144: Long \u003d 3241\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594472275404_-556285250",
+      "id": "20200711-125755_1282379069",
+      "dateCreated": "2020-07-11 12:57:55.404",
+      "dateStarted": "2020-07-11 13:01:56.607",
+      "dateFinished": "2020-07-11 13:01:57.689",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "towers.printSchema",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-11 13:01:43.516",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "root\n |-- cell_id: double (nullable \u003d true)\n |-- BTSNAME: string (nullable \u003d true)\n |-- Name: string (nullable \u003d true)\n |-- site_id: string (nullable \u003d true)\n |-- Latitude: double (nullable \u003d true)\n |-- longitude: double (nullable \u003d true)\n |-- location: string (nullable \u003d true)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594472473265_-1048677668",
+      "id": "20200711-130113_1144540453",
+      "dateCreated": "2020-07-11 13:01:13.265",
+      "dateStarted": "2020-07-11 13:01:43.532",
+      "dateFinished": "2020-07-11 13:01:43.703",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "user": "anonymous",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594472498081_1453974770",
+      "id": "20200711-130138_29843074",
+      "dateCreated": "2020-07-11 13:01:38.081",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "validate_towers",
+  "id": "2FFRSBP8F",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

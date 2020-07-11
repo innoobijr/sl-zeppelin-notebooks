@@ -1,0 +1,352 @@
+{
+  "paragraphs": [
+    {
+      "text": "%spark.pyspark\r\n\r\n\u0027\u0027\u0027\r\n * title:generalQueries\r\n * author: Prabhakar Kafle\r\n * description: \r\n\u0027\u0027\u0027\r\n\r\nimport pandas as pd\r\nimport numpy as np\r\nimport matplotlib.pyplot as plt\r\nimport os\r\n\r\nfrom pyspark.sql import SQLContext\r\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\r\nfrom pyspark.sql.functions import split, lower\r\nimport pyspark.sql.functions as F",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-10 15:23:40.647",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594393497137_1475168312",
+      "id": "20200710-150457_1872181280",
+      "dateCreated": "2020-07-10 15:04:57.137",
+      "dateStarted": "2020-07-10 15:23:40.654",
+      "dateFinished": "2020-07-10 15:29:55.311",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-10 15:05:53.566",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594393547728_-440712632",
+      "id": "20200710-150547_1252732811",
+      "dateCreated": "2020-07-10 15:05:47.728",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\ndf \u003d sq.read.csv(\"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-daily/*.csv\", header\u003d\"true\", inferSchema\u003d\"true\")\n# Deriving bunch of useful information from the columns\n# df \u003d df.withColumn(\u0027direction\u0027, lower(split(df[\u0027cdr_type\u0027], \u0027 \u0027).getItem(0)))\\\n#         .withColumn(\u0027subscriber\u0027, F.col(\u0027source\u0027))\\\n#         .withColumn(\"call_datetime\", F.to_timestamp(\"time\"))\\\n#         .withColumn(\"call_date\", F.to_date(\"call_datetime\"))\\\n#         .withColumn(\"hour\", F.hour(\"call_date\"))\\\n#         .withColumn(\"site\", F.expr(\"substring(antenna_id, 1, length(antenna_id)-1)\"))\\\n#         .drop(\u0027time\u0027, \u0027cdr_type\u0027, \u0027source\u0027, \u0027target\u0027, \u0027direction\u0027, \u0027antenna_id\u0027) # Drop columns which we\u0027ll not use",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-10 15:20:43.928",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594393553627_-980919199",
+      "id": "20200710-150553_81929267",
+      "dateCreated": "2020-07-10 15:05:53.627",
+      "dateStarted": "2020-07-10 15:20:43.935",
+      "dateFinished": "2020-07-10 15:29:55.112",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndf.show()",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-10 15:25:01.817",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------------------+-----+\n|          subscriber|          call_date|count|\n+--------------------+-------------------+-----+\n|7E308F5F262553155...|2020-05-03 00:00:00|   39|\n|CC4DC69009DB1C208...|2020-05-03 00:00:00|   65|\n|E3267769938ADA918...|2020-05-03 00:00:00|    9|\n|1FBC4080F09BB323F...|2020-05-03 00:00:00|   16|\n|3419ABFB42CC94708...|2020-05-03 00:00:00|    8|\n|6EEF121E33BCB3B1C...|2020-05-03 00:00:00|    5|\n|C463732636C529CB1...|2020-05-03 00:00:00|   15|\n|464ED0D1A09D48283...|2020-05-03 00:00:00|    5|\n|41607507606F2A9AD...|2020-05-03 00:00:00|   12|\n|D92CBE1C1249AC729...|2020-05-03 00:00:00|   35|\n|39C54F55B9FD53221...|2020-05-03 00:00:00|   41|\n|84CC707A98EB011E7...|2020-05-03 00:00:00|   16|\n|E7E0115DEF5BAE64F...|2020-05-03 00:00:00|    4|\n|666CB1D3255EDC246...|2020-05-03 00:00:00|    3|\n|518E3D3B98F1C15C2...|2020-05-03 00:00:00|    9|\n|1E0D48CD1FDB365E6...|2020-05-03 00:00:00|    3|\n|241A446E16EEDFA67...|2020-05-03 00:00:00|    7|\n|F33D431F46A2D8DA3...|2020-05-03 00:00:00|    5|\n|E8A85F7C9F58011E6...|2020-05-03 00:00:00|   45|\n|E82EF121A659E9E2C...|2020-05-03 00:00:00|   20|\n+--------------------+-------------------+-----+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594394443928_1972247359",
+      "id": "20200710-152043_211412540",
+      "dateCreated": "2020-07-10 15:20:43.928",
+      "dateStarted": "2020-07-10 15:29:55.320",
+      "dateFinished": "2020-07-10 15:29:56.118",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndaily_pattern \u003d df.groupBy(\u0027call_date\u0027).agg(F.count(\u0027subscriber\u0027).alias(\u0027users\u0027), F.avg(\u0027count\u0027).alias(\u0027per_user\u0027)).orderBy(\u0027call_date\u0027)\ndaily_pattern.createOrReplaceTempView(\"daily_pattern\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-10 17:06:48.449",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594394701817_1118535483",
+      "id": "20200710-152501_2015079295",
+      "dateCreated": "2020-07-10 15:25:01.817",
+      "dateStarted": "2020-07-10 17:06:48.458",
+      "dateFinished": "2020-07-10 17:06:48.569",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\nselect * from daily_pattern",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-10 17:06:52.483",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "scatterChart",
+              "height": 300.0,
+              "optionOpen": true,
+              "setting": {
+                "table": {
+                  "tableGridState": {
+                    "columns": [
+                      {
+                        "name": "call_date",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "per_user",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "users",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      }
+                    ],
+                    "scrollFocus": {},
+                    "selection": [],
+                    "grouping": {
+                      "grouping": [],
+                      "aggregations": [],
+                      "rowExpandedStates": {}
+                    },
+                    "treeView": {},
+                    "pagination": {
+                      "paginationCurrentPage": 1.0,
+                      "paginationPageSize": 250.0
+                    }
+                  },
+                  "tableColumnTypeState": {
+                    "names": {
+                      "call_date": "string",
+                      "users": "string",
+                      "per_user": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "call_date",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "users",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "call_date\tusers\tper_user\n2020-02-01 00:00:00.0\t1439840\t10.601568506522595\n2020-02-02 00:00:00.0\t1486747\t12.735776833583657\n2020-02-03 00:00:00.0\t1544985\t14.595472062530016\n2020-02-04 00:00:00.0\t1559510\t14.660087681330879\n2020-02-05 00:00:00.0\t1564443\t15.043891631787396\n2020-02-06 00:00:00.0\t1564201\t14.700442142383144\n2020-02-07 00:00:00.0\t1574877\t14.917412650376727\n2020-02-08 00:00:00.0\t1564912\t14.715156050208542\n2020-02-09 00:00:00.0\t1597156\t16.67161650357479\n2020-02-10 00:00:00.0\t1567884\t14.805414813851025\n2020-02-11 00:00:00.0\t1553794\t13.936974954868564\n2020-02-12 00:00:00.0\t1557983\t14.951598989463307\n2020-02-13 00:00:00.0\t1564474\t14.86372800059317\n2020-02-14 00:00:00.0\t1575146\t16.071409843017825\n2020-02-15 00:00:00.0\t1562352\t14.694652872942287\n2020-02-16 00:00:00.0\t1583554\t16.121347853405787\n2020-02-17 00:00:00.0\t1549527\t14.565780031080433\n2020-02-18 00:00:00.0\t1551125\t14.575128003785638\n2020-02-19 00:00:00.0\t1548956\t14.884916108064976\n2020-02-20 00:00:00.0\t1521490\t13.893677320470513\n2020-02-21 00:00:00.0\t1540875\t14.625860873944431\n2020-02-22 00:00:00.0\t1533266\t14.500074024941513\n2020-02-23 00:00:00.0\t1563500\t15.904497023027169\n2020-02-24 00:00:00.0\t1533498\t14.278594899638017\n2020-02-25 00:00:00.0\t1533819\t14.504341776963253\n2020-02-26 00:00:00.0\t1544456\t14.887862854064569\n2020-02-27 00:00:00.0\t1552331\t14.792822669377427\n2020-02-28 00:00:00.0\t1563253\t15.168673165077461\n2020-02-29 00:00:00.0\t1548064\t15.01111645828825\n2020-03-01 00:00:00.0\t1579127\t16.27272899980242\n2020-03-02 00:00:00.0\t1557389\t15.063101768408535\n2020-03-03 00:00:00.0\t1570296\t15.018026526192179\n2020-03-04 00:00:00.0\t1581533\t15.630365202392108\n2020-03-05 00:00:00.0\t1569867\t15.226655999103109\n2020-03-06 00:00:00.0\t1561001\t14.886031536154341\n2020-03-08 00:00:00.0\t762540\t4.214403178849635\n2020-03-09 00:00:00.0\t1551865\t13.570851478155975\n2020-03-10 00:00:00.0\t1550962\t13.523122730845287\n2020-03-11 00:00:00.0\t1552424\t13.409524453677312\n2020-03-12 00:00:00.0\t1550241\t13.32741017208926\n2020-03-13 00:00:00.0\t1552797\t13.267738796507206\n2020-03-14 00:00:00.0\t1537697\t13.173562689162631\n2020-03-15 00:00:00.0\t1526532\t12.642451227716663\n2020-03-16 00:00:00.0\t1545452\t13.168546697958462\n2020-03-17 00:00:00.0\t1538781\t12.990546419180884\n2020-03-18 00:00:00.0\t1543471\t12.887152471829745\n2020-03-19 00:00:00.0\t1545670\t13.101907197586032\n2020-03-20 00:00:00.0\t1566543\t12.960207948196794\n2020-03-21 00:00:00.0\t1544320\t12.697405526441718\n2020-03-22 00:00:00.0\t1513408\t12.276636388444896\n2020-03-23 00:00:00.0\t1539845\t12.751228369590205\n2020-03-24 00:00:00.0\t1521889\t12.554595272982935\n2020-03-25 00:00:00.0\t1528542\t12.515296930015662\n2020-03-26 00:00:00.0\t1527803\t12.59484331759833\n2020-03-27 00:00:00.0\t1542544\t12.734647611576971\n2020-03-28 00:00:00.0\t1518532\t12.698285779762442\n2020-03-29 00:00:00.0\t1497340\t12.300188801348524\n2020-03-30 00:00:00.0\t1541055\t12.828866050292786\n2020-03-31 00:00:00.0\t1539820\t13.335591604478703\n2020-04-01 00:00:00.0\t1562865\t13.333061183748319\n2020-04-02 00:00:00.0\t1565890\t13.72420685730999\n2020-04-03 00:00:00.0\t1566357\t14.069625845432526\n2020-04-04 00:00:00.0\t1579799\t15.086011520445625\n2020-04-07 00:00:00.0\t122291\t2.2466248538322526\n2020-04-08 00:00:00.0\t1433500\t10.116442971747471\n2020-04-09 00:00:00.0\t1439966\t10.50341987003869\n2020-04-10 00:00:00.0\t1542083\t13.18086757919802\n2020-04-11 00:00:00.0\t1503042\t11.930905503036174\n2020-04-12 00:00:00.0\t1440119\t10.686333083354166\n2020-04-13 00:00:00.0\t1476474\t11.356678575661627\n2020-04-14 00:00:00.0\t1483270\t11.884358960702393\n2020-04-15 00:00:00.0\t1466764\t11.063222806652735\n2020-04-16 00:00:00.0\t1495346\t11.621179565679403\n2020-04-17 00:00:00.0\t1501228\t11.627265393887274\n2020-04-20 00:00:00.0\t1469108\t11.330549332963042\n2020-04-21 00:00:00.0\t1493283\t11.85037407485783\n2020-04-22 00:00:00.0\t1484535\t11.718473651026313\n2020-04-23 00:00:00.0\t1462256\t11.432392527442166\n2020-04-24 00:00:00.0\t1497665\t11.614153623037446\n2020-04-25 00:00:00.0\t1457610\t10.895330098359576\n2020-04-26 00:00:00.0\t1439708\t10.697495118805259\n2020-04-27 00:00:00.0\t1487097\t11.296513746908408\n2020-04-28 00:00:00.0\t1475788\t11.24726366709604\n2020-04-29 00:00:00.0\t1507693\t12.080609195234576\n2020-04-30 00:00:00.0\t1491584\t11.449352199170681\n2020-05-01 00:00:00.0\t1485241\t11.582142842715195\n2020-05-02 00:00:00.0\t1508039\t13.126977485330286\n2020-05-03 00:00:00.0\t1386537\t8.550071472978022\n2020-05-04 00:00:00.0\t1398790\t8.472656029385377\n2020-05-05 00:00:00.0\t1384899\t8.37236840205069\n2020-05-06 00:00:00.0\t1465033\t11.98877705227319\n2020-05-07 00:00:00.0\t1466046\t11.884811254217125\n2020-05-08 00:00:00.0\t1471510\t11.239237083514837\n2020-05-09 00:00:00.0\t1468486\t10.870486425824675\n2020-05-10 00:00:00.0\t1414781\t10.48743976103739\n2020-05-11 00:00:00.0\t1470368\t11.207098354222648\n2020-05-12 00:00:00.0\t1471640\t11.050769889375118\n2020-05-13 00:00:00.0\t1476631\t11.217203067521224\n2020-05-14 00:00:00.0\t1471720\t10.989963450953\n2020-05-15 00:00:00.0\t1479161\t11.157892210516637\n2020-05-16 00:00:00.0\t1427944\t11.000526631296465\n2020-05-17 00:00:00.0\t1417667\t10.452653935900367\n2020-05-18 00:00:00.0\t1471406\t11.15839533181506\n2020-05-19 00:00:00.0\t1481326\t11.359122597508856\n2020-05-20 00:00:00.0\t1460330\t11.089383906377325\n2020-05-21 00:00:00.0\t1477597\t11.344524694808737\n2020-05-22 00:00:00.0\t1492062\t11.591274357231804\n2020-05-23 00:00:00.0\t1469386\t11.221437238794136\n2020-05-24 00:00:00.0\t1457389\t11.729250235009161\n2020-05-25 00:00:00.0\t1441333\t10.9517245829211\n2020-05-26 00:00:00.0\t1438859\t11.258401095311566\n2020-05-27 00:00:00.0\t1285777\t8.121352302926557\n2020-06-01 00:00:00.0\t1354493\t10.00589814351337\n2020-06-02 00:00:00.0\t1368182\t9.903785531613826\n2020-06-03 00:00:00.0\t1361476\t9.785243525964816\n2020-06-04 00:00:00.0\t1358548\t9.734914040578618\n2020-06-05 00:00:00.0\t1367363\t9.864768269458608\n2020-06-06 00:00:00.0\t1358601\t9.71225568635995\n2020-06-07 00:00:00.0\t1328543\t9.511219801527085\n2020-06-08 00:00:00.0\t1448320\t11.808106766386734\n2020-06-09 00:00:00.0\t1443619\t11.650351200454413\n2020-06-10 00:00:00.0\t1452763\t11.617873240250997\n2020-06-11 00:00:00.0\t1444390\t11.514651503644096\n2020-06-12 00:00:00.0\t1451533\t11.793766456727848\n2020-06-13 00:00:00.0\t1437251\t11.63992327024071\n2020-06-14 00:00:00.0\t1419945\t11.002406431235013\n2020-06-15 00:00:00.0\t1458231\t12.120057027962629\n2020-06-16 00:00:00.0\t1449899\t11.915460376577695\n2020-06-17 00:00:00.0\t1439570\t11.50164458717215\n2020-06-18 00:00:00.0\t1429753\t11.307288526557716\n2020-06-19 00:00:00.0\t1443669\t11.569082962172796\n2020-06-20 00:00:00.0\t1449397\t11.839608582321764\n2020-06-21 00:00:00.0\t1440511\t11.57157871645637\n2020-06-22 00:00:00.0\t1452988\t11.843535635851339\n2020-06-23 00:00:00.0\t1457514\t11.968340634573229\n2020-06-24 00:00:00.0\t1457588\t11.90598172735936\n2020-06-25 00:00:00.0\t1439138\t11.488369782210057\n2020-06-26 00:00:00.0\t1469833\t12.351307018343569\n2020-06-27 00:00:00.0\t1456817\t11.796156964121094\n2020-06-28 00:00:00.0\t1443600\t11.882017179274037\n2020-06-29 00:00:00.0\t1306245\t8.937520143617775\n2020-06-30 00:00:00.0\t1461826\t12.247954101271901\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594394939078_-1920987238",
+      "id": "20200710-152859_1576872658",
+      "dateCreated": "2020-07-10 15:28:59.078",
+      "dateStarted": "2020-07-10 17:06:52.492",
+      "dateFinished": "2020-07-10 17:16:11.441",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-10 15:35:06.110",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594395306109_1458532196",
+      "id": "20200710-153506_794500049",
+      "dateCreated": "2020-07-10 15:35:06.109",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "MIT/usetStats",
+  "id": "2FFPHU2ZB",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
