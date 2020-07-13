@@ -1,0 +1,172 @@
+{
+  "paragraphs": [
+    {
+      "text": "%spark.pyspark\r\n\r\nimport os\r\nfrom datetime import datetime\r\nimport matplotlib.pyplot as plt\r\nfrom pyspark.sql import SQLContext\r\n\r\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\r\nfrom pyspark.sql.functions import split, lower\r\nimport pyspark.sql.functions as F",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-12 23:16:09.915",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594595085742_-919809977",
+      "id": "20200712-230445_1307427025",
+      "dateCreated": "2020-07-12 23:04:45.742",
+      "dateStarted": "2020-07-12 23:16:09.920",
+      "dateFinished": "2020-07-12 23:16:09.926",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n# Just some configuration for Spark to be able to use AWS S3\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)\n\n# stops \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops-2020-07-11_19:10/part-00000-ae0d2ec0-3605-46af-8236-2fa3ff14cd3f-c000.csv\"",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-12 23:16:12.560",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594595097382_852497125",
+      "id": "20200712-230457_673617609",
+      "dateCreated": "2020-07-12 23:04:57.382",
+      "dateStarted": "2020-07-12 23:16:12.564",
+      "dateFinished": "2020-07-12 23:16:12.570",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n\ndf \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops-2020-07-11_19:10/part-00000-ae0d2ec0-3605-46af-8236-2fa3ff14cd3f-c000.csv\u0027)",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-13 00:52:57.806",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594595587837_431241545",
+      "id": "20200712-231307_2108629871",
+      "dateCreated": "2020-07-12 23:13:07.837",
+      "dateStarted": "2020-07-12 23:18:09.822",
+      "dateFinished": "2020-07-12 23:18:14.245",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndf.show()",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-12 23:18:17.856",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------+----------+-------+--------------------+--------------------+---------+---------+--------+-------------------+\n|                 _c0|    _c1|       _c2|    _c3|                 _c4|                 _c5|      _c6|      _c7|     _c8|                _c9|\n+--------------------+-------+----------+-------+--------------------+--------------------+---------+---------+--------+-------------------+\n|          subscriber|site_id| call_date|STOP_ID|          start_time|            end_time|frequency|event_gap|duration|         confidence|\n|00029E72B5BDC783E...|   1408|2020-02-28|      1|2020-02-28T14:49:...|2020-02-28T16:48:...|        3|     5074|    7184| 0.7062917594654788|\n|00029E72B5BDC783E...|   1410|2020-02-15|      2|2020-02-15T07:38:...|2020-02-15T21:45:...|        8|    40124|   50814| 0.7896249065218247|\n|00029E72B5BDC783E...|   1001|2020-02-15|      3|2020-02-15T15:33:...|2020-02-15T16:16:...|        2|     2551|    2607| 0.9785193709244342|\n|00029E72B5BDC783E...|   1410|2020-02-27|      4|2020-02-27T07:41:...|2020-02-27T21:22:...|        3|    48413|   49243| 0.9831448124606543|\n|00029E72B5BDC783E...|   1408|2020-02-27|      5|2020-02-27T13:57:...|2020-02-27T15:43:...|        5|     5287|    6390| 0.8273865414710485|\n|00029E72B5BDC783E...|   1410|2020-02-18|      6|2020-02-18T01:12:...|2020-02-18T14:01:...|        5|    46127|   46173| 0.9990037467784203|\n|00029E72B5BDC783E...|   1423|2020-02-18|      7|2020-02-18T15:17:...|2020-02-18T17:17:...|        2|     7107|    7205| 0.9863983344899375|\n|00029E72B5BDC783E...|   1410|2020-02-08|      8|2020-02-08T09:16:...|2020-02-08T19:35:...|        6|    32270|   37103| 0.8697409912945044|\n|00029E72B5BDC783E...|   2032|2020-02-08|      9|2020-02-08T14:06:...|2020-02-08T16:13:...|        2|     7559|    7596| 0.9951290152711953|\n|00029E72B5BDC783E...|   1405|2020-02-19|     10|2020-02-19T11:07:...|2020-02-19T21:17:...|        6|    23980|   36607| 0.6550659709891551|\n|00029E72B5BDC783E...|   1410|2020-02-11|     11|2020-02-11T09:42:...|2020-02-11T13:03:...|        3|     7317|   12048| 0.6073207171314741|\n|00029E72B5BDC783E...|   1410|2020-02-02|     12|2020-02-02T07:35:...|2020-02-02T15:06:...|       10|    18665|   27008|  0.691091528436019|\n|00029E72B5BDC783E...|   1420|2020-02-02|     13|2020-02-02T11:08:...|2020-02-02T11:26:...|        2|      138|    1136|0.12147887323943662|\n|00029E72B5BDC783E...|   1428|2020-02-02|     14|2020-02-02T12:57:...|2020-02-02T15:03:...|        6|     3135|    7559|0.41473739912686863|\n|00029E72B5BDC783E...|   1423|2020-02-02|     15|2020-02-02T17:42:...|2020-02-02T18:56:...|        2|     4383|    4460| 0.9827354260089686|\n|00029E72B5BDC783E...|   1410|2020-02-10|     16|2020-02-10T01:08:...|2020-02-10T19:17:...|        9|    53796|   65363| 0.8230344384437679|\n|00029E72B5BDC783E...|   1408|2020-02-10|     17|2020-02-10T09:26:...|2020-02-10T11:51:...|        6|     5911|    8699| 0.6795033911943902|\n|00029E72B5BDC783E...|   1405|2020-02-06|     18|2020-02-06T08:22:...|2020-02-06T20:41:...|        5|    42712|   44342| 0.9632402688196292|\n|00029E72B5BDC783E...|   1408|2020-02-06|     19|2020-02-06T12:17:...|2020-02-06T16:24:...|        5|    13783|   14818| 0.9301525172088001|\n+--------------------+-------+----------+-------+--------------------+--------------------+---------+---------+--------+-------------------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594595777809_-511117375",
+      "id": "20200712-231617_1903670329",
+      "dateCreated": "2020-07-12 23:16:17.810",
+      "dateStarted": "2020-07-12 23:18:17.863",
+      "dateFinished": "2020-07-12 23:18:20.793",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-12 23:16:32.604",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594595792604_1894971943",
+      "id": "20200712-231632_918139233",
+      "dateCreated": "2020-07-12 23:16:32.604",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "MIT/home_identification",
+  "id": "2FDMGU92E",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

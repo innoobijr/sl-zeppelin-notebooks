@@ -1,9 +1,9 @@
 {
   "paragraphs": [
     {
-      "text": "/**\n * title: count_events_per_locality_per_hour\n * author: Innocent Obi Jr\n * description: \n */\n \n//Default configuration\\ (Remove in production)\nsc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))\n\nval path_to_cdrs \u003d \"s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\"\nval path_to_towers \u003d \"s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\"\nval path_to_ouput \u003d  \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/count_events_per_locality_per_hour\"\nval cutoff : Int  \u003d 15",
+      "text": "/**\n * title: count_events_per_locality_per_hour\n * author: Innocent Obi Jr\n * description: \n */\n \n//Default configuration\\ (Remove in production)\nsc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))\n\nval path_to_cdrs \u003d \"s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\"\nval path_to_towers \u003d \"s3n://sierra-leone-lake/blob/towers/combined_towers_district_07_11.csv\"\nval path_to_ouput \u003d  \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/flowminder/count_events_per_locality_per_hour\"\nval cutoff : Int  \u003d 15",
       "user": "anonymous",
-      "dateUpdated": "2020-07-06 03:45:02.489",
+      "dateUpdated": "2020-07-13 00:06:11.138",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -26,7 +26,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "path_to_cdrs: String \u003d s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\npath_to_towers: String \u003d s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\npath_to_ouput: String \u003d s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/od_matrix_directed_all_pairs_per_day\ncutoff: Int \u003d 15\n"
+            "data": "path_to_cdrs: String \u003d s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\npath_to_towers: String \u003d s3n://sierra-leone-lake/blob/towers/combined_towers_district_07_11.csv\npath_to_ouput: String \u003d s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/flowminder/count_events_per_locality_per_hour\ncutoff: Int \u003d 15\n"
           }
         ]
       },
@@ -34,15 +34,15 @@
       "jobName": "paragraph_1594004132422_1668156314",
       "id": "20200706-025532_1141114240",
       "dateCreated": "2020-07-06 02:55:32.422",
-      "dateStarted": "2020-07-06 03:03:48.577",
-      "dateFinished": "2020-07-06 03:04:00.675",
+      "dateStarted": "2020-07-13 00:06:11.153",
+      "dateFinished": "2020-07-13 00:06:11.377",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "/**\n * \n */\n\nimport org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\n//import org.apache.spark.sql._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\n\n val calls \u003d spark.read.format(\"csv\")\n    .option(\"header\",\"false\")\n    .option(\"inferSchema\", \"true\")\n    .load(path_to_cdrs)\n    .withColumnRenamed(\"_c0\", \"antenna_id\")\n    .withColumnRenamed(\"_c1\", \"time\")\n    .withColumnRenamed(\"_c2\", \"direction\")\n    .withColumnRenamed(\"_c3\", \"source\")\n    .withColumn(\"msisdn\", col(\"source\"))\n    .withColumnRenamed(\"_c4\", \"target\")\n    .withColumnRenamed(\"_c5\", \"duration\")\n    .withColumn(\"site_id\", substring(col(\"antenna_id\"), 0, 4))\n    .withColumn(\"call_datetime\", to_timestamp($\"time\"))\n    .withColumn(\"call_date\", to_date($\"call_datetime\"))\n    .withColumn(\"end_time\",  to_timestamp(unix_timestamp($\"call_datetime\") + ($\"duration\")))\n    \n\nval cells \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(path_to_towers)\n  .withColumnRenamed(\"New_Dist\", \"locality\")\n  .withColumnRenamed(\"CI\", \"cell_id\")\n\ncells.persist(StorageLevel.MEMORY_AND_DISK)\ncells.createOrReplaceTempView(\"cells\")\n\ncalls.persist(StorageLevel.MEMORY_AND_DISK)\ncalls.createOrReplaceTempView(\"calls\")",
+      "text": "/**\n * \n */\n\nimport org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\n//import org.apache.spark.sql._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\n\n val calls \u003d spark.read.format(\"csv\")\n    .option(\"header\",\"false\")\n    .option(\"inferSchema\", \"true\")\n    .load(path_to_cdrs)\n    .withColumnRenamed(\"_c0\", \"antenna_id\")\n    .withColumnRenamed(\"_c1\", \"time\")\n    .withColumnRenamed(\"_c2\", \"direction\")\n    .withColumnRenamed(\"_c3\", \"source\")\n    .withColumn(\"msisdn\", col(\"source\"))\n    .withColumnRenamed(\"_c4\", \"target\")\n    .withColumnRenamed(\"_c5\", \"duration\")\n    .withColumn(\"site_id\", substring(col(\"antenna_id\"), 0, 4))\n    .withColumn(\"call_datetime\", to_timestamp($\"time\"))\n    .withColumn(\"call_date\", to_date($\"call_datetime\"))\n    .withColumn(\"end_time\",  to_timestamp(unix_timestamp($\"call_datetime\") + ($\"duration\")))\n    \n\nval cells \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(path_to_towers)\n  .withColumnRenamed(\"admin2Name\", \"locality\")\n  .withColumnRenamed(\"CI\", \"cell_id\")\n\ncells.persist(StorageLevel.MEMORY_AND_DISK)\ncells.createOrReplaceTempView(\"cells\")\n\ncalls.persist(StorageLevel.MEMORY_AND_DISK)\ncalls.createOrReplaceTempView(\"calls\")",
       "user": "anonymous",
-      "dateUpdated": "2020-07-06 03:39:58.901",
+      "dateUpdated": "2020-07-13 00:06:14.148",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -65,7 +65,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "import org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\ncalls: org.apache.spark.sql.DataFrame \u003d [antenna_id: int, time: timestamp ... 9 more fields]\ncells: org.apache.spark.sql.DataFrame \u003d [site_id: string, cell_id: int ... 8 more fields]\n"
+            "data": "import org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\ncalls: org.apache.spark.sql.DataFrame \u003d [antenna_id: int, time: timestamp ... 9 more fields]\ncells: org.apache.spark.sql.DataFrame \u003d [site_id: string, Name: string ... 18 more fields]\n"
           }
         ]
       },
@@ -73,15 +73,15 @@
       "jobName": "paragraph_1594004150631_-932141351",
       "id": "20200706-025550_674981819",
       "dateCreated": "2020-07-06 02:55:50.631",
-      "dateStarted": "2020-07-06 03:39:58.934",
-      "dateFinished": "2020-07-06 03:40:48.196",
+      "dateStarted": "2020-07-13 00:06:14.156",
+      "dateFinished": "2020-07-13 00:06:53.844",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "val countEventsPerLocalityPerHour \u003d spark.sql(s\"\"\"\n    SELECT\n        call_date,\n        call_hour,\n        locality,\n        event_count\n    FROM (\n        SELECT calls.call_date AS call_date,\n            extract(HOUR FROM calls.call_datetime) AS call_hour,\n            cells.locality AS locality,\n            count(DISTINCT msisdn) AS subscriber_count,\n            count(*) AS event_count\n        FROM calls\n        INNER JOIN cells\n            ON calls.site_id \u003d cells.site_id\n        WHERE calls.call_date \u003e\u003d \u00272020-02-01\u0027\n            AND calls.call_date \u003c\u003d CURRENT_DATE\n        GROUP BY call_date, call_hour, locality\n    ) AS grouped\n    WHERE grouped.subscriber_count \u003e $cutoff\n\"\"\")\n countEventsPerLocalityPerHour.createOrReplaceTempView(\"count_events_per_locality_per_hour\")",
+      "text": "calls.printSchema",
       "user": "anonymous",
-      "dateUpdated": "2020-07-06 03:42:00.257",
+      "dateUpdated": "2020-07-13 00:08:01.436",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -104,7 +104,46 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "countEventsPerLocalityPerHour: org.apache.spark.sql.DataFrame \u003d [call_date: date, call_hour: int ... 2 more fields]\n"
+            "data": "root\n |-- antenna_id: integer (nullable \u003d true)\n |-- time: timestamp (nullable \u003d true)\n |-- direction: string (nullable \u003d true)\n |-- source: string (nullable \u003d true)\n |-- target: string (nullable \u003d true)\n |-- duration: integer (nullable \u003d true)\n |-- msisdn: string (nullable \u003d true)\n |-- site_id: string (nullable \u003d true)\n |-- call_datetime: timestamp (nullable \u003d true)\n |-- call_date: date (nullable \u003d true)\n |-- end_time: timestamp (nullable \u003d true)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594598716385_-1507040423",
+      "id": "20200713-000516_887179140",
+      "dateCreated": "2020-07-13 00:05:16.385",
+      "dateStarted": "2020-07-13 00:08:01.454",
+      "dateFinished": "2020-07-13 00:08:01.782",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val countEventsPerLocalityPerHour \u003d spark.sql(s\"\"\"\n    SELECT\n        grouped.call_date,\n        grouped.hour,\n        grouped.locality,\n        grouped.event_count\n    FROM (\n        SELECT calls.call_date AS call_date,\n            extract(HOUR FROM calls.call_datetime) AS hour,\n            cells.locality AS locality,\n            count(DISTINCT msisdn) AS subscriber_count,\n            count(*) AS event_count\n        FROM calls\n        INNER JOIN cells\n            ON calls.site_id \u003d cells.site_id\n        WHERE calls.call_date \u003e\u003d \u00272020-02-01\u0027\n            AND calls.call_date \u003c\u003d CURRENT_DATE\n        GROUP BY call_date, hour, locality\n    ) AS grouped\n    WHERE grouped.subscriber_count \u003e $cutoff\n\"\"\")\n countEventsPerLocalityPerHour.createOrReplaceTempView(\"count_events_per_locality_per_hour\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-13 00:08:29.370",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "countEventsPerLocalityPerHour: org.apache.spark.sql.DataFrame \u003d [call_date: date, hour: int ... 2 more fields]\n"
           }
         ]
       },
@@ -112,15 +151,15 @@
       "jobName": "paragraph_1594004171169_389988824",
       "id": "20200706-025611_1702427210",
       "dateCreated": "2020-07-06 02:56:11.169",
-      "dateStarted": "2020-07-06 03:42:00.283",
-      "dateFinished": "2020-07-06 03:42:01.097",
+      "dateStarted": "2020-07-13 00:08:29.377",
+      "dateFinished": "2020-07-13 00:08:29.686",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.sql\nselect * from count_events_per_locality_per_hour",
       "user": "anonymous",
-      "dateUpdated": "2020-07-06 03:43:01.869",
+      "dateUpdated": "2020-07-13 00:09:12.649",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -137,7 +176,7 @@
                   "tableColumnTypeState": {
                     "names": {
                       "call_date": "string",
-                      "call_hour": "string",
+                      "hour": "string",
                       "locality": "string",
                       "event_count": "string"
                     },
@@ -174,7 +213,7 @@
         "msg": [
           {
             "type": "TABLE",
-            "data": "call_date\tcall_hour\tlocality\tevent_count\n2020-04-03\t14\tBo\t36895\n2020-04-03\t14\tFalaba\t1504\n2020-04-03\t14\tKono\t48388\n2020-04-03\t16\tBombali\t85445\n2020-04-03\t16\tWestern Area Rur\t191036\n2020-04-03\t15\tTonkolili\t49601\n2020-04-03\t15\tBombali\t86244\n2020-04-03\t16\tKarene\t18720\n2020-04-03\t15\tMoyamba\t14054\n2020-04-03\t14\tBonthe\t8028\n2020-04-03\t14\tMoyamba\t13622\n2020-04-03\t16\tnull\t1817\n2020-04-03\t16\tFalaba\t2012\n2020-04-03\t15\tWestern Area Rur\t191389\n2020-04-03\t15\tBo\t38190\n2020-04-03\t16\tTonkolili\t52919\n2020-04-03\t16\tWestern Area Urb\t430233\n2020-04-03\t16\tBonthe\t8403\n2020-04-03\t14\tTonkolili\t47674\n2020-04-03\t16\tKambia\t21645\n2020-04-03\t16\tKenema\t44956\n2020-04-03\t14\tKailahun\t17986\n2020-04-03\t14\tWestern Area Urb\t434743\n2020-04-03\t16\tKailahun\t19332\n2020-04-03\t15\tPujehun\t12232\n2020-04-03\t15\tKambia\t20987\n2020-04-03\t14\tKoinadugu\t19058\n2020-04-03\t14\tKenema\t44318\n2020-04-03\t14\tPort Loko\t67065\n2020-04-03\t15\tKenema\t44002\n2020-04-03\t15\tKarene\t17986\n2020-04-03\t16\tKono\t53479\n2020-04-03\t14\tKarene\t16544\n2020-04-03\t16\tKoinadugu\t20248\n2020-04-03\t15\tWestern Area Urb\t438446\n2020-04-03\t15\tnull\t1916\n2020-04-03\t15\tKailahun\t18184\n2020-04-03\t16\tPort Loko\t70803\n2020-04-03\t14\tPujehun\t11336\n2020-04-03\t14\tBombali\t84741\n2020-04-03\t15\tFalaba\t2011\n2020-04-03\t15\tBonthe\t8353\n2020-04-03\t15\tKono\t49911\n2020-04-03\t14\tWestern Area Rur\t182966\n2020-04-03\t15\tKoinadugu\t19788\n2020-04-03\t15\tPort Loko\t70495\n2020-04-03\t16\tBo\t39679\n2020-04-03\t16\tMoyamba\t15371\n2020-04-03\t14\tnull\t1805\n2020-04-03\t16\tPujehun\t13183\n2020-04-03\t14\tKambia\t19391\n"
+            "data": "call_date\thour\tlocality\tevent_count\n2020-04-03\t14\tBo\t240417\n2020-04-03\t14\tKono\t316929\n2020-04-03\t16\tBombali\t699386\n2020-04-03\t14\tWestern Area Rural\t1242988\n2020-04-03\t15\tTonkolili\t316536\n2020-04-03\t15\tBombali\t701772\n2020-04-03\t15\tMoyamba\t57335\n2020-04-03\t14\tBonthe\t38224\n2020-04-03\t14\tMoyamba\t55795\n2020-04-03\t16\tnull\t38999\n2020-04-03\t16\tWestern Area Rural\t1296246\n2020-04-03\t15\tBo\t248059\n2020-04-03\t16\tTonkolili\t333950\n2020-04-03\t16\tWestern Area Urban\t3007618\n2020-04-03\t16\tBonthe\t40372\n2020-04-03\t14\tTonkolili\t305805\n2020-04-03\t16\tKambia\t169513\n2020-04-03\t16\tKenema\t291283\n2020-04-03\t15\tWestern Area Rural\t1301940\n2020-04-03\t15\tWestern Area Urban\t3078879\n2020-04-03\t14\tKailahun\t88050\n2020-04-03\t16\tKailahun\t94359\n2020-04-03\t15\tPujehun\t51677\n2020-04-03\t15\tKambia\t167307\n2020-04-03\t14\tKoinadugu\t105126\n2020-04-03\t14\tKenema\t289366\n2020-04-03\t14\tPort Loko\t406841\n2020-04-03\t15\tKenema\t289186\n2020-04-03\t16\tKono\t349992\n2020-04-03\t16\tKoinadugu\t118760\n2020-04-03\t15\tnull\t43580\n2020-04-03\t15\tKailahun\t89960\n2020-04-03\t16\tPort Loko\t430549\n2020-04-03\t14\tPujehun\t47640\n2020-04-03\t14\tBombali\t685382\n2020-04-03\t15\tBonthe\t40002\n2020-04-03\t15\tKono\t326767\n2020-04-03\t15\tKoinadugu\t113404\n2020-04-03\t15\tPort Loko\t424621\n2020-04-03\t16\tBo\t257735\n2020-04-03\t16\tMoyamba\t63001\n2020-04-03\t14\tnull\t44050\n2020-04-03\t14\tWestern Area Urban\t3046021\n2020-04-03\t16\tPujehun\t55962\n2020-04-03\t14\tKambia\t157055\n"
           },
           {
             "type": "TEXT",
@@ -186,15 +225,15 @@
       "jobName": "paragraph_1594006884692_-489542806",
       "id": "20200706-034124_1882612900",
       "dateCreated": "2020-07-06 03:41:24.692",
-      "dateStarted": "2020-07-06 03:42:03.184",
-      "dateFinished": "2020-07-06 03:42:54.882",
+      "dateStarted": "2020-07-13 00:08:32.345",
+      "dateFinished": "2020-07-13 00:09:12.247",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": " countEventsPerLocalityPerHour.coalesce(2).write.format(\"csv\").option(\"header\", \"true\").save(path_to_output)",
+      "text": " countEventsPerLocalityPerHour.write.format(\"csv\").option(\"header\", \"true\").save(path_to_output)",
       "user": "anonymous",
-      "dateUpdated": "2020-07-06 03:44:47.349",
+      "dateUpdated": "2020-07-13 00:09:33.712",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,

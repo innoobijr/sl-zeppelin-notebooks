@@ -172,7 +172,7 @@
     {
       "text": "%spark.sql\nselect * from daily_pattern",
       "user": "anonymous",
-      "dateUpdated": "2020-07-10 17:06:52.483",
+      "dateUpdated": "2020-07-12 21:47:41.657",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -180,7 +180,7 @@
         "results": {
           "0": {
             "graph": {
-              "mode": "scatterChart",
+              "mode": "lineChart",
               "height": 300.0,
               "optionOpen": true,
               "setting": {
@@ -258,7 +258,9 @@
                   "rotate": {
                     "degree": "-45"
                   },
-                  "xLabelStatus": "default"
+                  "xLabelStatus": "default",
+                  "isDateFormat": true,
+                  "dateFormat": "MMM-DD"
                 },
                 "stackedAreaChart": {
                   "rotate": {
@@ -278,8 +280,8 @@
               "groups": [],
               "values": [
                 {
-                  "name": "users",
-                  "index": 1.0,
+                  "name": "per_user",
+                  "index": 2.0,
                   "aggr": "sum"
                 }
               ]

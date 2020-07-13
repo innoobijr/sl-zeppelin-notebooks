@@ -1,9 +1,9 @@
 {
   "paragraphs": [
     {
-      "text": "/**\n * title: count_subscribers_per_locality\n * author: Innocent Obi Jr\n * description: \n */\n \n//Default configuration\\ (Remove in production)\nsc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))\n\nval path_to_cdrs \u003d \"s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\"\nval path_to_towers \u003d \"s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\"\nval path_to_ouput \u003d  \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/count_subscribers_per_locality_per_day\"\nval cutoff : Int  \u003d 15",
+      "text": "/**\n * title: count_subscribers_per_locality\n * author: Innocent Obi Jr\n * description: \n */\n \n//Default configuration\\ (Remove in production)\nsc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))\n\nval path_to_cdrs \u003d \"s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\"\nval path_to_towers \u003d \"s3n://sierra-leone-lake/blob/towers/combined_towers_district_07_11.csv\"\nval cutoff : Int  \u003d 15",
       "user": "anonymous",
-      "dateUpdated": "2020-07-06 04:03:51.771",
+      "dateUpdated": "2020-07-13 00:21:41.813",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -29,9 +29,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": " * \n */\nimport org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\n//import org.apache.spark.sql._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\n\n val calls \u003d spark.read.format(\"csv\")\n    .option(\"header\",\"false\")\n    .option(\"inferSchema\", \"true\")\n    .load(path_to_cdrs)\n    .withColumnRenamed(\"_c0\", \"antenna_id\")\n    .withColumnRenamed(\"_c1\", \"time\")\n    .withColumnRenamed(\"_c2\", \"direction\")\n    .withColumnRenamed(\"_c3\", \"source\")\n    .withColumn(\"msisdn\", col(\"source\"))\n    .withColumnRenamed(\"_c4\", \"target\")\n    .withColumnRenamed(\"_c5\", \"duration\")\n    .withColumn(\"site_id\", substring(col(\"antenna_id\"), 0, 4))\n    .withColumn(\"call_datetime\", to_timestamp($\"time\"))\n    .withColumn(\"call_date\", to_date($\"call_datetime\"))\n    .withColumn(\"end_time\",  to_timestamp(unix_timestamp($\"call_datetime\") + ($\"duration\")))\n    \n\nval cells \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(path_to_towers)\n  .withColumnRenamed(\"New_Dist\", \"locality\")\n  .withColumnRenamed(\"CI\", \"cell_id\")\n\ncells.persist(StorageLevel.MEMORY_AND_DISK)\ncells.createOrReplaceTempView(\"cells\")\n\ncalls.persist(StorageLevel.MEMORY_AND_DISK)\ncalls.createOrReplaceTempView(\"calls\")",
+      "text": "implicit class DataframeOps(df: org.apache.spark.sql.DataFrame){\n    def path_to_ouput(filename: String): String \u003d  s\"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/flowminder/$filename\"\n    def saveToS3(filename: String) : Unit \u003d df.write.format(\"csv\").option(\"header\", \"true\").save(path_to_ouput(filename))\n}",
       "user": "anonymous",
-      "dateUpdated": "2020-07-06 03:58:53.611",
+      "dateUpdated": "2020-07-13 00:22:08.336",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -48,18 +48,68 @@
       "settings": {
         "params": {},
         "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "defined class DataframeOps\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594599570532_-935932901",
+      "id": "20200713-001930_1108014844",
+      "dateCreated": "2020-07-13 00:19:30.532",
+      "dateStarted": "2020-07-13 00:22:08.342",
+      "dateFinished": "2020-07-13 00:22:08.560",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": " * \n */\nimport org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\n//import org.apache.spark.sql._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\n\n val calls \u003d spark.read.format(\"csv\")\n    .option(\"header\",\"false\")\n    .option(\"inferSchema\", \"true\")\n    .load(path_to_cdrs)\n    .withColumnRenamed(\"_c0\", \"antenna_id\")\n    .withColumnRenamed(\"_c1\", \"time\")\n    .withColumnRenamed(\"_c2\", \"direction\")\n    .withColumnRenamed(\"_c3\", \"source\")\n    .withColumn(\"msisdn\", col(\"source\"))\n    .withColumnRenamed(\"_c4\", \"target\")\n    .withColumnRenamed(\"_c5\", \"duration\")\n    .withColumn(\"site_id\", substring(col(\"antenna_id\"), 0, 4))\n    .withColumn(\"call_datetime\", to_timestamp($\"time\"))\n    .withColumn(\"call_date\", to_date($\"call_datetime\"))\n    .withColumn(\"end_time\",  to_timestamp(unix_timestamp($\"call_datetime\") + ($\"duration\")))\n    \n\nval cells \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(path_to_towers)\n  .withColumn(\"locality\", col(\"admin2Name\"))\n  .withColumnRenamed(\"CI\", \"cell_id\")\n\ncells.persist(StorageLevel.MEMORY_AND_DISK)\ncells.createOrReplaceTempView(\"cells\")\n\ncalls.persist(StorageLevel.MEMORY_AND_DISK)\ncalls.createOrReplaceTempView(\"calls\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-13 00:13:49.547",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003cconsole\u003e:106: error: not found: value *\n       *\n       ^\n\u003cconsole\u003e:107: error: not found: value */\n        */\n        ^\n"
+          }
+        ]
       },
       "apps": [],
       "jobName": "paragraph_1594007913862_1301923957",
       "id": "20200706-035833_1438804406",
       "dateCreated": "2020-07-06 03:58:33.862",
-      "status": "READY",
+      "dateStarted": "2020-07-13 00:13:49.552",
+      "dateFinished": "2020-07-13 00:13:49.605",
+      "status": "ERROR",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "\nval countSubscribersPerLocalityPerDay \u003d spark.sql(s\"\"\"\nSELECT calls.call_date AS visit_date,\n            cells.locality AS locality,\n            count(DISTINCT msisdn) AS subscriber_count\n        FROM calls\n        INNER JOIN cells\n            ON calls.site_id \u003d cells.site_id\n        WHERE calls.call_date \u003e\u003d \u00272020-02-01\u0027\n            AND calls.call_date \u003c\u003d CURRENT_DATE\n        GROUP BY visit_date, locality\n    ) AS grouped\n    WHERE grouped.subscriber_count \u003e $cutoff\n\"\"\")\n\nval countSubscribersPerLocalityPerWeek \u003d spark.sql(s\"\"\"\n    SELECT * FROM (\n        SELECT extract(WEEK FROM calls.call_date) AS visit_week,\n            cells.locality AS locality,\n            count(DISTINCT msisdn) AS subscriber_count\n        FROM calls\n        INNER JOIN cells\n            ON calls.site_id \u003d cells.site_id\n        WHERE calls.call_date \u003e\u003d \u00272020-02-01\u0027\n            AND calls.call_date \u003c\u003d CURRENT_DATE\n        GROUP BY visit_week, locality\n    ) AS grouped\n    WHERE grouped.subscriber_count \u003e $cutoff\n\"\"\")\nval countSubscribersPerLocalityPerHour \u003d spark.sql(s\"\"\"\n    SELECT * FROM (\n        SELECT calls.call_date AS visit_date,\n            extract(HOUR FROM calls.call_datetime) AS visit_hour,\n            cells.locality AS locality,\n            count(DISTINCT msisdn) AS subscriber_count\n        FROM calls\n        INNER JOIN cells\n            ON calls.site_id \u003d cells.site_id\n        WHERE calls.call_date \u003e\u003d \u00272020-02-01\u0027\n            AND calls.call_date \u003c\u003d CURRENT_DATE\n        GROUP BY visit_date, visit_hour, locality\n    ) AS grouped\n    WHERE grouped.subscriber_count \u003e $cutoff\n\"\"\")\n\ncountSubscribersPerLocalityPerDay.createOrReplaceTempView(\"count_subscribers_per_locality_per_day\")\ncountSubscribersPerLocalityPerWeek.createOrReplaceTempView(\"count_subscribers_per_locality_per_week\")\ncountSubscribersPerLocalityPerHour.createOrReplaceTempView(\"count_subscribers_per_locality_per_hour\")\n",
+      "text": "val countSubscribersPerLocalityPerDay \u003d spark.sql(s\"\"\"\nSELECT * FROM ( \n        SELECT calls.call_date AS visit_date,\n            cells.locality AS locality,\n            count(DISTINCT msisdn) AS subscriber_count\n        FROM calls\n        INNER JOIN cells\n            ON calls.site_id \u003d cells.site_id\n        WHERE calls.call_date \u003e\u003d \u00272020-02-01\u0027\n            AND calls.call_date \u003c\u003d CURRENT_DATE\n        GROUP BY visit_date, locality\n    ) AS grouped\n    WHERE grouped.subscriber_count \u003e $cutoff\n\"\"\")\n\nval countSubscribersPerLocalityPerWeek \u003d spark.sql(s\"\"\"\n    SELECT * FROM (\n        SELECT extract(WEEK FROM calls.call_date) AS visit_week,\n            cells.locality AS locality,\n            count(DISTINCT msisdn) AS subscriber_count\n        FROM calls\n        INNER JOIN cells\n            ON calls.site_id \u003d cells.site_id\n        WHERE calls.call_date \u003e\u003d \u00272020-02-01\u0027\n            AND calls.call_date \u003c\u003d CURRENT_DATE\n        GROUP BY visit_week, locality\n    ) AS grouped\n    WHERE grouped.subscriber_count \u003e $cutoff\n\"\"\")\nval countSubscribersPerLocalityPerHour \u003d spark.sql(s\"\"\"\n    SELECT * FROM (\n        SELECT calls.call_date AS visit_date,\n            extract(HOUR FROM calls.call_datetime) AS visit_hour,\n            cells.locality AS locality,\n            count(DISTINCT msisdn) AS subscriber_count\n        FROM calls\n        INNER JOIN cells\n            ON calls.site_id \u003d cells.site_id\n        WHERE calls.call_date \u003e\u003d \u00272020-02-01\u0027\n            AND calls.call_date \u003c\u003d CURRENT_DATE\n        GROUP BY visit_date, visit_hour, locality\n    ) AS grouped\n    WHERE grouped.subscriber_count \u003e $cutoff\n\"\"\")\n\ncountSubscribersPerLocalityPerDay.createOrReplaceTempView(\"count_subscribers_per_locality_per_day\")\n//countSubscribersPerLocalityPerWeek.createOrReplaceTempView(\"count_subscribers_per_locality_per_week\")\n//countSubscribersPerLocalityPerHour.createOrReplaceTempView(\"count_subscribers_per_locality_per_hour\")\nval res : Map[String, org.apache.spark.sql.DataFrame] \u003d Map(\n    \"count_subscribers_per_locality_per_day\" -\u003e countSubscribersPerLocalityPerDay,\n    \"count_subscribers_per_locality_per_week\" -\u003e countSubscribersPerLocalityPerWeek,\n    \"count_subscribers_per_locality_per_hour\" -\u003e countSubscribersPerLocalityPerHour)\n",
       "user": "anonymous",
-      "dateUpdated": "2020-07-06 04:06:28.195",
+      "dateUpdated": "2020-07-13 00:31:02.466",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -77,11 +127,61 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "countSubscribersPerLocalityPerDay: org.apache.spark.sql.DataFrame \u003d [visit_date: date, locality: string ... 1 more field]\ncountSubscribersPerLocalityPerWeek: org.apache.spark.sql.DataFrame \u003d [visit_week: int, locality: string ... 1 more field]\ncountSubscribersPerLocalityPerHour: org.apache.spark.sql.DataFrame \u003d [visit_date: date, visit_hour: int ... 2 more fields]\nres: Map[String,org.apache.spark.sql.DataFrame] \u003d Map(count_subscribers_per_locality_per_day -\u003e [visit_date: date, locality: string ... 1 more field], count_subscribers_per_locality_per_week -\u003e [visit_week: int, locality: string ... 1 more field], count_subscribers_per_locality_per_hour -\u003e [visit_date: date, visit_hour: int ... 2 more fields])\n"
+          }
+        ]
+      },
       "apps": [],
       "jobName": "paragraph_1594008122976_-891119697",
       "id": "20200706-040202_220010121",
       "dateCreated": "2020-07-06 04:02:02.976",
-      "status": "READY",
+      "dateStarted": "2020-07-13 00:31:02.474",
+      "dateFinished": "2020-07-13 00:31:03.049",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "res.map(x \u003d\u003e x._2.saveToS3(x._1))",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-13 00:32:25.812",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "res184: scala.collection.immutable.Iterable[Unit] \u003d List((), (), ())\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594599754294_-302502912",
+      "id": "20200713-002234_431171307",
+      "dateCreated": "2020-07-13 00:22:34.294",
+      "dateStarted": "2020-07-13 00:32:25.820",
+      "dateFinished": "2020-07-13 00:37:22.870",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
@@ -92,9 +192,9 @@
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1594008120789_-1190706218",
-      "id": "20200706-040200_672090596",
-      "dateCreated": "2020-07-06 04:02:00.789",
+      "jobName": "paragraph_1594600005028_598352203",
+      "id": "20200713-002645_1206730510",
+      "dateCreated": "2020-07-13 00:26:45.028",
       "status": "READY",
       "progressUpdateIntervalMs": 500
     }
