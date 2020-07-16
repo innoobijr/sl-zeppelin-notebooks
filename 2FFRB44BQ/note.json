@@ -1,0 +1,102 @@
+{
+  "paragraphs": [
+    {
+      "text": "sc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\r\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-15 00:30:39.606",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594772528091_1481351649",
+      "id": "20200715-002208_1710035192",
+      "dateCreated": "2020-07-15 00:22:08.091",
+      "dateStarted": "2020-07-15 00:30:39.612",
+      "dateFinished": "2020-07-15 00:30:39.798",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import org.apache.spark.sql.types._\r\nimport org.apache.spark.sql._\r\nimport spark.implicits._\r\n\r\n val test \u003d spark.read.format(\"csv\")\r\n    .option(\"header\",\"false\")\r\n    .option(\"inferSchema\", \"true\")\r\n    .load(\"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops/stops-2020-07-11.csv\")",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-15 00:30:39.812",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "org.apache.spark.sql.AnalysisException: Path does not exist: s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops/stops-2020-07-11.csv;\n  at org.apache.spark.sql.execution.datasources.DataSource$$anonfun$org$apache$spark$sql$execution$datasources$DataSource$$checkAndGlobPathIfNecessary$1.apply(DataSource.scala:558)\n  at org.apache.spark.sql.execution.datasources.DataSource$$anonfun$org$apache$spark$sql$execution$datasources$DataSource$$checkAndGlobPathIfNecessary$1.apply(DataSource.scala:545)\n  at scala.collection.TraversableLike$$anonfun$flatMap$1.apply(TraversableLike.scala:241)\n  at scala.collection.TraversableLike$$anonfun$flatMap$1.apply(TraversableLike.scala:241)\n  at scala.collection.immutable.List.foreach(List.scala:392)\n  at scala.collection.TraversableLike$class.flatMap(TraversableLike.scala:241)\n  at scala.collection.immutable.List.flatMap(List.scala:355)\n  at org.apache.spark.sql.execution.datasources.DataSource.org$apache$spark$sql$execution$datasources$DataSource$$checkAndGlobPathIfNecessary(DataSource.scala:545)\n  at org.apache.spark.sql.execution.datasources.DataSource.resolveRelation(DataSource.scala:359)\n  at org.apache.spark.sql.DataFrameReader.loadV1Source(DataFrameReader.scala:223)\n  at org.apache.spark.sql.DataFrameReader.load(DataFrameReader.scala:211)\n  at org.apache.spark.sql.DataFrameReader.load(DataFrameReader.scala:178)\n  at $line1436961231.$read$\u003cinit\u003e(\u003cconsole\u003e:30)\n  at $line1436961231.$read$\u003cinit\u003e(\u003cconsole\u003e:38)\n  at $line1436961231.$read$\u003cinit\u003e(\u003cconsole\u003e:40)\n  at $line1436961231.$read$\u003cinit\u003e(\u003cconsole\u003e:42)\n  at $line1436961231.$read$\u003cinit\u003e(\u003cconsole\u003e:44)\n  at $line1436961231.$read$\u003cinit\u003e(\u003cconsole\u003e:46)\n  at $line1436961231.$read$\u003cinit\u003e(\u003cconsole\u003e:48)\n  at $line1436961231.$read$\u003cinit\u003e(\u003cconsole\u003e:50)\n  at $line1436961231.$read.\u003cinit\u003e(\u003cconsole\u003e:52)\n  at $line1436961231.$read$.\u003cinit\u003e(\u003cconsole\u003e:56)\n  at $line1436961231.$read$.\u003cclinit\u003e(\u003cconsole\u003e)\n  at $line1436961231.$eval$.$print$lzycompute(\u003cconsole\u003e:7)\n  at $line1436961231.$eval$.$print(\u003cconsole\u003e:6)\n  at $line1436961231.$eval.$print(\u003cconsole\u003e)\n  at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n  at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n  at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n  at java.lang.reflect.Method.invoke(Method.java:498)\n  at scala.tools.nsc.interpreter.IMain$ReadEvalPrint.call(IMain.scala:793)\n  at scala.tools.nsc.interpreter.IMain$Request.loadAndRun(IMain.scala:1054)\n  at scala.tools.nsc.interpreter.IMain$WrappedRequest$$anonfun$loadAndRunReq$1.apply(IMain.scala:645)\n  at scala.tools.nsc.interpreter.IMain$WrappedRequest$$anonfun$loadAndRunReq$1.apply(IMain.scala:644)\n  at scala.reflect.internal.util.ScalaClassLoader$class.asContext(ScalaClassLoader.scala:31)\n  at scala.reflect.internal.util.AbstractFileClassLoader.asContext(AbstractFileClassLoader.scala:19)\n  at scala.tools.nsc.interpreter.IMain$WrappedRequest.loadAndRunReq(IMain.scala:644)\n  at scala.tools.nsc.interpreter.IMain.interpret(IMain.scala:576)\n  at scala.tools.nsc.interpreter.IMain.interpret(IMain.scala:572)\n  at org.apache.zeppelin.spark.SparkScala211Interpreter.scalaInterpret(SparkScala211Interpreter.scala:108)\n  at org.apache.zeppelin.spark.BaseSparkScalaInterpreter$$anonfun$_interpret$1$1.apply(BaseSparkScalaInterpreter.scala:100)\n  at org.apache.zeppelin.spark.BaseSparkScalaInterpreter$$anonfun$_interpret$1$1.apply(BaseSparkScalaInterpreter.scala:94)\n  at scala.util.DynamicVariable.withValue(DynamicVariable.scala:58)\n  at scala.Console$.withOut(Console.scala:65)\n  at org.apache.zeppelin.spark.BaseSparkScalaInterpreter._interpret$1(BaseSparkScalaInterpreter.scala:94)\n  at org.apache.zeppelin.spark.BaseSparkScalaInterpreter.interpret(BaseSparkScalaInterpreter.scala:125)\n  at org.apache.zeppelin.spark.NewSparkInterpreter.interpret(NewSparkInterpreter.java:147)\n  at org.apache.zeppelin.spark.SparkInterpreter.interpret(SparkInterpreter.java:73)\n  at org.apache.zeppelin.interpreter.LazyOpenInterpreter.interpret(LazyOpenInterpreter.java:103)\n  at org.apache.zeppelin.interpreter.remote.RemoteInterpreterServer$InterpretJob.jobRun(RemoteInterpreterServer.java:632)\n  at org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n  at org.apache.zeppelin.scheduler.FIFOScheduler$1.run(FIFOScheduler.java:140)\n  at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n  at java.util.concurrent.FutureTask.run(FutureTask.java:266)\n  at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n  at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n  at java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594772566084_1467689516",
+      "id": "20200715-002246_755855063",
+      "dateCreated": "2020-07-15 00:22:46.084",
+      "dateStarted": "2020-07-15 00:30:39.828",
+      "dateFinished": "2020-07-15 00:30:41.329",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "user": "yanchao",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594772640679_-1493568770",
+      "id": "20200715-002400_83091252",
+      "dateCreated": "2020-07-15 00:24:00.679",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "~Trash/Geospatial/draft",
+  "id": "2FFRB44BQ",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

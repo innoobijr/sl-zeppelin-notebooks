@@ -2,8 +2,8 @@
   "paragraphs": [
     {
       "text": "%spark.pyspark\r\n\r\nimport os\r\nfrom datetime import datetime\r\nimport matplotlib.pyplot as plt\r\nfrom pyspark.sql import SQLContext\r\n\r\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\r\nfrom pyspark.sql.functions import split, lower\r\nimport pyspark.sql.functions as F\r\nfrom pyspark.sql.window import Window\r\nfrom pyspark import StorageLevel",
-      "user": "anonymous",
-      "dateUpdated": "2020-07-09 15:59:30.265",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-16 04:43:40.786",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -29,15 +29,15 @@
       "jobName": "paragraph_1594224959072_789358027",
       "id": "20200708-161559_1145660513",
       "dateCreated": "2020-07-08 16:15:59.072",
-      "dateStarted": "2020-07-09 15:59:30.280",
-      "dateFinished": "2020-07-09 15:59:30.347",
+      "dateStarted": "2020-07-16 04:43:40.811",
+      "dateFinished": "2020-07-16 04:43:40.824",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)\n\ndailyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-daily\"\nweeklyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-weekly\"\nhourlyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-hourly\"",
-      "user": "anonymous",
-      "dateUpdated": "2020-07-09 16:07:45.146",
+      "text": "%spark.pyspark\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)\n\ndailyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-daily\"\nweeklyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-weekly\"\nhourlyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-hourly\"\ndailyPatternPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-daily-avg\"",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-16 04:43:42.836",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -63,15 +63,15 @@
       "jobName": "paragraph_1594225397346_-1982597034",
       "id": "20200708-162317_1250270320",
       "dateCreated": "2020-07-08 16:23:17.346",
-      "dateStarted": "2020-07-09 16:07:45.161",
-      "dateFinished": "2020-07-09 16:07:45.172",
+      "dateStarted": "2020-07-16 04:43:42.850",
+      "dateFinished": "2020-07-16 04:43:42.864",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\nnames\u003d{\u0027antenna_id\u0027: StringType(),\u0027time\u0027: StringType(),\u0027cdr_type\u0027: StringType(),\u0027source\u0027: StringType(),\u0027target\u0027: StringType(),\u0027duration\u0027: IntegerType()}\nfields\u003d[]\nfor header in names:\n    fields.append(StructField(header, names[header], False))\nschema \u003d StructType(fields)\n# df \u003d sq.read.csv(\u0027./data/20200321_20.csv\u0027, schema\u003dschema)\ndf \u003d sq.read.csv(\u0027s3n://sierra-leone-lake/blob/cdrs/africell-raw/2020042[1-3]_1[0-2].csv\u0027, schema\u003dschema)\n\ndf \u003d df.withColumn(\u0027direction\u0027, lower(split(df[\u0027cdr_type\u0027], \u0027 \u0027).getItem(0)))\\\n        .withColumn(\u0027subscriber\u0027, F.col(\u0027source\u0027))\\\n        .withColumn(\"call_datetime\", F.to_timestamp(\"time\"))\\\n        .withColumn(\"call_date\", F.to_date(\"call_datetime\"))\\\n        .withColumn(\"week\", F.weekofyear(\"call_date\"))\\\n        .withColumn(\"month\", F.month(\"call_date\"))\\\n        .withColumn(\"hour\", F.hour(\"call_date\"))\\\n        .withColumn(\"site\", F.expr(\"substring(antenna_id, 1, length(antenna_id)-1)\"))\ndf \u003d df.drop(\u0027time\u0027, \u0027cdr_type\u0027, \u0027source\u0027, \u0027target\u0027, \u0027direction\u0027, \u0027antenna_id\u0027)",
-      "user": "anonymous",
-      "dateUpdated": "2020-07-09 16:00:06.271",
+      "text": "%spark.pyspark\nnames\u003d{\u0027antenna_id\u0027: StringType(),\u0027time\u0027: StringType(),\u0027cdr_type\u0027: StringType(),\u0027source\u0027: StringType(),\u0027target\u0027: StringType(),\u0027duration\u0027: IntegerType()}\nfields\u003d[]\nfor header in names:\n    fields.append(StructField(header, names[header], False))\nschema \u003d StructType(fields)\n# df \u003d sq.read.csv(\u0027./data/20200321_20.csv\u0027, schema\u003dschema)\ndf \u003d sq.read.csv(\u0027s3n://sierra-leone-lake/blob/cdrs/africell-raw/2020042[1-5]_[0-2]0.csv\u0027, schema\u003dschema)\n# df \u003d sq.read.csv(\u0027s3n://sierra-leone-lake/blob/cdrs/africell-raw/2020*.csv\u0027, schema\u003dschema)\n\ndf \u003d df.withColumn(\u0027direction\u0027, lower(split(df[\u0027cdr_type\u0027], \u0027 \u0027).getItem(0)))\\\n        .withColumn(\u0027subscriber\u0027, F.col(\u0027source\u0027))\\\n        .withColumn(\"call_datetime\", F.to_timestamp(\"time\"))\\\n        .withColumn(\"call_date\", F.to_date(\"call_datetime\"))\\\n        .withColumn(\"week\", F.weekofyear(\"call_date\"))\\\n        .withColumn(\"hour\", F.hour(\"call_datetime\"))\\\n        .withColumn(\"site\", F.expr(\"substring(antenna_id, 1, length(antenna_id)-1)\"))\ndf \u003d df.drop(\u0027time\u0027, \u0027cdr_type\u0027, \u0027source\u0027, \u0027target\u0027, \u0027direction\u0027, \u0027antenna_id\u0027)",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-16 05:06:27.908",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -97,15 +97,49 @@
       "jobName": "paragraph_1594225413361_-1463632856",
       "id": "20200708-162333_433705629",
       "dateCreated": "2020-07-08 16:23:33.361",
-      "dateStarted": "2020-07-09 16:00:06.295",
-      "dateFinished": "2020-07-09 16:00:09.098",
+      "dateStarted": "2020-07-16 05:06:27.926",
+      "dateFinished": "2020-07-16 05:06:31.496",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\ndaily \u003d df.groupBy(\u0027subscriber\u0027, \u0027call_date\u0027).agg(F.count(\u0027call_date\u0027).alias(\u0027count\u0027))\n# daily.persist(StorageLevel.MEMORY_AND_DISK)\n\n# weekly \u003d daily\\\n#         .withColumn(\"week\", F.weekofyear(\"call_date\"))\\\n#         .groupBy(\u0027subscriber\u0027, \u0027week\u0027)\\\n#         .agg(F.sum(\u0027count\u0027).alias(\u0027count\u0027))\n\nhourly \u003d df.groupBy(\u0027subscriber\u0027, \u0027hour\u0027).agg(F.count(\u0027hour\u0027).alias(\u0027count\u0027))",
-      "user": "anonymous",
-      "dateUpdated": "2020-07-10 14:16:49.862",
+      "text": "%spark.pyspark\ndef bin_count(count):\n    if count\u003d\u003d0: \n        return \u00270\u0027\n    elif 0\u003ccount\u003c\u003d5:\n        return \u00270-5\u0027\n    elif 5\u003ccount\u003c\u003d10:\n        return \u00275-10\u0027\n    elif 10\u003ccount\u003c\u003d20:\n        return \u002710-20\u0027\n    elif 20\u003ccount\u003c\u003d35:\n        return \u002720-35\u0027\n    elif 35\u003ccount\u003c\u003d50:\n        return \u002735-50\u0027\n    elif 50\u003ccount\u003c\u003d75:\n        return \u002750-75\u0027\n    elif 75\u003ccount\u003c\u003d100:\n        return \u002775-100\u0027\n    elif 100\u003ccount\u003c\u003d150:\n        return \u0027100-150\u0027\n    elif 150\u003ccount\u003c\u003d240:\n        return \u0027150-210\u0027\n    elif 210\u003ccount\u003c\u003d300:\n        return \u0027210-300\u0027\n    elif 300\u003ccount\u003c\u003d400:\n        return \u0027300-400\u0027\n    elif 400\u003ccount\u003c\u003d540:\n        return \u0027400-540\u0027\n    elif 540\u003ccount\u003c\u003d720:\n        return \u0027540-720\u0027\n    elif 720\u003ccount\u003c\u003d900:\n        return \u0027720-900\u0027\n    else:\n        return \u0027900-inf\u0027\n\nbin \u003d F.udf(bin_count, StringType())",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-16 05:40:20.182",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594876712431_-1867856613",
+      "id": "20200716-051832_788036241",
+      "dateCreated": "2020-07-16 05:18:32.431",
+      "dateStarted": "2020-07-16 05:40:20.204",
+      "dateFinished": "2020-07-16 05:40:20.214",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# daily \u003d df.groupBy(\u0027subscriber\u0027, \u0027call_date\u0027).agg(F.count(\u0027call_date\u0027).alias(\u0027count\u0027))\n# daily.persist(StorageLevel.MEMORY_AND_DISK)\n\n# weekly \u003d daily\\\n#         .withColumn(\"week\", F.weekofyear(\"call_date\"))\\\n#         .groupBy(\u0027subscriber\u0027, \u0027week\u0027)\\\n#         .agg(F.sum(\u0027count\u0027).alias(\u0027count\u0027))\n\nhourly \u003d df.groupBy(\u0027subscriber\u0027, \u0027hour\u0027, \u0027call_date\u0027).agg(F.count(\u0027hour\u0027).alias(\u0027count\u0027)).groupBy(\u0027hour\u0027).agg(F.avg(\u0027count\u0027).alias(\u0027count\u0027))\ndaily_pattern \u003d df.groupBy(\u0027subscriber\u0027, \u0027call_date\u0027, \u0027hour\u0027)\\\n            .agg(F.count(\u0027call_date\u0027).alias(\u0027count\u0027))\\\n            .groupBy(\u0027call_date\u0027, \u0027hour\u0027)\\\n            .agg(F.count(\u0027subscriber\u0027).alias(\u0027users\u0027), F.avg(\u0027count\u0027).alias(\u0027per_user\u0027))\nduration \u003d df.where(F.col(\u0027duration\u0027)\u003e0)\\\n            .groupBy(\u0027subscriber\u0027, \u0027call_date\u0027)\\\n            .agg(F.avg(\u0027duration\u0027).alias(\u0027avg_duration\u0027))\\\n            .withColumn(\u0027bin\u0027, bin(F.col(\u0027avg_duration\u0027)))\\\n            .groupBy(\u0027bin\u0027)\\\n            .agg(F.count(\u0027avg_duration\u0027).alias(\u0027numUsers\u0027))\\\n            .withColumn(\u0027sort\u0027, split(F.col(\u0027bin\u0027), \u0027-\u0027).getItem(0).cast(IntegerType()))\\\n            .orderBy(\u0027sort\u0027)\nduration.createOrReplaceTempView(\"duration\")",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-16 05:40:23.388",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -131,15 +165,15 @@
       "jobName": "paragraph_1594225432996_709827718",
       "id": "20200708-162352_1876247922",
       "dateCreated": "2020-07-08 16:23:52.997",
-      "dateStarted": "2020-07-09 16:20:11.001",
-      "dateFinished": "2020-07-09 16:20:11.161",
+      "dateStarted": "2020-07-16 05:40:23.406",
+      "dateFinished": "2020-07-16 05:40:23.691",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\ndaily.show()",
-      "user": "anonymous",
-      "dateUpdated": "2020-07-09 16:20:52.539",
+      "text": "%spark.pyspark\nhourly.show()",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-16 04:53:57.306",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -162,7 +196,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "+--------------------+----------+-----+\n|          subscriber| call_date|count|\n+--------------------+----------+-----+\n|60BACF26E9FC68C30...|2020-04-23|   12|\n|2D792DD892AF1E044...|2020-04-23|   38|\n|66266D893F533A5B6...|2020-04-23|    9|\n|A983E70C9DF611B1C...|2020-04-23|   11|\n|A2E87AB98CF992676...|2020-04-23|    6|\n|3212680CCD2A6B9A5...|2020-04-23|    8|\n|2ADD12DDD00CCF634...|2020-04-23|    4|\n|923CA5F502A8F3378...|2020-04-23|   59|\n|FB6A6C3DBE1E457C6...|2020-04-23|    5|\n|28B57407CC6489273...|2020-04-23|   24|\n|08FA5DE64991AEB22...|2020-04-23|    2|\n|18B01A38FE4FBBE7F...|2020-04-23|    2|\n|9BDAF8DE14C38D185...|2020-04-23|   10|\n|2309CC61960FD2300...|2020-04-23|    1|\n|82D1A063DE76A8C26...|2020-04-23|   12|\n|0D4B36A91ADE84FD0...|2020-04-23|    5|\n|E36B1A0D2545B5D16...|2020-04-23|   12|\n|9E34EE00BE6AD9D7B...|2020-04-23|    4|\n|E87B587C27F698262...|2020-04-23|   14|\n|D8375E19D1E0C6227...|2020-04-23|    8|\n+--------------------+----------+-----+\nonly showing top 20 rows\n\n"
+            "data": "+----+------------------+\n|hour|             count|\n+----+------------------+\n|  12| 2.478248356997368|\n|  22| 2.495016611295681|\n|   1|1.9654435340220877|\n|  13|2.4060259115645932|\n|  16|2.3691051157450937|\n|   6|1.7989411764705883|\n|   3|1.6122006660675583|\n|  20|  2.93595819559217|\n|   5|1.6181552404619208|\n|  19| 2.766536107624836|\n|  15|2.3806757566828893|\n|   9| 2.549517723356275|\n|  17| 2.405656374436974|\n|   4|1.8645581667764843|\n|   8| 2.395900686482055|\n|  23| 2.098679327768684|\n|   7| 2.153247974537037|\n|  10|2.5919597432918957|\n|  21|2.7166878736225484|\n|  11|2.5120260484232304|\n+----+------------------+\nonly showing top 20 rows\n\n"
           }
         ]
       },
@@ -170,15 +204,250 @@
       "jobName": "paragraph_1594227316616_883492222",
       "id": "20200708-165516_706035272",
       "dateCreated": "2020-07-08 16:55:16.616",
-      "dateStarted": "2020-07-09 16:20:52.555",
-      "dateFinished": "2020-07-09 16:21:13.594",
+      "dateStarted": "2020-07-16 04:53:57.321",
+      "dateFinished": "2020-07-16 04:54:56.482",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\ndaily.coalesce(5).write.format(\"csv\").option(\"header\", \"true\").save(dailyPath)\n\n# weekly.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(weeklyPath)\n\nhourly.coalesce(50).write.format(\"csv\").option(\"header\", \"true\").save(hourlyPath)",
+      "text": "%spark.pyspark\ndaily_pattern.show()",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-16 04:58:36.261",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+----------+----+------+------------------+\n| call_date|hour| users|          per_user|\n+----------+----+------+------------------+\n|2020-04-21|   7|331776| 2.153247974537037|\n|2020-04-21|  10|433021|2.5919597432918957|\n|2020-04-21|   8|408605| 2.395900686482055|\n|2020-04-21|   0| 40724| 2.044445535801984|\n|2020-04-21|  21|416530|2.7166878736225484|\n|2020-04-21|   5| 34204|1.6181552404619208|\n|2020-04-21|  15|393692|2.3806757566828893|\n|2020-04-21|  16|404164|2.3691051157450937|\n|2020-04-21|  17|428932| 2.405656374436974|\n|2020-04-21|   9|443003| 2.549517723356275|\n|2020-04-21|   1| 19649|1.9654435340220877|\n|2020-04-21|   3| 18917|1.6122006660675583|\n|2020-04-21|  22|199262| 2.495016611295681|\n|2020-04-21|  20|590177|  2.93595819559217|\n|2020-04-21|  18|470244|2.4601823734061465|\n|2020-04-21|  12|403073| 2.478248356997368|\n|2020-04-21|  23| 98359| 2.098679327768684|\n|2020-04-21|  14|401980| 2.368699935320165|\n|2020-04-21|   6|136000|1.7989411764705883|\n|2020-04-21|  13|414178|2.4060259115645932|\n+----------+----+------+------------------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594874764529_1063624894",
+      "id": "20200716-044604_1877853005",
+      "dateCreated": "2020-07-16 04:46:04.529",
+      "dateStarted": "2020-07-16 04:58:36.275",
+      "dateFinished": "2020-07-16 04:59:35.395",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nduration.show()",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-16 05:09:13.520",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+----------+------------------+\n|          subscriber| call_date|     avg(duration)|\n+--------------------+----------+------------------+\n|B957D31305A5AD38F...|2020-04-21|            23.125|\n|133C2A1081CA0FD46...|2020-04-21|               4.0|\n|E75DF96F605B86B1C...|2020-04-21|               3.5|\n|9FA1DC03A4D51F97D...|2020-04-21|              13.0|\n|6AC7A223E7E9A9F31...|2020-04-21| 4.090909090909091|\n|59D0D20D65EA2666D...|2020-04-21|              25.2|\n|00048BAA88CE11EEF...|2020-04-21|              33.0|\n|0B163B4B8B7DDE3B0...|2020-04-21|30.333333333333332|\n|6B79180DC8872759A...|2020-04-21|              21.0|\n|052D9830D7699B2E6...|2020-04-21|              16.0|\n|B8661DA5320EEE34E...|2020-04-21|              16.5|\n|C5766E2EBFEF7D2AD...|2020-04-21|             39.75|\n|4EB8B4FC912C1835F...|2020-04-21|              20.0|\n|88B15508CD5A653BC...|2020-04-21|              28.0|\n|8F0B8D217C8424297...|2020-04-21|               3.0|\n|0A315E5F6A2333C3E...|2020-04-21|              14.8|\n|AE09F554CB51BC6DE...|2020-04-21|              31.5|\n|5EC8C1C420BE56FD5...|2020-04-21|              36.0|\n|EC604230ACACD55AF...|2020-04-21|10.363636363636363|\n|75581CBCE658F1870...|2020-04-21|               4.0|\n+--------------------+----------+------------------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594876008277_-1913210089",
+      "id": "20200716-050648_590636351",
+      "dateCreated": "2020-07-16 05:06:48.277",
+      "dateStarted": "2020-07-16 05:09:13.536",
+      "dateFinished": "2020-07-16 05:09:58.472",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\nselect * from duration",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-16 05:44:38.552",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300.0,
+              "optionOpen": true,
+              "setting": {
+                "table": {
+                  "tableGridState": {
+                    "columns": [
+                      {
+                        "name": "bin",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "numUsers",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "sort",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {
+                          "priority": 0.0,
+                          "direction": "asc"
+                        },
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      }
+                    ],
+                    "scrollFocus": {},
+                    "selection": [],
+                    "grouping": {
+                      "grouping": [],
+                      "aggregations": [],
+                      "rowExpandedStates": {}
+                    },
+                    "treeView": {},
+                    "pagination": {
+                      "paginationCurrentPage": 1.0,
+                      "paginationPageSize": 250.0
+                    }
+                  },
+                  "tableColumnTypeState": {
+                    "names": {
+                      "bin": "string",
+                      "numUsers": "string",
+                      "sort": "number"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default",
+                  "isDateFormat": false,
+                  "dateFormat": "MMM DD"
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "bin",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "numUsers",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "bin\tnumUsers\tsort\n0-5\t610747\t0\n5-10\t282785\t5\n10-20\t570640\t10\n20-35\t693983\t20\n35-50\t437618\t35\n50-75\t357693\t50\n75-100\t166871\t75\n100-150\t120182\t100\n150-210\t61770\t150\n210-300\t11301\t210\n300-400\t8168\t300\n400-540\t4569\t400\n540-720\t2261\t540\n720-900\t983\t720\n900-inf\t1655\t900\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594876308826_1297559376",
+      "id": "20200716-051148_937797418",
+      "dateCreated": "2020-07-16 05:11:48.826",
+      "dateStarted": "2020-07-16 05:40:29.114",
+      "dateFinished": "2020-07-16 05:41:24.419",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n# daily.coalesce(5).write.format(\"csv\").option(\"header\", \"true\").save(dailyPath)\n\n# weekly.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(weeklyPath)\n\n# hourly.coalesce(50).write.format(\"csv\").option(\"header\", \"true\").save(hourlyPath)\n\ndaily_pattern.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(dailyPatternPath)",
       "user": "anonymous",
-      "dateUpdated": "2020-07-09 16:19:50.600",
+      "dateUpdated": "2020-07-15 17:54:45.352",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,

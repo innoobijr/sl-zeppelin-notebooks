@@ -1,0 +1,297 @@
+{
+  "paragraphs": [
+    {
+      "text": "/**\n * title: total_locatable_subscribers_per_day\n * author: Innocent Obi Jr\n * description: \n */\n \n//Default configuration\\ (Remove in production)\nsc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))\n\nval path_to_cdrs \u003d \"s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\"\nval path_to_towers \u003d \"s3n://sierra-leone-lake/blob/towers/combined_towers_district_07_11.csv\"\nval cutoff : Int  \u003d 15",
+      "user": "innocent",
+      "dateUpdated": "2020-07-16 09:36:55.592",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "path_to_cdrs: String \u003d s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\npath_to_towers: String \u003d s3n://sierra-leone-lake/blob/towers/combined_towers_district_07_11.csv\ncutoff: Int \u003d 15\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594891771588_1974018765",
+      "id": "20200706-035802_1432653419",
+      "dateCreated": "2020-07-16 09:29:31.588",
+      "dateStarted": "2020-07-16 09:36:55.600",
+      "dateFinished": "2020-07-16 09:37:00.324",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "implicit class DataframeOps(df: org.apache.spark.sql.DataFrame){\n    def path_to_ouput(filename: String): String \u003d  s\"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/flowminder/$filename\"\n    def saveToS3(filename: String) : Unit \u003d df.write.format(\"csv\").option(\"header\", \"true\").save(path_to_ouput(filename))\n}",
+      "user": "innocent",
+      "dateUpdated": "2020-07-16 09:37:34.212",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "defined class DataframeOps\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594891771595_441856496",
+      "id": "20200713-001930_1108014844",
+      "dateCreated": "2020-07-16 09:29:31.595",
+      "dateStarted": "2020-07-16 09:37:34.226",
+      "dateFinished": "2020-07-16 09:37:34.989",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "/* \n */\nimport org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\n//import org.apache.spark.sql._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\n\n val calls \u003d spark.read.format(\"csv\")\n    .option(\"header\",\"false\")\n    .option(\"inferSchema\", \"true\")\n    .load(path_to_cdrs)\n    .withColumnRenamed(\"_c0\", \"antenna_id\")\n    .withColumnRenamed(\"_c1\", \"time\")\n    .withColumnRenamed(\"_c2\", \"direction\")\n    .withColumnRenamed(\"_c3\", \"source\")\n    .withColumn(\"msisdn\", col(\"source\"))\n    .withColumnRenamed(\"_c4\", \"target\")\n    .withColumnRenamed(\"_c5\", \"duration\")\n    .withColumn(\"site_id\", substring(col(\"antenna_id\"), 0, 4))\n    .withColumn(\"call_datetime\", to_timestamp($\"time\"))\n    .withColumn(\"call_date\", to_date($\"call_datetime\"))\n    .withColumn(\"end_time\",  to_timestamp(unix_timestamp($\"call_datetime\") + ($\"duration\")))\n    \n\nval cells \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(path_to_towers)\n  .withColumn(\"locality\", col(\"admin2Name\"))\n  .withColumnRenamed(\"CI\", \"cell_id\")\n\ncells.persist(StorageLevel.MEMORY_AND_DISK)\ncells.createOrReplaceTempView(\"cells\")\n\ncalls.persist(StorageLevel.MEMORY_AND_DISK)\ncalls.createOrReplaceTempView(\"calls\")",
+      "user": "innocent",
+      "dateUpdated": "2020-07-16 09:37:38.590",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\ncalls: org.apache.spark.sql.DataFrame \u003d [antenna_id: int, time: timestamp ... 9 more fields]\ncells: org.apache.spark.sql.DataFrame \u003d [site_id: string, Name: string ... 19 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594891771596_-1321176027",
+      "id": "20200706-035833_1438804406",
+      "dateCreated": "2020-07-16 09:29:31.596",
+      "dateStarted": "2020-07-16 09:37:38.603",
+      "dateFinished": "2020-07-16 09:38:24.659",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val totalLocatableSubscribersPerDay \u003d spark.sql(s\"\"\"\nSELECT * FROM (\n    SELECT calls.call_date AS call_date,\n        count(DISTINCT msisdn) AS subscriber_count\n    FROM calls\n    INNER JOIN cells\n        on calls.site_id \u003d cells.site_id\n    WHERE calls.call_date \u003e\u003d \u00272020-02-01\u0027\n        AND calls.call_Date \u003c\u003d CURRENT_DATE\n        AND cells.locality IS NOT NULL\n        AND cells.locality !\u003d \u0027\u0027\n    GROUP BY call_date\n    ) AS grouped\n    WHERE grouped.subscriber_count \u003e $cutoff\n\"\"\")\n\n\ntotalLocatableSubscribersPerDay.createOrReplaceTempView(\"total_locatable_subscribers_per_day\")",
+      "user": "innocent",
+      "dateUpdated": "2020-07-16 09:38:28.629",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "totalLocatableSubscribersPerDay: org.apache.spark.sql.DataFrame \u003d [call_date: date, subscriber_count: bigint]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594891771597_-218435673",
+      "id": "20200706-040202_220010121",
+      "dateCreated": "2020-07-16 09:29:31.597",
+      "dateStarted": "2020-07-16 09:38:28.637",
+      "dateFinished": "2020-07-16 09:38:29.299",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "totalLocatableSubscribersPerDay.saveToS3(\"total_locatable_subscribers_per_day\"))",
+      "user": "innocent",
+      "dateUpdated": "2020-07-16 09:38:36.495",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "res184: scala.collection.immutable.Iterable[Unit] \u003d List((), (), ())\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594891771598_-2106783030",
+      "id": "20200713-002234_431171307",
+      "dateCreated": "2020-07-16 09:29:31.598",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\nselect * from total_locatable_subscribers_per_day",
+      "user": "innocent",
+      "dateUpdated": "2020-07-16 09:40:19.893",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "call_date": "string",
+                      "subscriber_count": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "call_date\tsubscriber_count\n2020-04-03\t847483\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594891771598_-91832833",
+      "id": "20200713-002645_1206730510",
+      "dateCreated": "2020-07-16 09:29:31.598",
+      "dateStarted": "2020-07-16 09:38:56.706",
+      "dateFinished": "2020-07-16 09:40:19.179",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\n",
+      "user": "innocent",
+      "dateUpdated": "2020-07-16 09:38:56.696",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594892336696_-1402282685",
+      "id": "20200716-093856_947780521",
+      "dateCreated": "2020-07-16 09:38:56.696",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Flowminder/total_locatable_subscribers_per_day",
+  "id": "2FDBNTEMK",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

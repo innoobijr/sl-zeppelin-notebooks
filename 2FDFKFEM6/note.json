@@ -226,7 +226,7 @@
     {
       "text": "%spark.sql\nselect * from tmp",
       "user": "anonymous",
-      "dateUpdated": "2020-07-07 17:48:31.380",
+      "dateUpdated": "2020-07-13 17:14:41.245",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,

@@ -26,13 +26,13 @@
         "msg": []
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592460463571_154559872",
       "id": "paragraph_1592460463571_154559872",
       "dateCreated": "2020-06-18 06:07:43.571",
       "dateStarted": "2020-07-01 13:20:45.612",
       "dateFinished": "2020-07-01 13:20:46.562",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": " System.getenv()",
@@ -65,13 +65,13 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1593133440611_1001307495",
       "id": "paragraph_1593133440611_1001307495",
       "dateCreated": "2020-06-26 01:04:00.611",
       "dateStarted": "2020-06-26 01:06:26.883",
       "dateFinished": "2020-06-26 01:06:37.597",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "%md\n# ls",
@@ -104,13 +104,13 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1593021015250_-813449607",
       "id": "paragraph_1593021015250_-813449607",
       "dateCreated": "2020-06-24 17:50:15.250",
       "dateStarted": "2020-06-26 01:19:20.533",
       "dateFinished": "2020-06-26 01:19:21.390",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "%python\ng \u003d 9",
@@ -138,13 +138,13 @@
         "msg": []
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1593118255903_2013089546",
       "id": "paragraph_1593118255903_2013089546",
       "dateCreated": "2020-06-25 20:50:55.903",
       "dateStarted": "2020-06-26 01:18:30.064",
       "dateFinished": "2020-06-26 01:18:32.226",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\ncdrs \u003d spark.read.format(\"csv\") \\\n    .option(\"header\",\"false\") \\\n    .load(\"s3n://sierra-leone-lake/blob/cdrs/africell-raw/202004*.csv\")\n",
@@ -177,13 +177,13 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1593022289491_-1967511797",
       "id": "paragraph_1593022289491_-1967511797",
       "dateCreated": "2020-06-24 18:11:29.491",
       "dateStarted": "2020-07-01 13:32:43.847",
       "dateFinished": "2020-07-01 13:32:47.767",
-      "status": "ABORT"
+      "status": "ABORT",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "import org.apache.spark.sql.functions.input_file_name\nimport org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\n\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql._\nimport spark.implicits._\n\n val cdrs \u003d spark.read.format(\"csv\")\n    .option(\"header\",\"false\")\n    .option(\"inferSchema\", \"true\")\n    .load(\"s3n://sierra-leone-lake/blob/cdrs/africell-raw/202004*.csv\")",
@@ -216,18 +216,18 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592452523853_333946365",
       "id": "paragraph_1592452523853_333946365",
       "dateCreated": "2020-06-18 03:55:23.854",
       "dateStarted": "2020-07-01 13:33:15.343",
       "dateFinished": "2020-07-01 14:06:14.623",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "cdrs.first()",
-      "user": "innocent",
-      "dateUpdated": "2020-06-25 18:35:03.563",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-14 22:52:26.452",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -246,22 +246,23 @@
         "forms": {}
       },
       "results": {
-        "code": "SUCCESS",
+        "code": "ERROR",
         "msg": [
           {
             "type": "TEXT",
-            "data": "\u001b[1m\u001b[34mres3\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.Row\u001b[0m \u003d [12011,2020-03-01 08:00:01.000,Incoming SMS,482CFDA9904D2ABD525C0AA4A75E5F4F,0662B91E51A2EA16DD90A20709C71761,0]\n"
+            "data": "org.apache.zeppelin.interpreter.InterpreterNotFoundException: No interpreter is binded to this note: 2D94M4J8S"
           }
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1593110027191_902047592",
       "id": "paragraph_1593110027191_902047592",
       "dateCreated": "2020-06-25 18:33:47.191",
       "dateStarted": "2020-06-25 18:35:03.568",
       "dateFinished": "2020-06-25 18:35:13.188",
-      "status": "FINISHED"
+      "status": "ERROR",
+      "errorMessage": "org.apache.zeppelin.interpreter.InterpreterNotFoundException: No interpreter is binded to this note: 2D94M4J8S\n\tat org.apache.zeppelin.interpreter.InterpreterFactory.getInterpreter(InterpreterFactory.java:60)\n\tat org.apache.zeppelin.notebook.Paragraph.getBindedInterpreter(Paragraph.java:243)\n\tat org.apache.zeppelin.notebook.Paragraph.execute(Paragraph.java:351)\n\tat org.apache.zeppelin.notebook.Note.run(Note.java:683)\n\tat org.apache.zeppelin.socket.NotebookServer.persistAndExecuteSingleParagraph(NotebookServer.java:1881)\n\tat org.apache.zeppelin.socket.NotebookServer.runParagraph(NotebookServer.java:1840)\n\tat org.apache.zeppelin.socket.NotebookServer.onMessage(NotebookServer.java:262)\n\tat org.apache.zeppelin.socket.NotebookSocket.onWebSocketText(NotebookSocket.java:59)\n\tat org.eclipse.jetty.websocket.common.events.JettyListenerEventDriver.onTextMessage(JettyListenerEventDriver.java:189)\n\tat org.eclipse.jetty.websocket.common.message.SimpleTextMessage.messageComplete(SimpleTextMessage.java:69)\n\tat org.eclipse.jetty.websocket.common.events.AbstractEventDriver.appendMessage(AbstractEventDriver.java:66)\n\tat org.eclipse.jetty.websocket.common.events.JettyListenerEventDriver.onTextFrame(JettyListenerEventDriver.java:158)\n\tat org.eclipse.jetty.websocket.common.events.AbstractEventDriver.incomingFrame(AbstractEventDriver.java:162)\n\tat org.eclipse.jetty.websocket.common.WebSocketSession.incomingFrame(WebSocketSession.java:459)\n\tat org.eclipse.jetty.websocket.common.extensions.AbstractExtension.nextIncomingFrame(AbstractExtension.java:182)\n\tat org.eclipse.jetty.websocket.common.extensions.compress.PerMessageDeflateExtension.nextIncomingFrame(PerMessageDeflateExtension.java:105)\n\tat org.eclipse.jetty.websocket.common.extensions.compress.CompressExtension.forwardIncoming(CompressExtension.java:142)\n\tat org.eclipse.jetty.websocket.common.extensions.compress.PerMessageDeflateExtension.incomingFrame(PerMessageDeflateExtension.java:85)\n\tat org.eclipse.jetty.websocket.common.extensions.ExtensionStack.incomingFrame(ExtensionStack.java:220)\n\tat org.eclipse.jetty.websocket.common.Parser.notifyFrame(Parser.java:219)\n\tat org.eclipse.jetty.websocket.common.Parser.parse(Parser.java:244)\n\tat org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection.readParse(AbstractWebSocketConnection.java:559)\n\tat org.eclipse.jetty.websocket.common.io.AbstractWebSocketConnection.onFillable(AbstractWebSocketConnection.java:390)\n\tat org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:305)\n\tat org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:103)\n\tat org.eclipse.jetty.io.ChannelEndPoint$2.run(ChannelEndPoint.java:118)\n\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:333)\n\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:310)\n\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:168)\n\tat org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:126)\n\tat org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:366)\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool.runJob(QueuedThreadPool.java:765)\n\tat org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:683)\n\tat java.lang.Thread.run(Thread.java:748)\n",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "import org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.sql.types.StringType\nimport org.apache.spark.storage.StorageLevel\n\nval cdr_renamed \u003d cdrs.withColumnRenamed(\"_c0\", \"antenna_id\")\n    .withColumnRenamed(\"_c1\", \"time\")\n    .withColumnRenamed(\"_c2\", \"direction\")\n    .withColumnRenamed(\"_c3\", \"source\")\n    .withColumnRenamed(\"_c4\", \"target\")\n    .withColumnRenamed(\"_c5\", \"duration\")\n\n// Change this to just use one of the other. We will need to speak to Africell to check if this is the correct interpretation\nval calls \u003d cdr_renamed.withColumn(\"msisdn\", when(col(\"direction\").contains(\"Outgoing\"), col(\"source\")).otherwise(col(\"source\")))\n    .withColumn(\"call_datetime\", to_timestamp($\"time\"))\n    .withColumn(\"call_date\", to_date($\"call_datetime\"))\n\ncalls.persist(StorageLevel.MEMORY_AND_DISK)\n\nval path_to_towers \u003d \"s3n://sierra-leone-lake/blob/towers/tower_district_secton.csv\"\n\nval cells \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(path_to_towers)\n  .withColumnRenamed(\"New_Dist\", \"locality\")\n  .withColumnRenamed(\"CI\", \"cell_id\")\n \ncells.persist(StorageLevel.MEMORY_AND_DISK)\n \n//val window \u003d Window.partitionBy(\"site_id\").orderBy(col(\"cell_id\"))\n//val districtSites \u003d cells.withColumn(\"row\",row_number.over(window))\n//        .where(col(\"row\") \u003d\u003d\u003d 1).select(col(\"latitude\").as(\"lat\"), col(\"longitude\").as(\"lon\"),$\"locality\", $\"site_id\")\n\n// (3) Saving the dataframes as a temporary view\ncalls.createOrReplaceTempView(\"calls\")\ncells.createOrReplaceTempView(\"cells\") \n//districtSites.createOrReplaceTempView(\"district_sites\") ",
@@ -294,13 +295,13 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592460429240_-1579483453",
       "id": "paragraph_1592460429240_-1579483453",
       "dateCreated": "2020-06-18 06:07:09.240",
       "dateStarted": "2020-07-01 13:22:05.019",
       "dateFinished": "2020-07-01 13:22:19.455",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "calls.schema",
@@ -333,13 +334,13 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592463500652_-2058601866",
       "id": "paragraph_1592463500652_-2058601866",
       "dateCreated": "2020-06-18 06:58:20.652",
       "dateStarted": "2020-06-18 17:47:28.089",
       "dateFinished": "2020-06-18 17:47:28.533",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "val tmp \u003d cdrs.withColumn(\"time\", col(\"_c1\").cast(StringType)).select(\"_c1\").first()(0)",
@@ -372,13 +373,13 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592465909250_1239486359",
       "id": "paragraph_1592465909250_1239486359",
       "dateCreated": "2020-06-18 07:38:29.251",
       "dateStarted": "2020-06-18 12:59:01.079",
       "dateFinished": "2020-06-18 12:59:09.606",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "// List of antennas -\u003e create pairs\n// Pick a subset first\nval od_matrix_directed_all_pairs_per_day \u003d spark.sql(\"\"\" \nSELECT * FROM (\n        SELECT connection_date,\n        connection_datetime,\n            locality_from,\n            locality_to,\n            locality_from_lat,\n            locality_from_lng,\n            locality_to_lat,\n            locality_to_lng,\n            count(*) AS subscriber_count\n        FROM (\n\n            SELECT t1.call_date AS connection_date,\n            t1.call_date AS connection_datetime,\n                t1.msisdn AS msisdn,\n                t1.locality AS locality_from,\n                t2.locality AS locality_to,\n                t1.Latitude AS locality_from_lat,\n                t2.Latitude AS locality_to_lat,\n                t1.longitude AS locality_from_lng,\n                t2.longitude AS locality_to_lng\n            FROM (\n                SELECT calls.msisdn,\n                    calls.call_date,\n                    cells.locality,\n                    cells.Latitude,\n                    cells.longitude,\n                    min(calls.call_datetime) AS earliest_visit,\n                    max(calls.call_datetime) AS latest_visit\n                FROM calls\n                INNER JOIN cells\n                    ON calls.antenna_id \u003d cells.cell_id\n                WHERE calls.call_date \u003e\u003d \u00272020-02-01\u0027\n                    AND calls.call_date \u003c\u003d CURRENT_DATE\n                GROUP BY msisdn, call_date, locality, Latitude, longitude\n            ) t1\n            FULL OUTER JOIN (\n                SELECT calls.msisdn,\n                    calls.call_date,\n                    cells.locality,\n                    cells.Latitude,\n                    cells.longitude,\n                    min(calls.call_datetime) AS earliest_visit,\n                    max(calls.call_datetime) AS latest_visit\n                FROM calls\n                INNER JOIN cells\n                    ON calls.antenna_id \u003d cells.cell_id\n                WHERE calls.call_date \u003e\u003d \u00272020-02-01\u0027\n                    AND calls.call_date \u003c\u003d CURRENT_DATE\n                GROUP BY msisdn, call_date, locality, Latitude, longitude\n            ) t2\n            ON t1.msisdn \u003d t2.msisdn\n                AND t1.call_date \u003d t2.call_date\n            WHERE t1.earliest_visit \u003c t2.latest_visit\n\n        ) AS pair_connections\n        GROUP BY 1, 2, 3, 4, 5, 6, 7, 8\n    )\n\"\"\")",
@@ -411,13 +412,13 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592488100913_-740266649",
       "id": "paragraph_1592488100913_-740266649",
       "dateCreated": "2020-06-18 13:48:20.913",
       "dateStarted": "2020-06-25 18:45:36.826",
       "dateFinished": "2020-06-25 18:45:37.469",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "od_matrix_directed_all_pairs_per_day.show()",
@@ -450,13 +451,13 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592489523810_393878005",
       "id": "paragraph_1592489523810_393878005",
       "dateCreated": "2020-06-18 14:12:03.810",
       "dateStarted": "2020-06-18 14:46:38.598",
       "dateFinished": "2020-06-18 14:49:40.840",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "\nval window \u003d Window.partitionBy(\"msisdn\").orderBy(\"call_datetime\")\n\ncalls.groupBy(\"msid\")",
@@ -489,13 +490,13 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592466983143_382211108",
       "id": "paragraph_1592466983143_382211108",
       "dateCreated": "2020-06-18 07:56:23.143",
       "dateStarted": "2020-06-18 08:08:32.707",
       "dateFinished": "2020-06-18 08:08:33.012",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "calls.unpersist()\ncells.unpersist()",
@@ -528,13 +529,13 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592792899280_616808313",
       "id": "paragraph_1592792899280_616808313",
       "dateCreated": "2020-06-22 02:28:19.280",
       "dateStarted": "2020-06-22 02:28:39.161",
       "dateFinished": "2020-06-22 02:28:39.550",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "val od_matrix \u003d od_matrix_directed_all_pairs_per_day.repartition(400)\nod_matrix.cache()",
@@ -567,13 +568,13 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592800232613_-756724645",
       "id": "paragraph_1592800232613_-756724645",
       "dateCreated": "2020-06-22 04:30:32.613",
       "dateStarted": "2020-06-22 04:35:00.340",
       "dateFinished": "2020-06-22 04:35:01.260",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "import org.apache.spark.sql.functions._\n\nod_matrix.withColumn(\"log_counts\", log($\"subscriber_count\"))\n .coalesce(1).write.format(\"csv\").option(\"header\", \"true\").option(\"path\",\"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/od_matrixv3.5\").save()",
@@ -597,13 +598,13 @@
         "forms": {}
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592491458747_-1021032493",
       "id": "paragraph_1592491458747_-1021032493",
       "dateCreated": "2020-06-18 14:44:18.747",
       "dateStarted": "2020-06-22 04:35:10.388",
       "dateFinished": "2020-06-22 06:01:57.777",
-      "status": "ERROR"
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "",
@@ -615,11 +616,11 @@
         "forms": {}
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592800993788_480939927",
       "id": "paragraph_1592800993788_480939927",
       "dateCreated": "2020-06-22 04:43:13.788",
-      "status": "READY"
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "val sample \u003d calls.limit(5)\nsample.show()",
@@ -652,13 +653,13 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592467407883_590353127",
       "id": "paragraph_1592467407883_590353127",
       "dateCreated": "2020-06-18 08:03:27.883",
       "dateStarted": "2020-06-18 16:37:01.113",
       "dateFinished": "2020-06-18 16:37:45.437",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "heat.show()",
@@ -691,13 +692,13 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1593610199429_-1678636487",
       "id": "paragraph_1593610199429_-1678636487",
       "dateCreated": "2020-07-01 13:29:59.429",
       "dateStarted": "2020-07-01 13:30:35.076",
       "dateFinished": "2020-07-01 13:30:35.615",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "import org.apache.spark.sql.functions._\nimport org.apache.spark.sql.functions.{col,hour,minute,second}\n\n\n// Heat Matrix\n//pick times\nval heat \u003d calls.select($\"call_date\", month($\"call_datetime\").alias(\"month\"), dayofweek($\"call_datetime\").alias(\"day\"), hour($\"call_datetime\").alias(\"hour\"))\nval preNatCOM \u003d heat.filter(col(\"call_date\") \u003c\u003d \"2020-03-07\").groupBy(\"day\", \"hour\").count().select(\"hour\", \"day\", \"count\")\nval preLockedDown \u003d heat.filter(col(\"call_date\") \u003e \"2020-03-07\" \u0026\u0026 col(\"call_date\") \u003c\u003d \"2020-04-04\").groupBy(\"day\", \"hour\").count().select(\"hour\", \"day\", \"count\")\n//sample.show()\nval firstLockedDown \u003d heat.filter(col(\"call_date\") \u003e\u003d \"2020-04-05\" \u0026\u0026 col(\"call_date\") \u003c\u003d \"2020-05-03\").groupBy(\"day\", \"hour\").count().select(\"hour\", \"day\", \"count\")\nval secondLockedDown \u003d heat.filter(col(\"call_date\") \u003e\u003d \"2020-05-03\").groupBy(\"day\", \"hour\").count().select(\"hour\", \"day\", \"count\")\n\npreNatCOM.createOrReplaceTempView(\"preNatCOM\")\npreLockedDown.createOrReplaceTempView(\"preLockedDown\")\nfirstLockedDown.createOrReplaceTempView(\"firstLockedDown\")\nsecondLockedDown.createOrReplaceTempView(\"secondLockedDown\")",
@@ -730,13 +731,13 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592498221113_1912674398",
       "id": "paragraph_1592498221113_1912674398",
       "dateCreated": "2020-06-18 16:37:01.113",
       "dateStarted": "2020-07-01 13:28:26.274",
       "dateFinished": "2020-07-01 13:28:26.927",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.sql\nselect * from preNatCOM",
@@ -821,13 +822,13 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592522375484_-1632588959",
       "id": "paragraph_1592522375484_-1632588959",
       "dateCreated": "2020-06-18 23:19:35.484",
       "dateStarted": "2020-07-01 13:28:57.804",
       "dateFinished": "2020-07-01 13:29:17.910",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "/*calls.groupBy(window(col(\"call_datetime\"),\n                          \"1 week\",\"1 week\"))\n                          .count().show()*/\npreLockedDown.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").option(\"path\",\"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/preLockedDownv2\").save()\npostLockedDown.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").option(\"path\",\"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/postLockedDownv2\").save()",
@@ -855,13 +856,13 @@
         "msg": []
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592519581460_-911217464",
       "id": "paragraph_1592519581460_-911217464",
       "dateCreated": "2020-06-18 22:33:01.460",
       "dateStarted": "2020-06-19 00:05:36.308",
       "dateFinished": "2020-06-19 00:41:03.821",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "heat.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").option(\"path\",\"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/heat\").save()",
@@ -883,13 +884,13 @@
         "msg": []
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592511091838_1491918806",
       "id": "paragraph_1592511091838_1491918806",
       "dateCreated": "2020-06-18 20:11:31.838",
       "dateStarted": "2020-06-18 20:13:56.851",
       "dateFinished": "2020-06-18 20:20:33.640",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "sample.join(cells, sample.col(\"antenna_id\") \u003d\u003d\u003d cells.col(\"cell_id\")).show()",
@@ -922,13 +923,13 @@
         ]
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592498760707_-472473963",
       "id": "paragraph_1592498760707_-472473963",
       "dateCreated": "2020-06-18 16:46:00.707",
       "dateStarted": "2020-06-18 17:06:07.429",
       "dateFinished": "2020-06-18 17:06:50.909",
-      "status": "FINISHED"
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
     },
     {
       "text": "",
@@ -940,17 +941,15 @@
         "forms": {}
       },
       "apps": [],
-      "progressUpdateIntervalMs": 500,
       "jobName": "paragraph_1592499828132_354660448",
       "id": "paragraph_1592499828132_354660448",
       "dateCreated": "2020-06-18 17:03:48.133",
-      "status": "READY"
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
     }
   ],
   "name": "UserPaths",
   "id": "2D94M4J8S",
-  "defaultInterpreterGroup": "spark",
-  "version": "0.8.2",
   "noteParams": {},
   "noteForms": {},
   "angularObjects": {},

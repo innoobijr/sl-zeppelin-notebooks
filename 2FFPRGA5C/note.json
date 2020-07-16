@@ -1,0 +1,129 @@
+{
+  "paragraphs": [
+    {
+      "text": "sc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\r\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-15 00:43:29.208",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594773756725_648920983",
+      "id": "20200715-004236_1857027284",
+      "dateCreated": "2020-07-15 00:42:36.725",
+      "dateStarted": "2020-07-15 00:43:29.217",
+      "dateFinished": "2020-07-15 00:43:29.462",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "import org.apache.spark.sql.functions.input_file_name\r\nimport org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\r\n\r\nimport org.apache.spark.sql.types._\r\nimport org.apache.spark.sql._\r\nimport spark.implicits._\r\n\r\n val cdrs \u003d spark.read.format(\"csv\")\r\n    .option(\"header\",\"false\")\r\n    .option(\"inferSchema\", \"true\")\r\n    .load(\"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops-2020-07-11/*.csv\")",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-15 00:43:29.514",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {}
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.spark.sql.functions.input_file_name\nimport org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql._\nimport spark.implicits._\ncdrs: org.apache.spark.sql.DataFrame \u003d [_c0: string, _c1: string ... 8 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594773780392_687435681",
+      "id": "20200715-004300_1898177765",
+      "dateCreated": "2020-07-15 00:43:00.392",
+      "dateStarted": "2020-07-15 00:43:29.521",
+      "dateFinished": "2020-07-15 00:49:22.478",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "cdrs\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-15 00:51:46.806",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {}
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "res3: org.apache.spark.sql.DataFrame \u003d [_c0: string, _c1: string ... 8 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594773809514_49935085",
+      "id": "20200715-004329_1555421126",
+      "dateCreated": "2020-07-15 00:43:29.514",
+      "dateStarted": "2020-07-15 00:51:46.825",
+      "dateFinished": "2020-07-15 00:51:47.524",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "user": "yanchao",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594774306806_402781819",
+      "id": "20200715-005146_427172584",
+      "dateCreated": "2020-07-15 00:51:46.807",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Geospatial/draft",
+  "id": "2FFPRGA5C",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

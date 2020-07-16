@@ -1,0 +1,61 @@
+{
+  "paragraphs": [
+    {
+      "text": "val path_to_towers \u003d \"s3n://sierra-leone-lake/blob/towers/tower_district_secton.csv\"\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-14 22:30:09.171",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594765788649_1161303896",
+      "id": "20200714-222948_1786795919",
+      "dateCreated": "2020-07-14 22:29:48.649",
+      "dateStarted": "2020-07-14 22:30:09.209",
+      "dateFinished": "2020-07-14 22:30:12.917",
+      "status": "ERROR",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "user": "yanchao",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594765809171_239950957",
+      "id": "20200714-223009_1978181328",
+      "dateCreated": "2020-07-14 22:30:09.171",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "~Trash/hourly recording",
+  "id": "2FD39ZC3Z",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "python:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

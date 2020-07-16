@@ -1,16 +1,623 @@
 {
   "paragraphs": [
     {
+      "text": "\n/**\n * title: OD matrix Tower to Tower\n * author: Zhuangyuan Fan\n * Time： 2020/07/13\n * description: \n **/\n// val pathToStop \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops-2020-07-11/part-0000[0-9]-ae0d2ec0-3605-46af-8236-2fa3ff14cd3f-c000.csv\"\n// val pathToTowers \u003d \"s3n://sierra-leone-lake/blob/towers/combined_towers_district_07_11.csv\"\n// val pathToMorning \u003d \"s3n://sierra-leone-lake/blob/AGGEGATED_CDRS/africell/towerOD/ODtower_morning\"\n// val pathToAfternoon \u003d \"s3n://sierra-leone-lake/blob/AGGEGATED_CDRS/africell/towerOD/ODtower_afternoon\"",
+      "user": "yuan",
+      "dateUpdated": "2020-07-15 12:22:23.557",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1593816085648_-280589306",
+      "id": "20200703-224125_1213989695",
+      "dateCreated": "2020-07-03 22:41:25.648",
+      "dateStarted": "2020-07-15 12:22:23.592",
+      "dateFinished": "2020-07-15 12:22:55.416",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n\nimport os\nfrom datetime import datetime\nimport matplotlib.pyplot as plt\nfrom pyspark.sql import SQLContext\n\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\nfrom pyspark.sql.functions import split, lower\nimport pyspark.sql.functions as F\nfrom pyspark import StorageLevel\n",
+      "user": "yuan",
+      "dateUpdated": "2020-07-15 12:21:59.233",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "pyspark is not responding"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594694114350_959117595",
+      "id": "20200714-023514_1300295417",
+      "dateCreated": "2020-07-14 02:35:14.350",
+      "dateStarted": "2020-07-15 12:21:59.261",
+      "dateFinished": "2020-07-15 12:22:12.782",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)\n\n\n",
+      "user": "yuan",
+      "dateUpdated": "2020-07-15 12:22:07.125",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "pyspark is not responding"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594694138090_795636530",
+      "id": "20200714-023538_201116719",
+      "dateCreated": "2020-07-14 02:35:38.090",
+      "dateStarted": "2020-07-15 12:22:07.163",
+      "dateFinished": "2020-07-15 12:22:24.646",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n\ndftrips \u003d sq.read.csv(\"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops-2020-07-11/part-00000-ae0d2ec0-3605-46af-8236-2fa3ff14cd3f-c000.csv\", header\u003d\"true\", inferSchema\u003d\"true\")\n\ndftrips.persist(StorageLevel.MEMORY_AND_DISK)",
+      "user": "yuan",
+      "dateUpdated": "2020-07-15 00:28:35.883",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "DataFrame[subscriber: string, site_id: int, call_date: timestamp, STOP_ID: int, start_time: timestamp, end_time: timestamp, frequency: int, event_gap: int, duration: int, confidence: double]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594735412467_612653679",
+      "id": "20200714-140332_1818954873",
+      "dateCreated": "2020-07-14 14:03:32.467",
+      "dateStarted": "2020-07-15 00:28:35.957",
+      "dateFinished": "2020-07-15 00:33:56.369",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndftrips.show()",
+      "user": "yuan",
+      "dateUpdated": "2020-07-15 00:28:39.129",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------+-------------------+-------+-------------------+-------------------+---------+---------+--------+-------------------+\n|          subscriber|site_id|          call_date|STOP_ID|         start_time|           end_time|frequency|event_gap|duration|         confidence|\n+--------------------+-------+-------------------+-------+-------------------+-------------------+---------+---------+--------+-------------------+\n|00029E72B5BDC783E...|   1408|2020-02-28 00:00:00|      1|2020-02-28 14:49:03|2020-02-28 16:48:47|        3|     5074|    7184| 0.7062917594654788|\n|00029E72B5BDC783E...|   1410|2020-02-15 00:00:00|      2|2020-02-15 07:38:54|2020-02-15 21:45:48|        8|    40124|   50814| 0.7896249065218247|\n|00029E72B5BDC783E...|   1001|2020-02-15 00:00:00|      3|2020-02-15 15:33:16|2020-02-15 16:16:43|        2|     2551|    2607| 0.9785193709244342|\n|00029E72B5BDC783E...|   1410|2020-02-27 00:00:00|      4|2020-02-27 07:41:42|2020-02-27 21:22:25|        3|    48413|   49243| 0.9831448124606543|\n|00029E72B5BDC783E...|   1408|2020-02-27 00:00:00|      5|2020-02-27 13:57:02|2020-02-27 15:43:32|        5|     5287|    6390| 0.8273865414710485|\n|00029E72B5BDC783E...|   1410|2020-02-18 00:00:00|      6|2020-02-18 01:12:05|2020-02-18 14:01:38|        5|    46127|   46173| 0.9990037467784203|\n|00029E72B5BDC783E...|   1423|2020-02-18 00:00:00|      7|2020-02-18 15:17:03|2020-02-18 17:17:08|        2|     7107|    7205| 0.9863983344899375|\n|00029E72B5BDC783E...|   1410|2020-02-08 00:00:00|      8|2020-02-08 09:16:49|2020-02-08 19:35:12|        6|    32270|   37103| 0.8697409912945044|\n|00029E72B5BDC783E...|   2032|2020-02-08 00:00:00|      9|2020-02-08 14:06:25|2020-02-08 16:13:01|        2|     7559|    7596| 0.9951290152711953|\n|00029E72B5BDC783E...|   1405|2020-02-19 00:00:00|     10|2020-02-19 11:07:47|2020-02-19 21:17:54|        6|    23980|   36607| 0.6550659709891551|\n|00029E72B5BDC783E...|   1410|2020-02-11 00:00:00|     11|2020-02-11 09:42:49|2020-02-11 13:03:37|        3|     7317|   12048| 0.6073207171314741|\n|00029E72B5BDC783E...|   1410|2020-02-02 00:00:00|     12|2020-02-02 07:35:55|2020-02-02 15:06:03|       10|    18665|   27008|  0.691091528436019|\n|00029E72B5BDC783E...|   1420|2020-02-02 00:00:00|     13|2020-02-02 11:08:02|2020-02-02 11:26:58|        2|      138|    1136|0.12147887323943662|\n|00029E72B5BDC783E...|   1428|2020-02-02 00:00:00|     14|2020-02-02 12:57:09|2020-02-02 15:03:08|        6|     3135|    7559|0.41473739912686863|\n|00029E72B5BDC783E...|   1423|2020-02-02 00:00:00|     15|2020-02-02 17:42:18|2020-02-02 18:56:38|        2|     4383|    4460| 0.9827354260089686|\n|00029E72B5BDC783E...|   1410|2020-02-10 00:00:00|     16|2020-02-10 01:08:25|2020-02-10 19:17:48|        9|    53796|   65363| 0.8230344384437679|\n|00029E72B5BDC783E...|   1408|2020-02-10 00:00:00|     17|2020-02-10 09:26:47|2020-02-10 11:51:46|        6|     5911|    8699| 0.6795033911943902|\n|00029E72B5BDC783E...|   1405|2020-02-06 00:00:00|     18|2020-02-06 08:22:48|2020-02-06 20:41:50|        5|    42712|   44342| 0.9632402688196292|\n|00029E72B5BDC783E...|   1408|2020-02-06 00:00:00|     19|2020-02-06 12:17:49|2020-02-06 16:24:47|        5|    13783|   14818| 0.9301525172088001|\n|00029E72B5BDC783E...|   1437|2020-02-24 00:00:00|     20|2020-02-24 12:54:13|2020-02-24 13:08:18|        3|      629|     845|  0.744378698224852|\n+--------------------+-------+-------------------+-------+-------------------+-------------------+---------+---------+--------+-------------------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594735513686_1311519773",
+      "id": "20200714-140513_1678533704",
+      "dateCreated": "2020-07-14 14:05:13.686",
+      "dateStarted": "2020-07-15 00:28:39.213",
+      "dateFinished": "2020-07-15 00:34:02.135",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n# names\u003d{\u0027subscriber\u0027:StringType(), \u0027site_id\u0027:StringType(), \u0027call_date\u0027:StringType(), \u0027STOP_ID\u0027:IntegerType(), \u0027start_time\u0027:StringType(), \u0027end_time\u0027:StringType(), \u0027frequency\u0027:IntegerType(), \u0027event_gap\u0027:IntegerType(), \u0027duration\u0027:IntegerType(), \u0027confidence\u0027: StringType()}\n# fields\u003d[]\n# for header in names:\n#     fields.append(StructField(header, names[header], False))\n# schema \u003d StructType(fields)\n\n# df \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops-2020-07*.csv\u0027, schema\u003dschema)",
       "user": "anonymous",
+      "dateUpdated": "2020-07-14 16:33:11.522",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594694151681_-399066674",
+      "id": "20200714-023551_565888113",
+      "dateCreated": "2020-07-14 02:35:51.681",
+      "dateStarted": "2020-07-14 14:13:06.496",
+      "dateFinished": "2020-07-14 14:13:20.608",
+      "status": "ABORT",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nfrom pyspark.sql.functions import udf\ndef weekend(weekday):\n    if weekday\u003c6:\n        return 1\n    else:\n        return 0\n        \nfunc_udf \u003d udf(weekend, IntegerType())",
+      "user": "yuan",
+      "dateUpdated": "2020-07-15 00:28:42.492",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594753042412_-1421761257",
+      "id": "20200714-185722_418635223",
+      "dateCreated": "2020-07-14 18:57:22.412",
+      "dateStarted": "2020-07-15 00:33:56.893",
+      "dateFinished": "2020-07-15 00:34:02.156",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nfrom pyspark.sql.functions import udf\n\ndef weekend(weekday):\n    if weekday\u003c6:\n        return 0\n    else:\n        return 1\n\ndef getonedayod(userdaydf):\n    des\u003duserdaydf[userdaydf[\u0027start_hour\u0027]\u003d\u003dnp.max(userdaydf[\u0027start_hour\u0027])].reset_index(drop\u003dTrue)\n    ori\u003duserdaydf[userdaydf[\u0027start_hour\u0027]\u003d\u003dnp.min(userdaydf[\u0027start_hour\u0027])].reset_index(drop\u003dTrue)\n    return (ori.at[0,\u0027site_id\u0027],des.at[0,\u0027site_id\u0027])\n\ndef getuserod(userdf):\n    output\u003duserdf.groupby(\u0027call_date\u0027).apply(getonedayod).reset_index().rename(columns\u003d{0:\u0027odpairs\u0027})\n    return output\n        \nfunc_udf \u003d udf(weekend, IntegerType())\nfunc_getondayod \u003d udf(getonedayod)\nfunc_getuserod \u003d udf(getuserod)\n",
+      "user": "yuan",
+      "dateUpdated": "2020-07-14 23:11:29.529",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594753976911_-1213445372",
+      "id": "20200714-191256_1370446385",
+      "dateCreated": "2020-07-14 19:12:56.911",
+      "dateStarted": "2020-07-14 23:19:58.081",
+      "dateFinished": "2020-07-14 23:19:58.087",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n\ndftrips \u003d dftrips.withColumn(\"call_datetime\", F.to_date(\"call_date\"))\\\n        .withColumn(\"start_hour\", F.hour(\"start_time\").cast(IntegerType()))\\\n        .withColumn(\"day_week\", F.date_format(\"start_time\", \"u\").cast(IntegerType()))\\\n        .drop(\u0027call_date\u0027, \u0027start_time\u0027, \u0027end_time\u0027) # Drop columns which we\u0027ll not use\n\ndftrips.show()\n",
+      "user": "yuan",
+      "dateUpdated": "2020-07-15 00:28:56.651",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+----------+--------+\n|          subscriber|site_id|STOP_ID|frequency|event_gap|duration|         confidence|call_datetime|start_hour|day_week|\n+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+----------+--------+\n|00029E72B5BDC783E...|   1408|      1|        3|     5074|    7184| 0.7062917594654788|   2020-02-28|        14|       5|\n|00029E72B5BDC783E...|   1410|      2|        8|    40124|   50814| 0.7896249065218247|   2020-02-15|         7|       6|\n|00029E72B5BDC783E...|   1001|      3|        2|     2551|    2607| 0.9785193709244342|   2020-02-15|        15|       6|\n|00029E72B5BDC783E...|   1410|      4|        3|    48413|   49243| 0.9831448124606543|   2020-02-27|         7|       4|\n|00029E72B5BDC783E...|   1408|      5|        5|     5287|    6390| 0.8273865414710485|   2020-02-27|        13|       4|\n|00029E72B5BDC783E...|   1410|      6|        5|    46127|   46173| 0.9990037467784203|   2020-02-18|         1|       2|\n|00029E72B5BDC783E...|   1423|      7|        2|     7107|    7205| 0.9863983344899375|   2020-02-18|        15|       2|\n|00029E72B5BDC783E...|   1410|      8|        6|    32270|   37103| 0.8697409912945044|   2020-02-08|         9|       6|\n|00029E72B5BDC783E...|   2032|      9|        2|     7559|    7596| 0.9951290152711953|   2020-02-08|        14|       6|\n|00029E72B5BDC783E...|   1405|     10|        6|    23980|   36607| 0.6550659709891551|   2020-02-19|        11|       3|\n|00029E72B5BDC783E...|   1410|     11|        3|     7317|   12048| 0.6073207171314741|   2020-02-11|         9|       2|\n|00029E72B5BDC783E...|   1410|     12|       10|    18665|   27008|  0.691091528436019|   2020-02-02|         7|       7|\n|00029E72B5BDC783E...|   1420|     13|        2|      138|    1136|0.12147887323943662|   2020-02-02|        11|       7|\n|00029E72B5BDC783E...|   1428|     14|        6|     3135|    7559|0.41473739912686863|   2020-02-02|        12|       7|\n|00029E72B5BDC783E...|   1423|     15|        2|     4383|    4460| 0.9827354260089686|   2020-02-02|        17|       7|\n|00029E72B5BDC783E...|   1410|     16|        9|    53796|   65363| 0.8230344384437679|   2020-02-10|         1|       1|\n|00029E72B5BDC783E...|   1408|     17|        6|     5911|    8699| 0.6795033911943902|   2020-02-10|         9|       1|\n|00029E72B5BDC783E...|   1405|     18|        5|    42712|   44342| 0.9632402688196292|   2020-02-06|         8|       4|\n|00029E72B5BDC783E...|   1408|     19|        5|    13783|   14818| 0.9301525172088001|   2020-02-06|        12|       4|\n|00029E72B5BDC783E...|   1437|     20|        3|      629|     845|  0.744378698224852|   2020-02-24|        12|       1|\n+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+----------+--------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594694219211_1012166165",
+      "id": "20200714-023659_1484848112",
+      "dateCreated": "2020-07-14 02:36:59.211",
+      "dateStarted": "2020-07-15 00:34:02.187",
+      "dateFinished": "2020-07-15 00:34:02.701",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndftrips\u003ddftrips.withColumn(\"is_weekend\", func_udf(dftrips[\"day_week\"]))\ndftrips.show()",
+      "user": "yuan",
+      "dateUpdated": "2020-07-15 00:29:05.228",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+----------+--------+----------+\n|          subscriber|site_id|STOP_ID|frequency|event_gap|duration|         confidence|call_datetime|start_hour|day_week|is_weekend|\n+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+----------+--------+----------+\n|00029E72B5BDC783E...|   1408|      1|        3|     5074|    7184| 0.7062917594654788|   2020-02-28|        14|       5|         1|\n|00029E72B5BDC783E...|   1410|      2|        8|    40124|   50814| 0.7896249065218247|   2020-02-15|         7|       6|         0|\n|00029E72B5BDC783E...|   1001|      3|        2|     2551|    2607| 0.9785193709244342|   2020-02-15|        15|       6|         0|\n|00029E72B5BDC783E...|   1410|      4|        3|    48413|   49243| 0.9831448124606543|   2020-02-27|         7|       4|         1|\n|00029E72B5BDC783E...|   1408|      5|        5|     5287|    6390| 0.8273865414710485|   2020-02-27|        13|       4|         1|\n|00029E72B5BDC783E...|   1410|      6|        5|    46127|   46173| 0.9990037467784203|   2020-02-18|         1|       2|         1|\n|00029E72B5BDC783E...|   1423|      7|        2|     7107|    7205| 0.9863983344899375|   2020-02-18|        15|       2|         1|\n|00029E72B5BDC783E...|   1410|      8|        6|    32270|   37103| 0.8697409912945044|   2020-02-08|         9|       6|         0|\n|00029E72B5BDC783E...|   2032|      9|        2|     7559|    7596| 0.9951290152711953|   2020-02-08|        14|       6|         0|\n|00029E72B5BDC783E...|   1405|     10|        6|    23980|   36607| 0.6550659709891551|   2020-02-19|        11|       3|         1|\n|00029E72B5BDC783E...|   1410|     11|        3|     7317|   12048| 0.6073207171314741|   2020-02-11|         9|       2|         1|\n|00029E72B5BDC783E...|   1410|     12|       10|    18665|   27008|  0.691091528436019|   2020-02-02|         7|       7|         0|\n|00029E72B5BDC783E...|   1420|     13|        2|      138|    1136|0.12147887323943662|   2020-02-02|        11|       7|         0|\n|00029E72B5BDC783E...|   1428|     14|        6|     3135|    7559|0.41473739912686863|   2020-02-02|        12|       7|         0|\n|00029E72B5BDC783E...|   1423|     15|        2|     4383|    4460| 0.9827354260089686|   2020-02-02|        17|       7|         0|\n|00029E72B5BDC783E...|   1410|     16|        9|    53796|   65363| 0.8230344384437679|   2020-02-10|         1|       1|         1|\n|00029E72B5BDC783E...|   1408|     17|        6|     5911|    8699| 0.6795033911943902|   2020-02-10|         9|       1|         1|\n|00029E72B5BDC783E...|   1405|     18|        5|    42712|   44342| 0.9632402688196292|   2020-02-06|         8|       4|         1|\n|00029E72B5BDC783E...|   1408|     19|        5|    13783|   14818| 0.9301525172088001|   2020-02-06|        12|       4|         1|\n|00029E72B5BDC783E...|   1437|     20|        3|      629|     845|  0.744378698224852|   2020-02-24|        12|       1|         1|\n+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+----------+--------+----------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594753809202_2136591962",
+      "id": "20200714-191009_916862686",
+      "dateCreated": "2020-07-14 19:10:09.202",
+      "dateStarted": "2020-07-15 00:34:02.721",
+      "dateFinished": "2020-07-15 00:34:03.837",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "yuan",
+      "dateUpdated": "2020-07-14 20:01:24.921",
       "config": {},
       "settings": {
         "params": {},
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1593816085648_-280589306",
-      "id": "20200703-224125_1213989695",
-      "dateCreated": "2020-07-03 22:41:25.648",
+      "jobName": "paragraph_1594756884920_977899802",
+      "id": "20200714-200124_73980171",
+      "dateCreated": "2020-07-14 20:01:24.920",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nmorningdf \u003d dftrips.where(\"start_hour \u003c 12 or start_hour \u003e 6\")\nmorningdf.show()",
+      "user": "yuan",
+      "dateUpdated": "2020-07-15 00:29:11.697",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+----------+--------+----------+\n|          subscriber|site_id|STOP_ID|frequency|event_gap|duration|         confidence|call_datetime|start_hour|day_week|is_weekend|\n+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+----------+--------+----------+\n|00029E72B5BDC783E...|   1408|      1|        3|     5074|    7184| 0.7062917594654788|   2020-02-28|        14|       5|         1|\n|00029E72B5BDC783E...|   1410|      2|        8|    40124|   50814| 0.7896249065218247|   2020-02-15|         7|       6|         0|\n|00029E72B5BDC783E...|   1001|      3|        2|     2551|    2607| 0.9785193709244342|   2020-02-15|        15|       6|         0|\n|00029E72B5BDC783E...|   1410|      4|        3|    48413|   49243| 0.9831448124606543|   2020-02-27|         7|       4|         1|\n|00029E72B5BDC783E...|   1408|      5|        5|     5287|    6390| 0.8273865414710485|   2020-02-27|        13|       4|         1|\n|00029E72B5BDC783E...|   1410|      6|        5|    46127|   46173| 0.9990037467784203|   2020-02-18|         1|       2|         1|\n|00029E72B5BDC783E...|   1423|      7|        2|     7107|    7205| 0.9863983344899375|   2020-02-18|        15|       2|         1|\n|00029E72B5BDC783E...|   1410|      8|        6|    32270|   37103| 0.8697409912945044|   2020-02-08|         9|       6|         0|\n|00029E72B5BDC783E...|   2032|      9|        2|     7559|    7596| 0.9951290152711953|   2020-02-08|        14|       6|         0|\n|00029E72B5BDC783E...|   1405|     10|        6|    23980|   36607| 0.6550659709891551|   2020-02-19|        11|       3|         1|\n|00029E72B5BDC783E...|   1410|     11|        3|     7317|   12048| 0.6073207171314741|   2020-02-11|         9|       2|         1|\n|00029E72B5BDC783E...|   1410|     12|       10|    18665|   27008|  0.691091528436019|   2020-02-02|         7|       7|         0|\n|00029E72B5BDC783E...|   1420|     13|        2|      138|    1136|0.12147887323943662|   2020-02-02|        11|       7|         0|\n|00029E72B5BDC783E...|   1428|     14|        6|     3135|    7559|0.41473739912686863|   2020-02-02|        12|       7|         0|\n|00029E72B5BDC783E...|   1423|     15|        2|     4383|    4460| 0.9827354260089686|   2020-02-02|        17|       7|         0|\n|00029E72B5BDC783E...|   1410|     16|        9|    53796|   65363| 0.8230344384437679|   2020-02-10|         1|       1|         1|\n|00029E72B5BDC783E...|   1408|     17|        6|     5911|    8699| 0.6795033911943902|   2020-02-10|         9|       1|         1|\n|00029E72B5BDC783E...|   1405|     18|        5|    42712|   44342| 0.9632402688196292|   2020-02-06|         8|       4|         1|\n|00029E72B5BDC783E...|   1408|     19|        5|    13783|   14818| 0.9301525172088001|   2020-02-06|        12|       4|         1|\n|00029E72B5BDC783E...|   1437|     20|        3|      629|     845|  0.744378698224852|   2020-02-24|        12|       1|         1|\n+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+----------+--------+----------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594694283288_2122486776",
+      "id": "20200714-023803_460236910",
+      "dateCreated": "2020-07-14 02:38:03.288",
+      "dateStarted": "2020-07-15 00:34:03.235",
+      "dateFinished": "2020-07-15 00:34:04.611",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nmorningdf.first().subscriber",
+      "user": "yuan",
+      "dateUpdated": "2020-07-14 20:01:50.273",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u002700029E72B5BDC783E696E4827A0776E5\u0027\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594756890287_-2130904171",
+      "id": "20200714-200130_28845197",
+      "dateCreated": "2020-07-14 20:01:30.287",
+      "dateStarted": "2020-07-14 20:01:38.361",
+      "dateFinished": "2020-07-14 20:01:38.739",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ntestdf\u003dmorningdf.where(\"subscriber \u003d\u003d \u002700029E72B5BDC783E696E4827A0776E5\u0027\")\n\ntestdf.show()\n\n",
+      "user": "yuan",
+      "dateUpdated": "2020-07-15 00:29:31.809",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+----------+--------+----------+\n|          subscriber|site_id|STOP_ID|frequency|event_gap|duration|         confidence|call_datetime|start_hour|day_week|is_weekend|\n+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+----------+--------+----------+\n|00029E72B5BDC783E...|   1408|      1|        3|     5074|    7184| 0.7062917594654788|   2020-02-28|        14|       5|         1|\n|00029E72B5BDC783E...|   1410|      2|        8|    40124|   50814| 0.7896249065218247|   2020-02-15|         7|       6|         0|\n|00029E72B5BDC783E...|   1001|      3|        2|     2551|    2607| 0.9785193709244342|   2020-02-15|        15|       6|         0|\n|00029E72B5BDC783E...|   1410|      4|        3|    48413|   49243| 0.9831448124606543|   2020-02-27|         7|       4|         1|\n|00029E72B5BDC783E...|   1408|      5|        5|     5287|    6390| 0.8273865414710485|   2020-02-27|        13|       4|         1|\n|00029E72B5BDC783E...|   1410|      6|        5|    46127|   46173| 0.9990037467784203|   2020-02-18|         1|       2|         1|\n|00029E72B5BDC783E...|   1423|      7|        2|     7107|    7205| 0.9863983344899375|   2020-02-18|        15|       2|         1|\n|00029E72B5BDC783E...|   1410|      8|        6|    32270|   37103| 0.8697409912945044|   2020-02-08|         9|       6|         0|\n|00029E72B5BDC783E...|   2032|      9|        2|     7559|    7596| 0.9951290152711953|   2020-02-08|        14|       6|         0|\n|00029E72B5BDC783E...|   1405|     10|        6|    23980|   36607| 0.6550659709891551|   2020-02-19|        11|       3|         1|\n|00029E72B5BDC783E...|   1410|     11|        3|     7317|   12048| 0.6073207171314741|   2020-02-11|         9|       2|         1|\n|00029E72B5BDC783E...|   1410|     12|       10|    18665|   27008|  0.691091528436019|   2020-02-02|         7|       7|         0|\n|00029E72B5BDC783E...|   1420|     13|        2|      138|    1136|0.12147887323943662|   2020-02-02|        11|       7|         0|\n|00029E72B5BDC783E...|   1428|     14|        6|     3135|    7559|0.41473739912686863|   2020-02-02|        12|       7|         0|\n|00029E72B5BDC783E...|   1423|     15|        2|     4383|    4460| 0.9827354260089686|   2020-02-02|        17|       7|         0|\n|00029E72B5BDC783E...|   1410|     16|        9|    53796|   65363| 0.8230344384437679|   2020-02-10|         1|       1|         1|\n|00029E72B5BDC783E...|   1408|     17|        6|     5911|    8699| 0.6795033911943902|   2020-02-10|         9|       1|         1|\n|00029E72B5BDC783E...|   1405|     18|        5|    42712|   44342| 0.9632402688196292|   2020-02-06|         8|       4|         1|\n|00029E72B5BDC783E...|   1408|     19|        5|    13783|   14818| 0.9301525172088001|   2020-02-06|        12|       4|         1|\n|00029E72B5BDC783E...|   1437|     20|        3|      629|     845|  0.744378698224852|   2020-02-24|        12|       1|         1|\n+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+----------+--------+----------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594756913157_-637322219",
+      "id": "20200714-200153_737332077",
+      "dateCreated": "2020-07-14 20:01:53.157",
+      "dateStarted": "2020-07-15 00:34:03.885",
+      "dateFinished": "2020-07-15 00:34:04.925",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndf_agg \u003d (testdf\n    .groupBy(\"call_datetime\")\n    .agg(F.min(\"start_hour\").alias(\"start\"), F.max(\"start_hour\").alias(\"end\")))\n\ndf_agg.show()\n\n",
+      "user": "yuan",
+      "dateUpdated": "2020-07-15 00:57:34.333",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "pyspark is not responding"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594774440668_-223764496",
+      "id": "20200715-005400_1283731987",
+      "dateCreated": "2020-07-15 00:54:00.668",
+      "dateStarted": "2020-07-15 00:57:34.401",
+      "dateFinished": "2020-07-15 00:58:10.390",
+      "status": "ABORT",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nfrom pyspark.sql import Window\n\nw \u003d Window.partitionBy(\u0027subscriber\u0027)\n\ntrips \u003d testdf.withColumn(\u0027start\u0027, F.min(\u0027start_hour\u0027).over(w))\\\n        .where(F.col(\u0027start\u0027) \u003d\u003d F.col(\u0027maxfreq\u0027))\\\n        .drop(\u0027total_freq\u0027)",
+      "user": "yuan",
+      "dateUpdated": "2020-07-15 00:53:02.256",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594756810255_1718634556",
+      "id": "20200714-200010_636889651",
+      "dateCreated": "2020-07-14 20:00:10.255",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nafternoondf \u003d dftrips.where(\"start_hour \u003c 20 or start_hour \u003e 14\")\nafternoondf.show()",
+      "user": "yuan",
+      "dateUpdated": "2020-07-14 19:13:24.595",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+----------+--------+----------+\n|          subscriber|site_id|STOP_ID|frequency|event_gap|duration|         confidence|call_datetime|start_hour|day_week|is_weekend|\n+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+----------+--------+----------+\n|00029E72B5BDC783E...|   1408|      1|        3|     5074|    7184| 0.7062917594654788|   2020-02-28|        14|       5|         0|\n|00029E72B5BDC783E...|   1410|      2|        8|    40124|   50814| 0.7896249065218247|   2020-02-15|         7|       6|         1|\n|00029E72B5BDC783E...|   1001|      3|        2|     2551|    2607| 0.9785193709244342|   2020-02-15|        15|       6|         1|\n|00029E72B5BDC783E...|   1410|      4|        3|    48413|   49243| 0.9831448124606543|   2020-02-27|         7|       4|         0|\n|00029E72B5BDC783E...|   1408|      5|        5|     5287|    6390| 0.8273865414710485|   2020-02-27|        13|       4|         0|\n|00029E72B5BDC783E...|   1410|      6|        5|    46127|   46173| 0.9990037467784203|   2020-02-18|         1|       2|         0|\n|00029E72B5BDC783E...|   1423|      7|        2|     7107|    7205| 0.9863983344899375|   2020-02-18|        15|       2|         0|\n|00029E72B5BDC783E...|   1410|      8|        6|    32270|   37103| 0.8697409912945044|   2020-02-08|         9|       6|         1|\n|00029E72B5BDC783E...|   2032|      9|        2|     7559|    7596| 0.9951290152711953|   2020-02-08|        14|       6|         1|\n|00029E72B5BDC783E...|   1405|     10|        6|    23980|   36607| 0.6550659709891551|   2020-02-19|        11|       3|         0|\n|00029E72B5BDC783E...|   1410|     11|        3|     7317|   12048| 0.6073207171314741|   2020-02-11|         9|       2|         0|\n|00029E72B5BDC783E...|   1410|     12|       10|    18665|   27008|  0.691091528436019|   2020-02-02|         7|       7|         1|\n|00029E72B5BDC783E...|   1420|     13|        2|      138|    1136|0.12147887323943662|   2020-02-02|        11|       7|         1|\n|00029E72B5BDC783E...|   1428|     14|        6|     3135|    7559|0.41473739912686863|   2020-02-02|        12|       7|         1|\n|00029E72B5BDC783E...|   1423|     15|        2|     4383|    4460| 0.9827354260089686|   2020-02-02|        17|       7|         1|\n|00029E72B5BDC783E...|   1410|     16|        9|    53796|   65363| 0.8230344384437679|   2020-02-10|         1|       1|         0|\n|00029E72B5BDC783E...|   1408|     17|        6|     5911|    8699| 0.6795033911943902|   2020-02-10|         9|       1|         0|\n|00029E72B5BDC783E...|   1405|     18|        5|    42712|   44342| 0.9632402688196292|   2020-02-06|         8|       4|         0|\n|00029E72B5BDC783E...|   1408|     19|        5|    13783|   14818| 0.9301525172088001|   2020-02-06|        12|       4|         0|\n|00029E72B5BDC783E...|   1437|     20|        3|      629|     845|  0.744378698224852|   2020-02-24|        12|       1|         0|\n+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+----------+--------+----------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594735930835_401295785",
+      "id": "20200714-141210_1804507286",
+      "dateCreated": "2020-07-14 14:12:10.835",
+      "dateStarted": "2020-07-14 19:13:24.614",
+      "dateFinished": "2020-07-14 19:13:24.925",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "yuan",
+      "dateUpdated": "2020-07-14 19:13:19.488",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594753999487_-440683635",
+      "id": "20200714-191319_925914944",
+      "dateCreated": "2020-07-14 19:13:19.487",
       "status": "READY",
       "progressUpdateIntervalMs": 500
     }

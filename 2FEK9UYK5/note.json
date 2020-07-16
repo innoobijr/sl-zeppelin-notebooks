@@ -1,0 +1,1061 @@
+{
+  "paragraphs": [
+    {
+      "text": "%spark.pyspark\n/**\n * title: Work Identification \n * author: Ziyu Ran\n * Time： 2020/07/03\n * description: \n */",
+      "user": "anonymous",
+      "dateUpdated": "2020-07-13 21:15:35.586",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594674366659_740465032",
+      "id": "20200713-210606_600373912",
+      "dateCreated": "2020-07-13 21:06:06.659",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nimport os\nfrom datetime import datetime\nimport matplotlib.pyplot as plt\nfrom pyspark.sql import SQLContext\n\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\nfrom pyspark.sql.functions import split, lower\nimport pyspark.sql.functions as F",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 14:44:39.893",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594674391684_1653444614",
+      "id": "20200713-210631_1385547486",
+      "dateCreated": "2020-07-13 21:06:31.685",
+      "dateStarted": "2020-07-15 14:44:40.073",
+      "dateFinished": "2020-07-15 14:44:45.248",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n# Just some configuration for Spark to be able to use AWS S3\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 14:44:47.170",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594674620806_1949962122",
+      "id": "20200713-211020_1047676617",
+      "dateCreated": "2020-07-13 21:10:20.806",
+      "dateStarted": "2020-07-15 14:44:47.258",
+      "dateFinished": "2020-07-15 14:44:47.280",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nnames\u003d{\u0027subscriber\u0027:StringType(), \u0027site_id\u0027:StringType(), \u0027call_date\u0027:StringType(), \u0027STOP_ID\u0027:IntegerType(), \u0027start_time\u0027:StringType(), \u0027end_time\u0027:StringType(), \u0027frequency\u0027:IntegerType(), \u0027event_gap\u0027:IntegerType(), \u0027duration\u0027:IntegerType(), \u0027confidence\u0027: StringType()}\nfields\u003d[]\nfor header in names:\n    fields.append(StructField(header, names[header], False))\nschema \u003d StructType(fields)\n\ndf1 \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops-2020-07-11/*.csv\u0027, schema\u003dschema)",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-14 21:55:08.924",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594674647819_400684394",
+      "id": "20200713-211047_285464659",
+      "dateCreated": "2020-07-13 21:10:47.819",
+      "dateStarted": "2020-07-14 21:55:08.997",
+      "dateFinished": "2020-07-14 22:02:06.544",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\ndf1 \u003d df1.withColumn(\"call_datetime\", F.to_date(\"call_date\"))\\\n        .withColumn(\"start\", F.to_timestamp(\"start_time\"))\\\n        .withColumn(\"end\", F.to_timestamp(\"end_time\"))\\\n        .withColumn(\"start_hour\", F.hour(\"start\"))\\\n        .withColumn(\"weekday\", F.date_format(\"start\", \"u\"))\\\n        .drop(\u0027call_date\u0027, \u0027start_time\u0027, \u0027end_time\u0027) # Drop columns which we\u0027ll not use\ndf1.persist(StorageLevel.MEMORY_AND_DISK)\ndf1.show()\n",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-14 23:51:47.602",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+-------------------+-------------------+----------+-------+\n|          subscriber|site_id|STOP_ID|frequency|event_gap|duration|         confidence|call_datetime|              start|                end|start_hour|weekday|\n+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+-------------------+-------------------+----------+-------+\n|00001C9215E4DFB5D...|   3525|      1|        2|    57653|   57660| 0.9998785986819285|   2020-02-19|2020-02-19 07:34:18|2020-02-19 23:35:18|         7|      3|\n|00001C9215E4DFB5D...|   3410|      2|        2|    10132|   10170| 0.9962635201573254|   2020-02-19|2020-02-19 08:36:03|2020-02-19 11:25:33|         8|      3|\n|00001C9215E4DFB5D...|   3412|      3|        2|    54173|   54197| 0.9995571710611288|   2020-02-26|2020-02-26 05:06:33|2020-02-26 20:09:50|         5|      3|\n|00001C9215E4DFB5D...|   1212|      4|        3|    10739|   11189| 0.9597819286799535|   2020-02-26|2020-02-26 20:17:52|2020-02-26 23:24:21|        20|      3|\n|00001C9215E4DFB5D...|   3613|      5|        2|     3524|    3591| 0.9813422445001392|   2020-02-12|2020-02-12 08:48:37|2020-02-12 09:48:28|         8|      3|\n|00001C9215E4DFB5D...|   3412|      6|        3|    13163|   21243| 0.6196394106293838|   2020-02-12|2020-02-12 17:31:58|2020-02-12 23:26:01|        17|      3|\n|00001C9215E4DFB5D...|   3410|      7|        2|     7738|    7775| 0.9952411575562701|   2020-02-24|2020-02-24 10:06:12|2020-02-24 12:15:47|        10|      1|\n|00001C9215E4DFB5D...|   3412|      8|        3|    16359|   17031| 0.9605425400739828|   2020-02-24|2020-02-24 18:57:11|2020-02-24 23:41:02|        18|      1|\n|00001C9215E4DFB5D...|   3525|      9|        4|    66149|   66169|  0.999697743656395|   2020-02-14|2020-02-14 00:48:10|2020-02-14 19:10:59|         0|      5|\n|00001C9215E4DFB5D...|   3417|     10|       10|     4194|   12178|0.34439152570208575|   2020-02-14|2020-02-14 08:22:00|2020-02-14 11:44:58|         8|      5|\n|00001C9215E4DFB5D...|   1212|     11|        2|    15308|   15342| 0.9977838612957893|   2020-02-14|2020-02-14 19:12:35|2020-02-14 23:28:17|        19|      5|\n|00001C9215E4DFB5D...|   3403|     12|        3|     2089|    4189|0.49868703747911197|   2020-02-27|2020-02-27 08:16:30|2020-02-27 09:26:19|         8|      4|\n|00001C9215E4DFB5D...|   3412|     13|        4|    25154|   30002|  0.838410772615159|   2020-02-27|2020-02-27 15:25:21|2020-02-27 23:45:23|        15|      4|\n|00001C9215E4DFB5D...|   3437|     14|        5|     1356|    2760|0.49130434782608695|   2020-02-13|2020-02-13 09:04:07|2020-02-13 09:50:07|         9|      4|\n|00001C9215E4DFB5D...|   3434|     15|        7|     9965|   18508| 0.5384158201858655|   2020-02-13|2020-02-13 10:18:21|2020-02-13 15:26:49|        10|      4|\n|00001C9215E4DFB5D...|   3412|     16|        5|      899|    2091| 0.4299378287900526|   2020-02-13|2020-02-13 18:19:27|2020-02-13 18:54:18|        18|      4|\n|00001C9215E4DFB5D...|   3412|     17|        2|     4803|    4845| 0.9913312693498452|   2020-02-18|2020-02-18 09:32:40|2020-02-18 10:53:25|         9|      2|\n|00001C9215E4DFB5D...|   3412|     18|        2|    20086|   20086|                1.0|   2020-02-21|2020-02-21 18:03:12|2020-02-21 23:37:58|        18|      5|\n|00001C9215E4DFB5D...|   3412|     19|        4|    40020|   61263| 0.6532491063121296|   2020-02-05|2020-02-05 05:04:51|2020-02-05 22:05:54|         5|      3|\n|00001C9215E4DFB5D...|   3412|     20|        5|    30770|   65187| 0.4720266310767484|   2020-02-07|2020-02-07 05:14:40|2020-02-07 23:21:07|         5|      5|\n+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+-------------------+-------------------+----------+-------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594674681849_-1877998090",
+      "id": "20200713-211121_2124207242",
+      "dateCreated": "2020-07-13 21:11:21.849",
+      "dateStarted": "2020-07-14 21:55:11.937",
+      "dateFinished": "2020-07-14 22:02:11.031",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndf1 \u003d df1.withColumn(\"start_hour\", df1[\"start_hour\"].cast(IntegerType()))\nworktime \u003d df1.where(\"start_hour\u003e9 and start_hour\u003c18 and weekday \u003c\u003d 5\")\nworktime.show()\n",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-14 21:55:14.717",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+-------------------+-------------------+----------+-------+\n|          subscriber|site_id|STOP_ID|frequency|event_gap|duration|         confidence|call_datetime|              start|                end|start_hour|weekday|\n+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+-------------------+-------------------+----------+-------+\n|00001C9215E4DFB5D...|   3412|      6|        3|    13163|   21243| 0.6196394106293838|   2020-02-12|2020-02-12 17:31:58|2020-02-12 23:26:01|        17|      3|\n|00001C9215E4DFB5D...|   3410|      7|        2|     7738|    7775| 0.9952411575562701|   2020-02-24|2020-02-24 10:06:12|2020-02-24 12:15:47|        10|      1|\n|00001C9215E4DFB5D...|   3412|     13|        4|    25154|   30002|  0.838410772615159|   2020-02-27|2020-02-27 15:25:21|2020-02-27 23:45:23|        15|      4|\n|00001C9215E4DFB5D...|   3434|     15|        7|     9965|   18508| 0.5384158201858655|   2020-02-13|2020-02-13 10:18:21|2020-02-13 15:26:49|        10|      4|\n|00001C9215E4DFB5D...|   3510|     23|        2|      666|     804| 0.8283582089552238|   2020-02-11|2020-02-11 15:35:06|2020-02-11 15:48:30|        15|      2|\n|00001C9215E4DFB5D...|   3613|     32|        2|     1034|    1053| 0.9819563152896487|   2020-02-03|2020-02-03 17:25:02|2020-02-03 17:42:35|        17|      1|\n|00001C9215E4DFB5D...|   3410|     37|        2|     5447|    5485| 0.9930720145852324|   2020-02-28|2020-02-28 12:58:17|2020-02-28 14:29:42|        12|      5|\n|00001C9215E4DFB5D...|   3417|     40|        2|     3482|    3566| 0.9764441951766686|   2020-02-10|2020-02-10 11:06:16|2020-02-10 12:05:42|        11|      1|\n|00001C9215E4DFB5D...|   3410|     41|        2|     1299|    1330| 0.9766917293233083|   2020-02-10|2020-02-10 13:07:41|2020-02-10 13:29:51|        13|      1|\n|00001C9215E4DFB5D...|   3412|     44|        6|    16540|   33028| 0.5007872108513988|   2020-02-06|2020-02-06 12:34:54|2020-02-06 21:45:22|        12|      4|\n|00001C9215E4DFB5D...|   3525|     46|        2|    29636|   29677| 0.9986184587390908|   2020-02-25|2020-02-25 14:53:12|2020-02-25 23:07:49|        14|      2|\n|00001C9215E4DFB5D...|   3526|     52|        3|     2706|    3586|  0.754601226993865|   2020-02-28|2020-02-28 15:38:49|2020-02-28 16:38:35|        15|      5|\n|00001C9215E4DFB5D...|   3525|     54|        3|    44666|   44683| 0.9996195421077367|   2020-02-18|2020-02-18 11:09:04|2020-02-18 23:33:47|        11|      2|\n|0001E30B0E65840A4...|   3608|      4|        3|      448|     843|  0.531435349940688|   2020-02-11|2020-02-11 17:01:16|2020-02-11 17:15:19|        17|      2|\n|0001E30B0E65840A4...|   3400|      5|       13|     2745|   11137|0.24647571159199066|   2020-02-11|2020-02-11 17:55:19|2020-02-11 21:00:56|        17|      2|\n|0001E30B0E65840A4...|   4012|     10|        5|      945|    1856| 0.5091594827586207|   2020-02-05|2020-02-05 16:03:30|2020-02-05 16:34:26|        16|      3|\n|0001E30B0E65840A4...|   4011|     30|       15|    11857|   42171| 0.2811647814849067|   2020-02-03|2020-02-03 11:00:22|2020-02-03 22:43:13|        11|      1|\n|0001E30B0E65840A4...|   3400|     31|        7|     6489|   24920| 0.2603932584269663|   2020-02-12|2020-02-12 12:41:06|2020-02-12 19:36:26|        12|      3|\n|0001E30B0E65840A4...|   4054|     38|        3|      935|    1355| 0.6900369003690037|   2020-02-11|2020-02-11 13:27:12|2020-02-11 13:49:47|        13|      2|\n|0001E30B0E65840A4...|   4011|     43|        5|     3780|    4515| 0.8372093023255814|   2020-02-05|2020-02-05 13:46:04|2020-02-05 15:01:19|        13|      3|\n+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+-------------------+-------------------+----------+-------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594674699822_726702471",
+      "id": "20200713-211139_745580115",
+      "dateCreated": "2020-07-13 21:11:39.822",
+      "dateStarted": "2020-07-14 22:02:07.064",
+      "dateFinished": "2020-07-14 22:02:35.897",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nwork \u003d worktime\\\n        .groupBy(\u0027subscriber\u0027, \u0027site_id\u0027)\\\n        .agg(F.sum(\u0027frequency\u0027).alias(\u0027total_freq\u0027))\\\n        .where(\"total_freq \u003e\u003d 5\")",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-14 21:55:24.955",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594674750906_1030474969",
+      "id": "20200713-211230_617434173",
+      "dateCreated": "2020-07-13 21:12:30.906",
+      "dateStarted": "2020-07-14 22:02:11.566",
+      "dateFinished": "2020-07-14 22:02:35.994",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nfrom pyspark.sql import Window\nw \u003d Window.partitionBy(\u0027subscriber\u0027)\nwork2 \u003d work.withColumn(\u0027maxfreq\u0027, F.max(\u0027total_freq\u0027).over(w))\\\n        .where(F.col(\u0027total_freq\u0027) \u003d\u003d F.col(\u0027maxfreq\u0027))\\\n        .drop(\u0027total_freq\u0027)\nwork2.show()",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-14 21:55:27.331",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------+-------+\n|          subscriber|site_id|maxfreq|\n+--------------------+-------+-------+\n|000116BABBD43C4CD...|   4026|    122|\n|000FAD58D62C03A79...|   2203|     12|\n|001092486DBA24A3D...|   2040|     69|\n|001603DD507491849...|   2212|     13|\n|001991E8E2E290397...|   1210|     10|\n|001E459530F1E213A...|   3489|     20|\n|001F99DE4BA7827AF...|   3503|      6|\n|002374A11730F9FE1...|   3605|     82|\n|002E91EBCA174B616...|   2215|     47|\n|002F1E1FB4DA49365...|   4066|     16|\n|003238B1D5FA9471D...|   1207|     44|\n|0037DD352BF737E2C...|   3467|    141|\n|0067D587BAD713EDB...|   2215|     27|\n|00783A3A9D3DB9F0B...|   2035|     90|\n|00934FFF68851B7F7...|   1070|     24|\n|0093CE18CE2F8CDA4...|   1281|     10|\n|00A070EA3ACE76516...|   3427|     59|\n|00A1E31B42C620CA4...|   2113|     12|\n|00DA2D6DD04886D3F...|   1220|     23|\n|00DA6F9A2939112E4...|   2222|     85|\n+--------------------+-------+-------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594674857983_1220528577",
+      "id": "20200713-211417_1421254867",
+      "dateCreated": "2020-07-13 21:14:17.983",
+      "dateStarted": "2020-07-14 22:02:36.087",
+      "dateFinished": "2020-07-14 22:08:59.761",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nwork3 \u003d work.groupBy(\u0027subscriber\u0027)\\\n            .agg(F.max(\u0027total_freq\u0027))\nwork3.show()",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-14 20:48:23.683",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+---------------+\n|          subscriber|max(total_freq)|\n+--------------------+---------------+\n|09E6B69FC22F1231C...|             68|\n|1A03658544CCD006A...|             38|\n|2162E75C33EEB82A1...|              9|\n|2260F02B4050605A4...|            110|\n|2261727DAD2C52F41...|            255|\n|3B139FB621B63AC6C...|             37|\n|419E138F1E64E4034...|              8|\n|5F6E546C13C0F7FC1...|             14|\n|6C3890569655D8092...|            118|\n|75F62D9B933581B20...|             82|\n|7F807D554C20BE317...|              7|\n|8696155CD5629B275...|             41|\n|8EA5712C5777EBB26...|             36|\n|94A73445B51E73CF0...|             99|\n|99200D7B28B3CAD40...|             28|\n|A7C3252AD5F23B3F2...|              5|\n|BB63A0113EFE22516...|             37|\n|BFDE6AAE760F41F24...|             27|\n|E710BEB4C3F187933...|             98|\n|F63745830369B98ED...|            148|\n+--------------------+---------------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594735982315_-1304133614",
+      "id": "20200714-141302_1114062324",
+      "dateCreated": "2020-07-14 14:13:02.315",
+      "dateStarted": "2020-07-14 20:48:23.698",
+      "dateFinished": "2020-07-14 20:48:34.532",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nwork4 \u003d work2.dropDuplicates([\"subscriber\"])\nwork4.show()",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-14 22:18:31.846",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------+-------+\n|          subscriber|site_id|maxfreq|\n+--------------------+-------+-------+\n|000116BABBD43C4CD...|   4026|    122|\n|000FAD58D62C03A79...|   2203|     12|\n|001092486DBA24A3D...|   2040|     69|\n|001603DD507491849...|   2212|     13|\n|001991E8E2E290397...|   1210|     10|\n|001E459530F1E213A...|   3489|     20|\n|001F99DE4BA7827AF...|   3503|      6|\n|002374A11730F9FE1...|   3605|     82|\n|002E91EBCA174B616...|   2215|     47|\n|002F1E1FB4DA49365...|   4066|     16|\n|003238B1D5FA9471D...|   1207|     44|\n|0037DD352BF737E2C...|   3467|    141|\n|0067D587BAD713EDB...|   2215|     27|\n|00783A3A9D3DB9F0B...|   2035|     90|\n|00934FFF68851B7F7...|   1070|     24|\n|0093CE18CE2F8CDA4...|   1281|     10|\n|00A070EA3ACE76516...|   3427|     59|\n|00A1E31B42C620CA4...|   2113|     12|\n|00DA2D6DD04886D3F...|   1220|     23|\n|00DA6F9A2939112E4...|   2222|     85|\n+--------------------+-------+-------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594677644035_767490958",
+      "id": "20200713-220044_1398757846",
+      "dateCreated": "2020-07-13 22:00:44.035",
+      "dateStarted": "2020-07-14 22:18:31.874",
+      "dateFinished": "2020-07-14 22:26:45.951",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nwork4.count()",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-14 22:18:42.306",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "1728257\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594760070199_608770148",
+      "id": "20200714-205430_1703209895",
+      "dateCreated": "2020-07-14 20:54:30.199",
+      "dateStarted": "2020-07-14 22:18:42.381",
+      "dateFinished": "2020-07-14 22:32:54.239",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nworkIdenPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/work_identification/work_Iden_Feb_0714_Ziyu_2\"\nwork4.write.format(\"csv\").option(\u0027header\u0027, \u0027true\u0027).save(workIdenPath)\n",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 14:13:16.823",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Fail to execute line 2: work4.write.format(\"csv\").option(\u0027header\u0027, \u0027true\u0027).save(workIdenPath)\nTraceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-8545697900504438084.py\", line 380, in \u003cmodule\u003e\n    exec(code, _zcUserQueryNameSpace)\n  File \"\u003cstdin\u003e\", line 2, in \u003cmodule\u003e\nNameError: name \u0027work4\u0027 is not defined\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594760109808_-1703681778",
+      "id": "20200714-205509_1901346921",
+      "dateCreated": "2020-07-14 20:55:09.808",
+      "dateStarted": "2020-07-15 14:13:16.897",
+      "dateFinished": "2020-07-15 14:13:16.934",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nwork_read \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/work_identification/work_Iden_Feb_0714_Ziyu_2/*.csv\u0027)\nhome_read \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_identification/home_identity_Feb_0714_Ziyu_home4_new5/*.csv\u0027)",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 14:45:01.890",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594823593850_-1381219424",
+      "id": "20200715-143313_1082984376",
+      "dateCreated": "2020-07-15 14:33:13.850",
+      "dateStarted": "2020-07-15 14:45:01.984",
+      "dateFinished": "2020-07-15 14:45:30.445",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nhome_read \u003d home_read.selectExpr(\"site_id as home_site_id\",\"subscriber as home_subscriber\")",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 14:45:36.310",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594768314064_-187007472",
+      "id": "20200714-231154_986380957",
+      "dateCreated": "2020-07-14 23:11:54.064",
+      "dateStarted": "2020-07-15 14:45:36.373",
+      "dateFinished": "2020-07-15 14:45:36.595",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nwork_read \u003d work_read.selectExpr(\"site_id as work_site_id\",\"subscriber as work_subscriber\")\n",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 14:45:40.174",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594760607258_1436593859",
+      "id": "20200714-210327_2100871240",
+      "dateCreated": "2020-07-14 21:03:27.258",
+      "dateStarted": "2020-07-15 14:45:40.225",
+      "dateFinished": "2020-07-15 14:45:40.254",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nhome_work \u003d home_read.alias(\"h\")\\\n        .join(work_read.alias(\"w\"), home_read.home_subscriber\u003d\u003dwork_read.work_subscriber)\\\n        .select(\"h.home_subscriber\", \"h.home_site_id\", \"w.work_site_id\")",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 14:46:12.985",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594768396873_-1406864029",
+      "id": "20200714-231316_2137887313",
+      "dateCreated": "2020-07-14 23:13:16.873",
+      "dateStarted": "2020-07-15 14:46:13.050",
+      "dateFinished": "2020-07-15 14:46:13.155",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nhome_work.show()",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 14:46:28.373",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+------------+------------+\n|     home_subscriber|home_site_id|work_site_id|\n+--------------------+------------+------------+\n|000116BABBD43C4CD...|        4026|        4026|\n|000FAD58D62C03A79...|        2203|        2203|\n|001092486DBA24A3D...|        2040|        2040|\n|001603DD507491849...|        2212|        2212|\n|001E459530F1E213A...|        3489|        3489|\n|002374A11730F9FE1...|        1439|        3605|\n|002E91EBCA174B616...|        4032|        2215|\n|0037DD352BF737E2C...|        3582|        3467|\n|0067D587BAD713EDB...|        2260|        2215|\n|00783A3A9D3DB9F0B...|        2035|        2035|\n|00934FFF68851B7F7...|        1224|        1070|\n|0093CE18CE2F8CDA4...|        1281|        1281|\n|00A070EA3ACE76516...|        3427|        3427|\n|00A1E31B42C620CA4...|        2113|        2113|\n|00DA2D6DD04886D3F...|        1220|        1220|\n|00DBECABD8A6F02BB...|        2039|        2039|\n|00DBF426CD30828BA...|        1202|        1202|\n|00E3B6D534F285E47...|        2229|        2229|\n|00F03DD5F22671679...|        2036|        2036|\n|00F1EE7EEE7C4DA56...|        2023|        2023|\n+--------------------+------------+------------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594824378707_1376551816",
+      "id": "20200715-144618_1671538002",
+      "dateCreated": "2020-07-15 14:46:18.707",
+      "dateStarted": "2020-07-15 14:46:28.441",
+      "dateFinished": "2020-07-15 14:47:01.902",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nhome_work_agg \u003d home_work\\\n                .groupBy(\u0027home_site_id\u0027, \u0027work_site_id\u0027)\\\n                .agg(F.count(\u0027home_subscriber\u0027).alias(\u0027home_work_count\u0027))",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 14:48:06.021",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594768600861_-1750558149",
+      "id": "20200714-231640_602635404",
+      "dateCreated": "2020-07-14 23:16:40.861",
+      "dateStarted": "2020-07-15 14:48:06.077",
+      "dateFinished": "2020-07-15 14:48:06.127",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nhome_work_agg.show()",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 14:48:19.270",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+------------+------------+---------------+\n|home_site_id|work_site_id|home_work_count|\n+------------+------------+---------------+\n|        1218|        1218|           8506|\n|        2047|        2047|           6770|\n|        3469|        3469|            830|\n|        2023|        1280|             14|\n|        4095|        4016|             85|\n|        1037|        2089|              6|\n|        3613|        3613|            299|\n|        1212|        1280|             11|\n|        4050|        4050|            217|\n|        3562|        3589|              9|\n|        1201|        1211|             13|\n|        3491|        3491|            374|\n|        1017|        1441|            119|\n|        2061|        4025|             45|\n|        1200|        3587|              4|\n|        3608|        3569|              4|\n|        3606|        3607|              7|\n|        3608|        3424|             34|\n|        2052|        2051|             56|\n|        4049|        2206|            106|\n+------------+------------+---------------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594824491166_1353975590",
+      "id": "20200715-144811_1676857733",
+      "dateCreated": "2020-07-15 14:48:11.167",
+      "dateStarted": "2020-07-15 14:48:19.312",
+      "dateFinished": "2020-07-15 14:48:53.280",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nhome_work_agg_Path \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_work/home_work_Feb_0715_Ziyu_agg\"\nhome_work_agg.write.format(\"csv\").option(\"header\", \"true\").save(home_work_agg_Path)",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 14:51:00.886",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594824596011_1644895694",
+      "id": "20200715-144956_409401198",
+      "dateCreated": "2020-07-15 14:49:56.011",
+      "dateStarted": "2020-07-15 14:51:00.962",
+      "dateFinished": "2020-07-15 14:59:09.818",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nhome_work_agg_place \u003d home_work_agg.alias(\"h\")\\\n                    .join(towers.alias(\"t\"), towers.site_id\u003d\u003dhome_work_agg.home_site_id)\\\n                    .select(\"h.home_site_id\", \"h.work_site_id\", \"h.home_work_count\",\"t.Latitude\",\"t.longitude\")",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 15:03:18.032",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594824728537_405582921",
+      "id": "20200715-145208_257469551",
+      "dateCreated": "2020-07-15 14:52:08.537",
+      "dateStarted": "2020-07-15 15:03:18.071",
+      "dateFinished": "2020-07-15 15:03:18.145",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nhome_work_agg_place \u003d home_work_agg_place.selectExpr(\"home_site_id as home_site_id\",\"work_site_id as work_site_id\",\"home_work_count as home_work_count\", \"Latitude as home_lat\", \"longitude as home_long\")",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 15:03:45.354",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594824872612_1113149495",
+      "id": "20200715-145432_1766290790",
+      "dateCreated": "2020-07-15 14:54:32.612",
+      "dateStarted": "2020-07-15 15:03:45.390",
+      "dateFinished": "2020-07-15 15:03:45.409",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nhome_work_agg_place \u003d home_work_agg_place.alias(\"h\")\\\n                    .join(towers.alias(\"t\"), towers.site_id\u003d\u003dhome_work_agg_place.work_site_id)\\\n                    .select(\"h.home_site_id\", \"h.work_site_id\", \"h.home_work_count\",\"h.home_lat\",\"h.home_long\",\"t.Latitude\",\"t.longitude\")",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 15:03:50.603",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594824995074_256637083",
+      "id": "20200715-145635_1838113435",
+      "dateCreated": "2020-07-15 14:56:35.074",
+      "dateStarted": "2020-07-15 15:03:50.633",
+      "dateFinished": "2020-07-15 15:03:50.737",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nhome_work_agg_place.show()",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 15:03:53.288",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+------------+------------+---------------+--------+----------+--------+----------+\n|home_site_id|work_site_id|home_work_count|home_lat| home_long|Latitude| longitude|\n+------------+------------+---------------+--------+----------+--------+----------+\n|        1218|        1218|           8506| 8.38567|   -13.145| 8.38567|   -13.145|\n|        2047|        2047|           6770|9.209687| -12.22914|9.209687| -12.22914|\n|        3469|        3469|            830| 8.48704|   -13.264| 8.48704|   -13.264|\n|        2023|        1280|             14|9.125981|-12.917557| 8.32978| -13.05465|\n|        1037|        2089|              6| 8.49177| -13.21576| 8.66817| -12.33402|\n|        3613|        3613|            299| 8.48832| -13.22643| 8.48832| -13.22643|\n|        1212|        1280|             11| 8.47767|  -13.2069| 8.32978| -13.05465|\n|        4050|        4050|            217|8.099816|-10.699933|8.099816|-10.699933|\n|        3562|        3589|              9| 8.43333|  -13.1609| 8.43911|  -13.1646|\n|        1201|        1211|             13| 8.33582|  -13.0397| 8.44891|  -13.1692|\n|        3491|        3491|            374|8.462024|-13.269175|8.462024|-13.269175|\n|        2061|        4025|             45|  7.9403| -11.14209| 7.88379|  -11.1897|\n|        1200|        3587|              4| 8.39201|  -12.9448| 8.34763|  -12.9891|\n|        3608|        3569|              4|8.405533|-13.148847| 8.32978| -13.05465|\n|        3606|        3607|              7| 8.45847|  -13.1767| 8.42788|  -13.1681|\n|        3608|        3424|             34|8.405533|-13.148847| 8.43044|  -13.1541|\n|        2052|        2051|             56| 8.76656|-12.787426|8.708928| -12.67757|\n|        4049|        2206|            106|8.277108|-10.573789|8.277108|-10.573789|\n|        2038|        2101|             21| 8.76161|  -12.7803|8.686594|-12.997512|\n|        2055|        1005|              1| 9.02775|-12.160405| 8.48795|  -13.2352|\n+------------+------------+---------------+--------+----------+--------+----------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1594825090269_-560895815",
+      "id": "20200715-145810_1854547340",
+      "dateCreated": "2020-07-15 14:58:10.269",
+      "dateStarted": "2020-07-15 15:03:53.327",
+      "dateFinished": "2020-07-15 15:04:26.805",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nhome_work_agg_place_Path \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_work/home_work_Feb_0715_Ziyu_agg_place\"\nhome_work_agg_place.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(home_work_agg_place_Path)",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 15:05:12.523",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594825113122_-1273058580",
+      "id": "20200715-145833_969645344",
+      "dateCreated": "2020-07-15 14:58:33.122",
+      "dateStarted": "2020-07-15 15:05:12.578",
+      "dateFinished": "2020-07-15 15:05:58.933",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nwork_location \u003d work_read\\\n                .groupBy(\u0027work_site_id\u0027)\\\n                .agg(F.count(\u0027work_subscriber\u0027).alias(\u0027work_number\u0027))",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 15:07:29.828",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594782446284_1486059362",
+      "id": "20200715-030726_99638771",
+      "dateCreated": "2020-07-15 03:07:26.284",
+      "dateStarted": "2020-07-15 15:07:29.870",
+      "dateFinished": "2020-07-15 15:07:29.913",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ntowers \u003d sq.read.csv(\"s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\", header\u003d\"true\")",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 15:03:05.098",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594823429132_1897764727",
+      "id": "20200715-143029_2143716208",
+      "dateCreated": "2020-07-15 14:30:29.132",
+      "dateStarted": "2020-07-15 15:03:05.159",
+      "dateFinished": "2020-07-15 15:03:06.336",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nwork_loc \u003d work_location.alias(\"h\")\\\n        .join(towers.alias(\"t\"), towers.site_id\u003d\u003dwork_location.work_site_id)\\\n        .select(\"t.site_id\", \"h.work_number\", \"t.Latitude\",\"t.longitude\")",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 15:07:57.636",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594823441530_470335462",
+      "id": "20200715-143041_855817305",
+      "dateCreated": "2020-07-15 14:30:41.530",
+      "dateStarted": "2020-07-15 15:07:57.668",
+      "dateFinished": "2020-07-15 15:07:57.720",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nworkLocationPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/work_identification/work_location_Feb_0715_Ziyu_map\"\nwork_loc.coalesce(1).write.format(\"csv\").option(\u0027header\u0027, \u0027true\u0027).save(workLocationPath)",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 15:08:04.367",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1594823485396_1942961754",
+      "id": "20200715-143125_6614794",
+      "dateCreated": "2020-07-15 14:31:25.396",
+      "dateStarted": "2020-07-15 15:08:04.421",
+      "dateFinished": "2020-07-15 15:08:30.696",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-15 15:08:04.368",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594825684367_-1981506317",
+      "id": "20200715-150804_1361990023",
+      "dateCreated": "2020-07-15 15:08:04.367",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "MIT/work_identification",
+  "id": "2FEK9UYK5",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
