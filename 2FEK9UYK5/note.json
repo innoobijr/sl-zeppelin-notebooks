@@ -131,9 +131,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\ndf1 \u003d df1.withColumn(\"call_datetime\", F.to_date(\"call_date\"))\\\n        .withColumn(\"start\", F.to_timestamp(\"start_time\"))\\\n        .withColumn(\"end\", F.to_timestamp(\"end_time\"))\\\n        .withColumn(\"start_hour\", F.hour(\"start\"))\\\n        .withColumn(\"weekday\", F.date_format(\"start\", \"u\"))\\\n        .drop(\u0027call_date\u0027, \u0027start_time\u0027, \u0027end_time\u0027) # Drop columns which we\u0027ll not use\ndf1.persist(StorageLevel.MEMORY_AND_DISK)\ndf1.show()\n",
+      "text": "%spark.pyspark\n\ndf1 \u003d df1.withColumn(\"call_datetime\", F.to_date(\"call_date\"))\\\n        .withColumn(\"start\", F.to_timestamp(\"start_time\"))\\\n        .withColumn(\"end\", F.to_timestamp(\"end_time\"))\\\n        .withColumn(\"start_hour\", F.hour(\"start\"))\\\n        .withColumn(\"weekday\", F.date_format(\"start\", \"u\"))\\\n        .drop(\u0027call_date\u0027, \u0027start_time\u0027, \u0027end_time\u0027) # Drop columns which we\u0027ll not use",
       "user": "ziyu",
-      "dateUpdated": "2020-07-14 23:51:47.602",
+      "dateUpdated": "2020-07-16 21:25:41.927",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -172,7 +172,7 @@
     {
       "text": "%spark.pyspark\ndf1 \u003d df1.withColumn(\"start_hour\", df1[\"start_hour\"].cast(IntegerType()))\nworktime \u003d df1.where(\"start_hour\u003e9 and start_hour\u003c18 and weekday \u003c\u003d 5\")\nworktime.show()\n",
       "user": "ziyu",
-      "dateUpdated": "2020-07-14 21:55:14.717",
+      "dateUpdated": "2020-07-16 21:25:51.652",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -243,9 +243,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\nfrom pyspark.sql import Window\nw \u003d Window.partitionBy(\u0027subscriber\u0027)\nwork2 \u003d work.withColumn(\u0027maxfreq\u0027, F.max(\u0027total_freq\u0027).over(w))\\\n        .where(F.col(\u0027total_freq\u0027) \u003d\u003d F.col(\u0027maxfreq\u0027))\\\n        .drop(\u0027total_freq\u0027)\nwork2.show()",
+      "text": "%spark.pyspark\n\nfrom pyspark.sql import Window\nw \u003d Window.partitionBy(\u0027subscriber\u0027)\nwork2 \u003d work.withColumn(\u0027maxfreq\u0027, F.max(\u0027total_freq\u0027).over(w))\\\n        .where(F.col(\u0027total_freq\u0027) \u003d\u003d F.col(\u0027maxfreq\u0027))\\\n        .drop(\u0027total_freq\u0027)",
       "user": "ziyu",
-      "dateUpdated": "2020-07-14 21:55:27.331",
+      "dateUpdated": "2020-07-16 21:25:55.627",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -282,48 +282,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\nwork3 \u003d work.groupBy(\u0027subscriber\u0027)\\\n            .agg(F.max(\u0027total_freq\u0027))\nwork3.show()",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-14 20:48:23.683",
-      "config": {
-        "colWidth": 12.0,
-        "fontSize": 9.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "editorMode": "ace/mode/python"
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "+--------------------+---------------+\n|          subscriber|max(total_freq)|\n+--------------------+---------------+\n|09E6B69FC22F1231C...|             68|\n|1A03658544CCD006A...|             38|\n|2162E75C33EEB82A1...|              9|\n|2260F02B4050605A4...|            110|\n|2261727DAD2C52F41...|            255|\n|3B139FB621B63AC6C...|             37|\n|419E138F1E64E4034...|              8|\n|5F6E546C13C0F7FC1...|             14|\n|6C3890569655D8092...|            118|\n|75F62D9B933581B20...|             82|\n|7F807D554C20BE317...|              7|\n|8696155CD5629B275...|             41|\n|8EA5712C5777EBB26...|             36|\n|94A73445B51E73CF0...|             99|\n|99200D7B28B3CAD40...|             28|\n|A7C3252AD5F23B3F2...|              5|\n|BB63A0113EFE22516...|             37|\n|BFDE6AAE760F41F24...|             27|\n|E710BEB4C3F187933...|             98|\n|F63745830369B98ED...|            148|\n+--------------------+---------------+\nonly showing top 20 rows\n\n"
-          }
-        ]
-      },
-      "apps": [],
-      "jobName": "paragraph_1594735982315_-1304133614",
-      "id": "20200714-141302_1114062324",
-      "dateCreated": "2020-07-14 14:13:02.315",
-      "dateStarted": "2020-07-14 20:48:23.698",
-      "dateFinished": "2020-07-14 20:48:34.532",
-      "status": "FINISHED",
-      "progressUpdateIntervalMs": 500
-    },
-    {
       "text": "%spark.pyspark\nwork4 \u003d work2.dropDuplicates([\"subscriber\"])\nwork4.show()",
       "user": "ziyu",
-      "dateUpdated": "2020-07-14 22:18:31.846",
+      "dateUpdated": "2020-07-16 21:26:03.839",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -362,7 +323,7 @@
     {
       "text": "%spark.pyspark\nwork4.count()",
       "user": "ziyu",
-      "dateUpdated": "2020-07-14 22:18:42.306",
+      "dateUpdated": "2020-07-16 21:26:06.265",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -399,9 +360,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\nworkIdenPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/work_identification/work_Iden_Feb_0714_Ziyu_2\"\nwork4.write.format(\"csv\").option(\u0027header\u0027, \u0027true\u0027).save(workIdenPath)\n",
+      "text": "%spark.pyspark\nworkIdenPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/work_identification/work_Iden_April_0716_Ziyu\"\nwork4.write.format(\"csv\").option(\u0027header\u0027, \u0027true\u0027).save(workIdenPath)\n",
       "user": "ziyu",
-      "dateUpdated": "2020-07-15 14:13:16.823",
+      "dateUpdated": "2020-07-16 21:26:36.354",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -438,9 +399,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\nwork_read \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/work_identification/work_Iden_Feb_0714_Ziyu_2/*.csv\u0027)\nhome_read \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_identification/home_identity_Feb_0714_Ziyu_home4_new5/*.csv\u0027)",
+      "text": "%spark.pyspark\n# home- work OD generate\nwork_read \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/work_identification/work_Iden_April_0716_Ziyu*.csv\u0027)\nhome_read \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_identification/home_identity_April_0716_Ziyu/*.csv\u0027)",
       "user": "ziyu",
-      "dateUpdated": "2020-07-15 14:45:01.890",
+      "dateUpdated": "2020-07-16 21:32:15.324",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -469,6 +430,34 @@
       "dateStarted": "2020-07-15 14:45:01.984",
       "dateFinished": "2020-07-15 14:45:30.445",
       "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ntowers \u003d sq.read.csv(\"s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\", header\u003d\"true\")",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-16 21:37:36.395",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594935438632_-258374460",
+      "id": "20200716-213718_284752662",
+      "dateCreated": "2020-07-16 21:37:18.632",
+      "status": "READY",
       "progressUpdateIntervalMs": 500
     },
     {
@@ -576,11 +565,11 @@
     {
       "text": "%spark.pyspark\nhome_work.show()",
       "user": "ziyu",
-      "dateUpdated": "2020-07-15 14:46:28.373",
+      "dateUpdated": "2020-07-16 20:24:48.875",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
-        "enabled": true,
+        "enabled": false,
         "results": {},
         "editorSetting": {
           "language": "python",
@@ -649,11 +638,11 @@
     {
       "text": "%spark.pyspark\nhome_work_agg.show()",
       "user": "ziyu",
-      "dateUpdated": "2020-07-15 14:48:19.270",
+      "dateUpdated": "2020-07-16 20:24:54.550",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
-        "enabled": true,
+        "enabled": false,
         "results": {},
         "editorSetting": {
           "language": "python",
@@ -682,40 +671,6 @@
       "dateCreated": "2020-07-15 14:48:11.167",
       "dateStarted": "2020-07-15 14:48:19.312",
       "dateFinished": "2020-07-15 14:48:53.280",
-      "status": "FINISHED",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "text": "%spark.pyspark\nhome_work_agg_Path \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_work/home_work_Feb_0715_Ziyu_agg\"\nhome_work_agg.write.format(\"csv\").option(\"header\", \"true\").save(home_work_agg_Path)",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-15 14:51:00.886",
-      "config": {
-        "colWidth": 12.0,
-        "fontSize": 9.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "editorMode": "ace/mode/python"
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      },
-      "apps": [],
-      "jobName": "paragraph_1594824596011_1644895694",
-      "id": "20200715-144956_409401198",
-      "dateCreated": "2020-07-15 14:49:56.011",
-      "dateStarted": "2020-07-15 14:51:00.962",
-      "dateFinished": "2020-07-15 14:59:09.818",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -824,19 +779,19 @@
     {
       "text": "%spark.pyspark\nhome_work_agg_place.show()",
       "user": "ziyu",
-      "dateUpdated": "2020-07-15 15:03:53.288",
+      "dateUpdated": "2020-07-16 20:25:24.374",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
-        "enabled": true,
+        "enabled": false,
         "results": {},
         "editorSetting": {
-          "language": "scala",
+          "language": "python",
           "editOnDblClick": false,
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/scala"
+        "editorMode": "ace/mode/python"
       },
       "settings": {
         "params": {},
@@ -861,9 +816,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\nhome_work_agg_place_Path \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_work/home_work_Feb_0715_Ziyu_agg_place\"\nhome_work_agg_place.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(home_work_agg_place_Path)",
+      "text": "%spark.pyspark\nhome_work_agg_place_Path \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_work/home_work_April_0716_Ziyu_agg_place\"\nhome_work_agg_place.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(home_work_agg_place_Path)",
       "user": "ziyu",
-      "dateUpdated": "2020-07-15 15:05:12.523",
+      "dateUpdated": "2020-07-16 21:37:05.427",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -929,40 +884,6 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\ntowers \u003d sq.read.csv(\"s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\", header\u003d\"true\")",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-15 15:03:05.098",
-      "config": {
-        "colWidth": 12.0,
-        "fontSize": 9.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "editorMode": "ace/mode/python"
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "results": {
-        "code": "SUCCESS",
-        "msg": []
-      },
-      "apps": [],
-      "jobName": "paragraph_1594823429132_1897764727",
-      "id": "20200715-143029_2143716208",
-      "dateCreated": "2020-07-15 14:30:29.132",
-      "dateStarted": "2020-07-15 15:03:05.159",
-      "dateFinished": "2020-07-15 15:03:06.336",
-      "status": "FINISHED",
-      "progressUpdateIntervalMs": 500
-    },
-    {
       "text": "%spark.pyspark\nwork_loc \u003d work_location.alias(\"h\")\\\n        .join(towers.alias(\"t\"), towers.site_id\u003d\u003dwork_location.work_site_id)\\\n        .select(\"t.site_id\", \"h.work_number\", \"t.Latitude\",\"t.longitude\")",
       "user": "ziyu",
       "dateUpdated": "2020-07-15 15:07:57.636",
@@ -997,9 +918,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\nworkLocationPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/work_identification/work_location_Feb_0715_Ziyu_map\"\nwork_loc.coalesce(1).write.format(\"csv\").option(\u0027header\u0027, \u0027true\u0027).save(workLocationPath)",
+      "text": "%spark.pyspark\nworkLocationPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/work_identification/work_location_April_0716_Ziyu_map\"\nwork_loc.coalesce(1).write.format(\"csv\").option(\u0027header\u0027, \u0027true\u0027).save(workLocationPath)",
       "user": "ziyu",
-      "dateUpdated": "2020-07-15 15:08:04.367",
+      "dateUpdated": "2020-07-16 21:38:06.570",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -1031,18 +952,58 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n",
+      "text": "%spark.pyspark\n# get the count\nd \u003d [{\u0027original\u0027: df.count(), \u0027afterfreq\u0027:work.count(), \u0027work\u0027:work4.count(),\u0027work_location\u0027:work_loc.count(),\u0027home_work\u0027:home_work.count(),\u0027home_work_agg\u0027:home_work_agg.count()}]\ncountdf \u003d spark.createDataFrame(d)",
       "user": "ziyu",
-      "dateUpdated": "2020-07-15 15:08:04.368",
-      "config": {},
+      "dateUpdated": "2020-07-16 22:02:55.460",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
       "settings": {
         "params": {},
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1594825684367_-1981506317",
-      "id": "20200715-150804_1361990023",
-      "dateCreated": "2020-07-15 15:08:04.367",
+      "jobName": "paragraph_1594936853240_-949369300",
+      "id": "20200716-220053_239249954",
+      "dateCreated": "2020-07-16 22:00:53.240",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ncountLocationPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/work_identification/count_April\"\ncountdf.coalesce(1).write.format(\"csv\").option(\u0027header\u0027, \u0027true\u0027).save(countLocationPath)",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-16 22:03:46.183",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1594936986085_405946710",
+      "id": "20200716-220306_2044466761",
+      "dateCreated": "2020-07-16 22:03:06.085",
       "status": "READY",
       "progressUpdateIntervalMs": 500
     }
