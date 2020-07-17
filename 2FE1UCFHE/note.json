@@ -3,7 +3,7 @@
     {
       "text": "%spark.pyspark\r\n\r\nimport os\r\nfrom datetime import datetime\r\nimport matplotlib.pyplot as plt\r\nfrom pyspark.sql import SQLContext\r\n\r\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\r\nfrom pyspark.sql.functions import split, lower\r\nimport pyspark.sql.functions as F\r\nfrom pyspark.sql.window import Window\r\nfrom pyspark import StorageLevel",
       "user": "prabhakar",
-      "dateUpdated": "2020-07-16 16:33:43.416",
+      "dateUpdated": "2020-07-17 18:28:30.035",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -29,15 +29,15 @@
       "jobName": "paragraph_1594224959072_789358027",
       "id": "20200708-161559_1145660513",
       "dateCreated": "2020-07-08 16:15:59.072",
-      "dateStarted": "2020-07-16 16:33:43.436",
-      "dateFinished": "2020-07-16 16:33:43.443",
+      "dateStarted": "2020-07-17 18:28:30.051",
+      "dateFinished": "2020-07-17 18:28:30.065",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)\n\ndailyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-daily\"\nweeklyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-weekly\"\nhourlyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-hourly\"\ndailyPatternPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-daily-avg\"",
+      "text": "%spark.pyspark\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)\n\ndailyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-daily\"\nweeklyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-weekly\"\nhourlyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-hourly\"\ndailyPatternPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-daily-avg\"\ndurationPatternPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-duration\"",
       "user": "prabhakar",
-      "dateUpdated": "2020-07-16 16:33:45.135",
+      "dateUpdated": "2020-07-17 19:04:21.080",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -63,15 +63,15 @@
       "jobName": "paragraph_1594225397346_-1982597034",
       "id": "20200708-162317_1250270320",
       "dateCreated": "2020-07-08 16:23:17.346",
-      "dateStarted": "2020-07-16 16:33:45.164",
-      "dateFinished": "2020-07-16 16:33:45.172",
+      "dateStarted": "2020-07-17 19:04:21.099",
+      "dateFinished": "2020-07-17 19:04:21.108",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\nnames\u003d{\u0027antenna_id\u0027: StringType(),\u0027time\u0027: StringType(),\u0027cdr_type\u0027: StringType(),\u0027source\u0027: StringType(),\u0027target\u0027: StringType(),\u0027duration\u0027: IntegerType()}\nfields\u003d[]\nfor header in names:\n    fields.append(StructField(header, names[header], False))\nschema \u003d StructType(fields)\n# df \u003d sq.read.csv(\u0027./data/20200321_20.csv\u0027, schema\u003dschema)\ndf \u003d sq.read.csv(\u0027s3n://sierra-leone-lake/blob/cdrs/africell-raw/2020030[3-9]_[0-2]0.csv\u0027, schema\u003dschema)\n# df \u003d sq.read.csv(\u0027s3n://sierra-leone-lake/blob/cdrs/africell-raw/2020*.csv\u0027, schema\u003dschema)\n\ndf \u003d df.withColumn(\u0027direction\u0027, lower(split(df[\u0027cdr_type\u0027], \u0027 \u0027).getItem(0)))\\\n        .withColumn(\u0027subscriber\u0027, F.col(\u0027source\u0027))\\\n        .withColumn(\"call_datetime\", F.to_timestamp(\"time\"))\\\n        .withColumn(\"call_date\", F.to_date(\"call_datetime\"))\\\n        .withColumn(\"week\", F.weekofyear(\"call_date\"))\\\n        .withColumn(\"hour\", F.hour(\"call_datetime\"))\\\n        .withColumn(\"site\", F.expr(\"substring(antenna_id, 1, length(antenna_id)-1)\"))\ndf \u003d df.drop(\u0027time\u0027, \u0027cdr_type\u0027, \u0027source\u0027, \u0027target\u0027, \u0027direction\u0027, \u0027antenna_id\u0027)",
       "user": "prabhakar",
-      "dateUpdated": "2020-07-16 16:44:24.439",
+      "dateUpdated": "2020-07-17 18:28:37.724",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -97,15 +97,15 @@
       "jobName": "paragraph_1594225413361_-1463632856",
       "id": "20200708-162333_433705629",
       "dateCreated": "2020-07-08 16:23:33.361",
-      "dateStarted": "2020-07-16 16:44:24.455",
-      "dateFinished": "2020-07-16 16:44:28.451",
+      "dateStarted": "2020-07-17 18:28:37.742",
+      "dateFinished": "2020-07-17 18:28:41.617",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\ndef bin_count(count):\n    if count\u003d\u003d0: \n        return \u00270\u0027\n    elif 0\u003ccount\u003c\u003d5:\n        return \u00270-5\u0027\n    elif 5\u003ccount\u003c\u003d10:\n        return \u00275-10\u0027\n    elif 10\u003ccount\u003c\u003d20:\n        return \u002710-20\u0027\n    elif 20\u003ccount\u003c\u003d35:\n        return \u002720-35\u0027\n    elif 35\u003ccount\u003c\u003d50:\n        return \u002735-50\u0027\n    elif 50\u003ccount\u003c\u003d75:\n        return \u002750-75\u0027\n    elif 75\u003ccount\u003c\u003d100:\n        return \u002775-100\u0027\n    elif 100\u003ccount\u003c\u003d150:\n        return \u0027100-150\u0027\n    elif 150\u003ccount\u003c\u003d240:\n        return \u0027150-210\u0027\n    elif 210\u003ccount\u003c\u003d300:\n        return \u0027210-300\u0027\n    elif 300\u003ccount\u003c\u003d400:\n        return \u0027300-400\u0027\n    elif 400\u003ccount\u003c\u003d540:\n        return \u0027400-540\u0027\n    elif 540\u003ccount\u003c\u003d720:\n        return \u0027540-720\u0027\n    elif 720\u003ccount\u003c\u003d900:\n        return \u0027720-900\u0027\n    else:\n        return \u0027900-inf\u0027\n\nbin \u003d F.udf(bin_count, StringType())",
       "user": "prabhakar",
-      "dateUpdated": "2020-07-16 16:44:27.208",
+      "dateUpdated": "2020-07-17 18:29:12.428",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -131,15 +131,15 @@
       "jobName": "paragraph_1594876712431_-1867856613",
       "id": "20200716-051832_788036241",
       "dateCreated": "2020-07-16 05:18:32.431",
-      "dateStarted": "2020-07-16 16:44:27.229",
-      "dateFinished": "2020-07-16 16:44:28.466",
+      "dateStarted": "2020-07-17 18:29:12.448",
+      "dateFinished": "2020-07-17 18:29:12.454",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\n# daily \u003d df.groupBy(\u0027subscriber\u0027, \u0027call_date\u0027).agg(F.count(\u0027call_date\u0027).alias(\u0027count\u0027))\n# daily.persist(StorageLevel.MEMORY_AND_DISK)\n\n# weekly \u003d daily\\\n#         .withColumn(\"week\", F.weekofyear(\"call_date\"))\\\n#         .groupBy(\u0027subscriber\u0027, \u0027week\u0027)\\\n#         .agg(F.sum(\u0027count\u0027).alias(\u0027count\u0027))\n\n# hourly \u003d df.groupBy(\u0027subscriber\u0027, \u0027hour\u0027, \u0027call_date\u0027).agg(F.count(\u0027hour\u0027).alias(\u0027count\u0027)).groupBy(\u0027hour\u0027).agg(F.avg(\u0027count\u0027).alias(\u0027count\u0027))\ndaily_pattern \u003d df.groupBy(\u0027subscriber\u0027, \u0027call_date\u0027, \u0027hour\u0027)\\\n            .agg(F.count(\u0027call_date\u0027).alias(\u0027count\u0027))\\\n            .groupBy(\u0027call_date\u0027, \u0027hour\u0027)\\\n            .agg(F.count(\u0027subscriber\u0027).alias(\u0027users\u0027), F.avg(\u0027count\u0027).alias(\u0027per_user\u0027))\nduration \u003d df.where(F.col(\u0027duration\u0027)\u003e0)\\\n            .groupBy(\u0027subscriber\u0027, \u0027call_date\u0027, \u0027hour\u0027)\\\n            .agg(F.avg(\u0027duration\u0027).alias(\u0027avg_duration\u0027))\nduration_bins \u003d duration\\\n            .withColumn(\u0027bin\u0027, bin(F.col(\u0027avg_duration\u0027)))\\\n            .groupBy(\u0027bin\u0027)\\\n            .agg(F.count(\u0027avg_duration\u0027).alias(\u0027numUsers\u0027))\\\n            .withColumn(\u0027sort\u0027, split(F.col(\u0027bin\u0027), \u0027-\u0027).getItem(0).cast(IntegerType()))\\\n            .orderBy(\u0027sort\u0027)\nduration_pattern \u003d duration\\\n            .groupBy(\u0027call_date\u0027, \u0027hour\u0027)\\\n            .agg(F.avg(\u0027avg_duration\u0027).alias(\u0027avg_duration\u0027))\nduration_bins.createOrReplaceTempView(\"duration_bins\")",
+      "text": "%spark.pyspark\n\n# daily \u003d df.groupBy(\u0027subscriber\u0027, \u0027call_date\u0027).agg(F.count(\u0027call_date\u0027).alias(\u0027count\u0027))\n# daily.persist(StorageLevel.MEMORY_AND_DISK)\n\n# weekly \u003d daily\\\n#         .withColumn(\"week\", F.weekofyear(\"call_date\"))\\\n#         .groupBy(\u0027subscriber\u0027, \u0027week\u0027)\\\n#         .agg(F.sum(\u0027count\u0027).alias(\u0027count\u0027))\n\n# hourly \u003d df.groupBy(\u0027subscriber\u0027, \u0027hour\u0027, \u0027call_date\u0027).agg(F.count(\u0027hour\u0027).alias(\u0027count\u0027)).groupBy(\u0027hour\u0027).agg(F.avg(\u0027count\u0027).alias(\u0027count\u0027))\ndaily_pattern \u003d df.groupBy(\u0027subscriber\u0027, \u0027call_date\u0027, \u0027hour\u0027)\\\n            .agg(F.count(\u0027call_date\u0027).alias(\u0027count\u0027))\\\n            .groupBy(\u0027call_date\u0027, \u0027hour\u0027)\\\n            .agg(F.count(\u0027subscriber\u0027).alias(\u0027users\u0027), F.avg(\u0027count\u0027).alias(\u0027per_user\u0027))\\\n            .orderBy(\u0027call_date\u0027, \u0027hour\u0027)\nduration \u003d df.where(F.col(\u0027duration\u0027)\u003e0)\\\n            .groupBy(\u0027subscriber\u0027, \u0027call_date\u0027, \u0027hour\u0027)\\\n            .agg(F.avg(\u0027duration\u0027).alias(\u0027avg_duration\u0027))\nduration_bins \u003d duration\\\n            .withColumn(\u0027bin\u0027, bin(F.col(\u0027avg_duration\u0027)))\\\n            .groupBy(\u0027bin\u0027)\\\n            .agg(F.count(\u0027avg_duration\u0027).alias(\u0027numUsers\u0027))\\\n            .withColumn(\u0027sort\u0027, split(F.col(\u0027bin\u0027), \u0027-\u0027).getItem(0).cast(IntegerType()))\\\n            .orderBy(\u0027sort\u0027)\nduration_pattern \u003d duration\\\n            .groupBy(\u0027call_date\u0027, \u0027hour\u0027)\\\n            .agg(F.avg(\u0027avg_duration\u0027).alias(\u0027avg_duration\u0027))\nduration_bins.createOrReplaceTempView(\"duration_bins\")",
       "user": "prabhakar",
-      "dateUpdated": "2020-07-16 16:44:31.946",
+      "dateUpdated": "2020-07-17 18:25:54.108",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -617,9 +617,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n# daily.coalesce(5).write.format(\"csv\").option(\"header\", \"true\").save(dailyPath)\n\n# weekly.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(weeklyPath)\n\n# hourly.coalesce(50).write.format(\"csv\").option(\"header\", \"true\").save(hourlyPath)\n\ndaily_pattern.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(dailyPatternPath)",
-      "user": "anonymous",
-      "dateUpdated": "2020-07-15 17:54:45.352",
+      "text": "%spark.pyspark\n# daily.coalesce(5).write.format(\"csv\").option(\"header\", \"true\").save(dailyPath)\n\n# weekly.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(weeklyPath)\n\n# hourly.coalesce(50).write.format(\"csv\").option(\"header\", \"true\").save(hourlyPath)\n\ndaily_pattern.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(dailyPatternPath)\n\nduration_pattern.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(durationPatternPath)",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-17 19:05:37.895",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -645,52 +645,24 @@
       "jobName": "paragraph_1594228037845_-1722918678",
       "id": "20200708-170717_2103919054",
       "dateCreated": "2020-07-08 17:07:17.845",
-      "dateStarted": "2020-07-09 16:07:49.601",
-      "dateFinished": "2020-07-09 16:10:24.340",
+      "dateStarted": "2020-07-17 19:05:37.911",
+      "dateFinished": "2020-07-17 19:11:46.044",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark",
-      "user": "anonymous",
-      "dateUpdated": "2020-07-09 16:03:28.563",
-      "config": {
-        "colWidth": 12.0,
-        "fontSize": 9.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "scala",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "editorMode": "ace/mode/scala"
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "apps": [],
-      "jobName": "paragraph_1594231847284_1582439521",
-      "id": "20200708-181047_15831177",
-      "dateCreated": "2020-07-08 18:10:47.285",
-      "status": "READY",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "text": "%spark.pyspark\n",
-      "user": "anonymous",
-      "dateUpdated": "2020-07-08 17:36:16.420",
+      "text": "%spark.sql\n",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-17 18:33:13.464",
       "config": {},
       "settings": {
         "params": {},
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1594229776419_-1379295449",
-      "id": "20200708-173616_2084933677",
-      "dateCreated": "2020-07-08 17:36:16.419",
+      "jobName": "paragraph_1595010793464_-148644650",
+      "id": "20200717-183313_1760872263",
+      "dateCreated": "2020-07-17 18:33:13.464",
       "status": "READY",
       "progressUpdateIntervalMs": 500
     }
