@@ -1,0 +1,98 @@
+{
+  "paragraphs": [
+    {
+      "text": "/**\n * title:OD_matrix\n * author: Yanchao LI\n * date: Jul 19\n * description: all the OD pairs and their frequency in a given month.\n * \n */\n ",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-19 23:25:08.436",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595200868576_1053193430",
+      "id": "20200719-232108_832500211",
+      "dateCreated": "2020-07-19 23:21:08.576",
+      "dateStarted": "2020-07-19 23:24:35.134",
+      "dateFinished": "2020-07-19 23:24:45.359",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nimport os\n// import org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\nimport pyspark.sql.functions as function\nimport org.apache.spark.sql.expressions.Window\n\nfrom datetime import datetime\nimport matplotlib.pyplot as plt\nfrom pyspark.sql import SQLContext\n\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\nfrom pyspark.sql.functions import split, lower\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-19 23:28:18.963",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {}
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Traceback (most recent call last):\n  File \"/tmp/zeppelin_pyspark-4321472847127433169.py\", line 364, in \u003cmodule\u003e\n    code \u003d compile(\u0027\\n\u0027.join(stmts), \u0027\u003cstdin\u003e\u0027, \u0027exec\u0027, ast.PyCF_ONLY_AST, 1)\n  File \"\u003cstdin\u003e\", line 2\n    // import org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\n     ^\nSyntaxError: invalid syntax\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595201075123_38035413",
+      "id": "20200719-232435_1542710984",
+      "dateCreated": "2020-07-19 23:24:35.123",
+      "dateStarted": "2020-07-19 23:28:18.970",
+      "dateFinished": "2020-07-19 23:28:18.975",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-19 23:27:03.219",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595201223218_-705699227",
+      "id": "20200719-232703_217520428",
+      "dateCreated": "2020-07-19 23:27:03.218",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "~Trash/MIT/OD_matrix",
+  "id": "2FF5CB2XR",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

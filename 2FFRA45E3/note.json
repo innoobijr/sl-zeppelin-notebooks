@@ -1,0 +1,270 @@
+{
+  "paragraphs": [
+    {
+      "text": "/**\n * title: count_events_per_locality_per_hour\n * author: Innocent Obi Jr\n * description: \n */\n \n//Default configuration\\ (Remove in production)\nsc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))\n\nval path_to_cdrs \u003d \"s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\"\nval path_to_towers \u003d \"s3n://sierra-leone-lake/blob/towers/combined_towers_district_07_11.csv\"\nval path_to_ouput \u003d  \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/flowminder/count_events_per_locality_per_hour\"\nval cutoff : Int  \u003d 15",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 02:09:06.685",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "path_to_cdrs: String \u003d s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\npath_to_towers: String \u003d s3n://sierra-leone-lake/blob/towers/combined_towers_district_07_11.csv\npath_to_ouput: String \u003d s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/flowminder/count_events_per_locality_per_hour\ncutoff: Int \u003d 15\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595210946684_129276527",
+      "id": "20200706-025532_1141114240",
+      "dateCreated": "2020-07-20 02:09:06.684",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "/**\n * \n */\n\nimport org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\n//import org.apache.spark.sql._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\n\n val calls \u003d spark.read.format(\"csv\")\n    .option(\"header\",\"false\")\n    .option(\"inferSchema\", \"true\")\n    .load(path_to_cdrs)\n    .withColumnRenamed(\"_c0\", \"antenna_id\")\n    .withColumnRenamed(\"_c1\", \"time\")\n    .withColumnRenamed(\"_c2\", \"direction\")\n    .withColumnRenamed(\"_c3\", \"source\")\n    .withColumn(\"msisdn\", col(\"source\"))\n    .withColumnRenamed(\"_c4\", \"target\")\n    .withColumnRenamed(\"_c5\", \"duration\")\n    .withColumn(\"site_id\", substring(col(\"antenna_id\"), 0, 4))\n    .withColumn(\"call_datetime\", to_timestamp($\"time\"))\n    .withColumn(\"call_date\", to_date($\"call_datetime\"))\n    .withColumn(\"end_time\",  to_timestamp(unix_timestamp($\"call_datetime\") + ($\"duration\")))\n    \n\nval cells \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(path_to_towers)\n  .withColumnRenamed(\"admin2Name\", \"locality\")\n  .withColumnRenamed(\"CI\", \"cell_id\")\n\ncells.persist(StorageLevel.MEMORY_AND_DISK)\ncells.createOrReplaceTempView(\"cells\")\n\ncalls.persist(StorageLevel.MEMORY_AND_DISK)\ncalls.createOrReplaceTempView(\"calls\")",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 02:09:06.687",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\ncalls: org.apache.spark.sql.DataFrame \u003d [antenna_id: int, time: timestamp ... 9 more fields]\ncells: org.apache.spark.sql.DataFrame \u003d [site_id: string, Name: string ... 18 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595210946686_-1698983667",
+      "id": "20200706-025550_674981819",
+      "dateCreated": "2020-07-20 02:09:06.686",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "calls.printSchema",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 02:09:06.688",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "root\n |-- antenna_id: integer (nullable \u003d true)\n |-- time: timestamp (nullable \u003d true)\n |-- direction: string (nullable \u003d true)\n |-- source: string (nullable \u003d true)\n |-- target: string (nullable \u003d true)\n |-- duration: integer (nullable \u003d true)\n |-- msisdn: string (nullable \u003d true)\n |-- site_id: string (nullable \u003d true)\n |-- call_datetime: timestamp (nullable \u003d true)\n |-- call_date: date (nullable \u003d true)\n |-- end_time: timestamp (nullable \u003d true)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595210946687_637270409",
+      "id": "20200713-000516_887179140",
+      "dateCreated": "2020-07-20 02:09:06.687",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val countEventsPerLocalityPerHour \u003d spark.sql(s\"\"\"\n    SELECT\n        grouped.call_date,\n        grouped.hour,\n        grouped.locality,\n        grouped.event_count\n    FROM (\n        SELECT calls.call_date AS call_date,\n            extract(HOUR FROM calls.call_datetime) AS hour,\n            cells.locality AS locality,\n            count(DISTINCT msisdn) AS subscriber_count,\n            count(*) AS event_count\n        FROM calls\n        INNER JOIN cells\n            ON calls.site_id \u003d cells.site_id\n        WHERE calls.call_date \u003e\u003d \u00272020-02-01\u0027\n            AND calls.call_date \u003c\u003d CURRENT_DATE\n        GROUP BY call_date, hour, locality\n    ) AS grouped\n    WHERE grouped.subscriber_count \u003e $cutoff\n\"\"\")\n countEventsPerLocalityPerHour.createOrReplaceTempView(\"count_events_per_locality_per_hour\")",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 02:09:06.688",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "countEventsPerLocalityPerHour: org.apache.spark.sql.DataFrame \u003d [call_date: date, hour: int ... 2 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595210946688_-1898112425",
+      "id": "20200706-025611_1702427210",
+      "dateCreated": "2020-07-20 02:09:06.688",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\nselect * from count_events_per_locality_per_hour",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 02:09:06.688",
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "call_date": "string",
+                      "hour": "string",
+                      "locality": "string",
+                      "event_count": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "call_date\thour\tlocality\tevent_count\n2020-04-03\t14\tBo\t240417\n2020-04-03\t14\tKono\t316929\n2020-04-03\t16\tBombali\t699386\n2020-04-03\t14\tWestern Area Rural\t1242988\n2020-04-03\t15\tTonkolili\t316536\n2020-04-03\t15\tBombali\t701772\n2020-04-03\t15\tMoyamba\t57335\n2020-04-03\t14\tBonthe\t38224\n2020-04-03\t14\tMoyamba\t55795\n2020-04-03\t16\tnull\t38999\n2020-04-03\t16\tWestern Area Rural\t1296246\n2020-04-03\t15\tBo\t248059\n2020-04-03\t16\tTonkolili\t333950\n2020-04-03\t16\tWestern Area Urban\t3007618\n2020-04-03\t16\tBonthe\t40372\n2020-04-03\t14\tTonkolili\t305805\n2020-04-03\t16\tKambia\t169513\n2020-04-03\t16\tKenema\t291283\n2020-04-03\t15\tWestern Area Rural\t1301940\n2020-04-03\t15\tWestern Area Urban\t3078879\n2020-04-03\t14\tKailahun\t88050\n2020-04-03\t16\tKailahun\t94359\n2020-04-03\t15\tPujehun\t51677\n2020-04-03\t15\tKambia\t167307\n2020-04-03\t14\tKoinadugu\t105126\n2020-04-03\t14\tKenema\t289366\n2020-04-03\t14\tPort Loko\t406841\n2020-04-03\t15\tKenema\t289186\n2020-04-03\t16\tKono\t349992\n2020-04-03\t16\tKoinadugu\t118760\n2020-04-03\t15\tnull\t43580\n2020-04-03\t15\tKailahun\t89960\n2020-04-03\t16\tPort Loko\t430549\n2020-04-03\t14\tPujehun\t47640\n2020-04-03\t14\tBombali\t685382\n2020-04-03\t15\tBonthe\t40002\n2020-04-03\t15\tKono\t326767\n2020-04-03\t15\tKoinadugu\t113404\n2020-04-03\t15\tPort Loko\t424621\n2020-04-03\t16\tBo\t257735\n2020-04-03\t16\tMoyamba\t63001\n2020-04-03\t14\tnull\t44050\n2020-04-03\t14\tWestern Area Urban\t3046021\n2020-04-03\t16\tPujehun\t55962\n2020-04-03\t14\tKambia\t157055\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595210946688_625895906",
+      "id": "20200706-034124_1882612900",
+      "dateCreated": "2020-07-20 02:09:06.688",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": " countEventsPerLocalityPerHour.write.format(\"csv\").option(\"header\", \"true\").save(path_to_output)",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 02:09:06.689",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595210946689_1583612629",
+      "id": "20200706-034203_1713620951",
+      "dateCreated": "2020-07-20 02:09:06.689",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Flowminder/count_events_per_locality_per_day",
+  "id": "2FFRA45E3",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "python:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

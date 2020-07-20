@@ -1,0 +1,212 @@
+{
+  "paragraphs": [
+    {
+      "text": "%spark.pyspark\n/**\n * title: Home Identification \n * author: Ziyu Ran\n * Time： 2020/07/03\n * description: \n */",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-17 21:37:17.129",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595021805310_1432123130",
+      "id": "20200717-213645_1375690227",
+      "dateCreated": "2020-07-17 21:36:45.310",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nimport os\nfrom datetime import datetime\nimport matplotlib.pyplot as plt\nfrom pyspark.sql import SQLContext\n\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\nfrom pyspark.sql.functions import split, lower\nimport pyspark.sql.functions as F",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-17 21:38:40.466",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595021837222_-1243820206",
+      "id": "20200717-213717_1962075068",
+      "dateCreated": "2020-07-17 21:37:17.222",
+      "dateStarted": "2020-07-17 21:38:40.472",
+      "dateFinished": "2020-07-17 21:38:40.480",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n# Just some configuration for Spark to be able to use AWS S3\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)\n",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-17 21:38:41.589",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595021846452_122355124",
+      "id": "20200717-213726_295643300",
+      "dateCreated": "2020-07-17 21:37:26.452",
+      "dateStarted": "2020-07-17 21:38:41.594",
+      "dateFinished": "2020-07-17 21:38:41.604",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nnames\u003d{\u0027subscriber\u0027:StringType(), \u0027april_home\u0027:StringType(), \u0027april_freq\u0027:StringType()}\nfields\u003d[]\nfor header in names:\n    fields.append(StructField(header, names[header], False))\nschema \u003d StructType(fields)\n\nApril \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_identification/home_identity_April_0716_Ziyu/*.csv\u0027, schema\u003dschema)",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-17 21:40:21.948",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595021853208_-1532391264",
+      "id": "20200717-213733_1358208223",
+      "dateCreated": "2020-07-17 21:37:33.208",
+      "dateStarted": "2020-07-17 21:40:21.955",
+      "dateFinished": "2020-07-17 21:40:25.047",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nApril.show()",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-17 21:40:26.573",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+----------+----------+\n|          subscriber|april_home|april_freq|\n+--------------------+----------+----------+\n|000176D783C13C546...|      3503|        11|\n|00026BC71A7DF82DB...|      1201|       141|\n|000330D968A0CC2E8...|      2042|        65|\n|0003B850FFA5943F8...|      1033|       135|\n|000617EAF340E6EF5...|      2033|        40|\n|0006DE7A2386B36F8...|      1209|        11|\n|00070D7EE746AFCFD...|      1409|        93|\n|000AAB336924F3A30...|      1213|        73|\n|000CC73A32301D0AC...|      3522|       151|\n|000E6F3595DA45358...|      2213|        10|\n|000EE4E9470577C31...|      2264|        15|\n|000F540CC28DE7117...|      2089|        10|\n|000F699E8613D6818...|      1037|       118|\n|000F7C70799C5E175...|      2253|       103|\n|00105D5E24781DDFA...|      3429|        12|\n|00108B7119D10DD12...|      1437|        20|\n|001179CB887DDD1AA...|      1220|       233|\n|0011EF3A6460B9CC3...|      1402|         6|\n|0013EB456390B01FA...|      2115|        88|\n|00144B933CD6E5BB7...|      1011|        27|\n+--------------------+----------+----------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595021923211_-1474404986",
+      "id": "20200717-213843_1160210985",
+      "dateCreated": "2020-07-17 21:38:43.211",
+      "dateStarted": "2020-07-17 21:40:26.580",
+      "dateFinished": "2020-07-17 21:40:27.460",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nnames\u003d{\u0027subscriber\u0027:StringType(), \u0027feb_home\u0027:StringType(), \u0027feb_freq\u0027:StringType()}\nfields\u003d[]\nfor header in names:\n    fields.append(StructField(header, names[header], False))\nschema \u003d StructType(fields)\n\nApril \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_identification/home_identity_April_0716_Ziyu/*.csv\u0027, schema\u003dschema)",
+      "user": "ziyu",
+      "dateUpdated": "2020-07-17 21:40:59.199",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595021929723_2146584191",
+      "id": "20200717-213849_1917628627",
+      "dateCreated": "2020-07-17 21:38:49.723",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "MIT/Feb_April_Compare",
+  "id": "2FEDEUM4X",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
