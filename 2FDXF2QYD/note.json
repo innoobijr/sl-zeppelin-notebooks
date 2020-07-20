@@ -1,9 +1,9 @@
 {
   "paragraphs": [
     {
-      "text": "/**\n * title: create_temp_views\n * author: Innocent Obi Jr\n * description: \n */\n \n//Default configuration\\ (Remove in production)\nsc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))\n\nval path_to_cdrs \u003d \"s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\"\nval path_to_towers \u003d \"s3n://sierra-leone-lake/blob/towers/combined_towers_district_07_11.csv\"\nval cutoff : Int  \u003d 15",
+      "text": "/**\n * title: create_temp_views\n * author: Innocent Obi Jr\n * description: \n */\n \n//Default configuration\\ (Remove in production)\nsc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))\n\nval path_to_cdrs \u003d \"s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\"\nval path_to_towers \u003d \"s3n://sierra-leone-lake/blob/towers/tower_current.csv\"\nval cutoff : Int  \u003d 15\nval locality : String \u003d \"admin3Name\"",
       "user": "innocent",
-      "dateUpdated": "2020-07-16 09:45:07.797",
+      "dateUpdated": "2020-07-20 02:07:48.313",
       "config": {
         "editorSetting": {
           "language": "scala",
@@ -77,9 +77,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "/* \n */\nimport org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\n//import org.apache.spark.sql._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\n\nval calls \u003d spark.read.format(\"csv\")\n    .option(\"header\",\"false\")\n    .option(\"inferSchema\", \"true\")\n    .load(path_to_cdrs)\n    .withColumnRenamed(\"_c0\", \"antenna_id\")\n    .withColumnRenamed(\"_c1\", \"time\")\n    .withColumnRenamed(\"_c2\", \"direction\")\n    .withColumnRenamed(\"_c3\", \"source\")\n    .withColumn(\"msisdn\", col(\"source\"))\n    .withColumnRenamed(\"_c4\", \"target\")\n    .withColumnRenamed(\"_c5\", \"duration\")\n    .withColumn(\"site_id\", substring(col(\"antenna_id\"), 0, 4))\n    .withColumn(\"call_datetime\", to_timestamp($\"time\"))\n    .withColumn(\"call_date\", to_date($\"call_datetime\"))\n    .withColumn(\"end_time\",  to_timestamp(unix_timestamp($\"call_datetime\") + ($\"duration\")))\n    \n\nval cells \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(path_to_towers)\n  .withColumn(\"locality\", col(\"admin2Name\"))\n  .withColumnRenamed(\"CI\", \"cell_id\")\n\ncells.persist(StorageLevel.MEMORY_AND_DISK)\ncells.createOrReplaceTempView(\"cells\")\n\ncalls.persist(StorageLevel.MEMORY_AND_DISK)\ncalls.createOrReplaceTempView(\"calls\")",
+      "text": "/* \n */\nimport org.apache.spark.sql.functions.{split, lit, window, concat, unix_timestamp, to_timestamp, date_format}\nimport org.apache.spark.sql.types._\n//import org.apache.spark.sql._\nimport org.apache.spark.sql.expressions.Window\nimport spark.implicits._\nimport org.apache.spark.storage.StorageLevel\n\nval calls \u003d spark.read.format(\"csv\")\n    .option(\"header\",\"false\")\n    .option(\"inferSchema\", \"true\")\n    .load(path_to_cdrs)\n    .withColumnRenamed(\"_c0\", \"antenna_id\")\n    .withColumnRenamed(\"_c1\", \"time\")\n    .withColumnRenamed(\"_c2\", \"direction\")\n    .withColumnRenamed(\"_c3\", \"source\")\n    .withColumn(\"msisdn\", col(\"source\"))\n    .withColumnRenamed(\"_c4\", \"target\")\n    .withColumnRenamed(\"_c5\", \"duration\")\n    .withColumn(\"site_id\", substring(col(\"antenna_id\"), 0, 4))\n    .withColumn(\"call_datetime\", to_timestamp($\"time\"))\n    .withColumn(\"call_date\", to_date($\"call_datetime\"))\n    .withColumn(\"end_time\",  to_timestamp(unix_timestamp($\"call_datetime\") + ($\"duration\")))\n    \n\nval cells \u003d spark.read.format(\"csv\")\n  .option(\"header\", true)\n  .option(\"inferSchema\", true)\n  .load(path_to_towers)\n  .withColumn(\"locality\", col(s\"$locality\"))\n  .withColumnRenamed(\"CI\", \"cell_id\")\n\ncells.persist(StorageLevel.MEMORY_AND_DISK)\ncells.createOrReplaceTempView(\"cells\")\n\ncalls.persist(StorageLevel.MEMORY_AND_DISK)\ncalls.createOrReplaceTempView(\"calls\")",
       "user": "innocent",
-      "dateUpdated": "2020-07-16 09:46:03.381",
+      "dateUpdated": "2020-07-20 02:08:06.839",
       "config": {
         "editorSetting": {
           "language": "scala",
@@ -120,6 +120,7 @@
   "noteParams": {},
   "noteForms": {},
   "angularObjects": {
+    "python:shared_process": [],
     "spark:shared_process": []
   },
   "config": {
