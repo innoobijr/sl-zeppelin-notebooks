@@ -98,7 +98,7 @@
     {
       "text": "%spark.pyspark\n\nnames\u003d{\u0027subscriber\u0027:StringType(), \u0027site_id\u0027:StringType(), \u0027call_date\u0027:StringType(), \u0027STOP_ID\u0027:IntegerType(), \u0027start_time\u0027:StringType(), \u0027end_time\u0027:StringType(), \u0027frequency\u0027:IntegerType(), \u0027event_gap\u0027:IntegerType(), \u0027duration\u0027:IntegerType(), \u0027confidence\u0027: StringType()}\nfields\u003d[]\nfor header in names:\n    fields.append(StructField(header, names[header], False))\nschema \u003d StructType(fields)\n\ndf \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops/feb/*.csv\u0027, schema\u003dschema)\ndf1 \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops/march/*.csv\u0027, schema\u003dschema)\ndf2 \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops/april/*.csv\u0027, schema\u003dschema)\ndf \u003d df.union(df1).union(df2)",
       "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:21:42.666",
+      "dateUpdated": "2020-07-20 18:36:18.522",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -110,7 +110,7 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": false
       },
       "settings": {
         "params": {},
@@ -129,9 +129,25 @@
       "progressUpdateIntervalMs": 500
     },
     {
+      "text": "%spark.pyspark\n",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 18:36:10.913",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595270170912_-1168152482",
+      "id": "20200720-183610_413246680",
+      "dateCreated": "2020-07-20 18:36:10.912",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
       "text": "%spark.pyspark\ndf \u003d df.withColumn(\"call_datetime\", F.to_date(\"call_date\"))\\\n        .withColumn(\"start\", F.to_timestamp(\"start_time\"))\\\n        .withColumn(\"end\", F.to_timestamp(\"end_time\"))\\\n        .withColumn(\"start_hour\", F.hour(\"start\"))\\\n        .withColumn(\"weekday\", F.date_format(\"start\", \"u\"))\\\n        .drop(\u0027call_date\u0027, \u0027start_time\u0027, \u0027end_time\u0027) # Drop columns which we\u0027ll not use",
       "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:17:18.748",
+      "dateUpdated": "2020-07-20 18:36:23.522",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -143,7 +159,7 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": false
       },
       "settings": {
         "params": {},
@@ -164,7 +180,7 @@
     {
       "text": "%spark.pyspark\ndf \u003d df.withColumn(\"start_hour\", df[\"start_hour\"].cast(IntegerType()))\n",
       "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:17:18.748",
+      "dateUpdated": "2020-07-20 18:36:27.272",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -176,7 +192,7 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": false
       },
       "settings": {
         "params": {},
@@ -195,9 +211,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\nhometime \u003d df.where(\"start_hour \u003c 8 or start_hour \u003e 20\")\n",
+      "text": "%spark.pyspark\n\nhometime \u003d combined.where(\"start_hour \u003c 8 or start_hour \u003e 20\")\n",
       "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:17:18.749",
+      "dateUpdated": "2020-07-20 18:36:43.199",
       "config": {
         "lineNumbers": false,
         "editorSetting": {
@@ -259,6 +275,22 @@
       "dateCreated": "2020-07-18 02:17:18.749",
       "status": "READY",
       "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 18:19:08.991",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595269148989_1534092886",
+      "id": "20200720-181908_676891716",
+      "dateCreated": "2020-07-20 18:19:08.989",
+      "status": "READY",
       "progressUpdateIntervalMs": 500
     },
     {
@@ -635,9 +667,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n# get the count\nd \u003d [{\u0027original\u0027: df.count(), \u0027afterfreq\u0027:home.count(), \u0027home\u0027:home4.count(),\u0027home_location\u0027:home_loc.count() }]\ncountdf \u003d spark.createDataFrame(d)",
+      "text": "%spark.pyspark\n# get the count\nd \u003d [{\u0027original\u0027: combined.count(), \u0027afterfreq\u0027:home.count(), \u0027home\u0027:home4.count(),\u0027home_location\u0027:home_loc.count() }]\ncountdf \u003d spark.createDataFrame(d)",
       "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:17:18.765",
+      "dateUpdated": "2020-07-20 18:37:20.422",
       "config": {
         "editorSetting": {
           "language": "python",

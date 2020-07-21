@@ -1,16 +1,478 @@
 {
   "paragraphs": [
     {
-      "user": "anonymous",
+      "text": "\n/**\n * title: OD matrix Tower to Tower\n * author: Zhuangyuan Fan\n * Time： 2020/07/13\n * description: \n **/",
+      "user": "yuan",
+      "dateUpdated": "2020-07-21 02:10:05.248",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "java.net.SocketException: Broken pipe (Write failed)\n\tat java.net.SocketOutputStream.socketWrite0(Native Method)\n\tat java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:111)\n\tat java.net.SocketOutputStream.write(SocketOutputStream.java:155)\n\tat java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82)\n\tat java.io.BufferedOutputStream.flush(BufferedOutputStream.java:140)\n\tat org.apache.thrift.transport.TIOStreamTransport.flush(TIOStreamTransport.java:159)\n\tat org.apache.thrift.TServiceClient.sendBase(TServiceClient.java:65)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.send_interpret(RemoteInterpreterService.java:268)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.interpret(RemoteInterpreterService.java:257)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:233)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:229)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:135)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:228)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:449)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:315)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1593816066630_-800983208",
+      "id": "20200703-224106_1336735098",
+      "dateCreated": "2020-07-03 22:41:06.630",
+      "dateStarted": "2020-07-21 02:10:05.291",
+      "dateFinished": "2020-07-21 02:10:05.297",
+      "status": "ERROR",
+      "errorMessage": "java.net.SocketException: Broken pipe (Write failed)\n\tat java.net.SocketOutputStream.socketWrite0(Native Method)\n\tat java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:111)\n\tat java.net.SocketOutputStream.write(SocketOutputStream.java:155)\n\tat java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82)\n\tat java.io.BufferedOutputStream.flush(BufferedOutputStream.java:140)\n\tat org.apache.thrift.transport.TIOStreamTransport.flush(TIOStreamTransport.java:159)\n\tat org.apache.thrift.TServiceClient.sendBase(TServiceClient.java:65)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.send_interpret(RemoteInterpreterService.java:268)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.interpret(RemoteInterpreterService.java:257)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:233)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:229)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:135)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:228)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:449)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:315)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nimport os\nfrom datetime import datetime\nimport matplotlib.pyplot as plt\nfrom pyspark.sql import SQLContext\n\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\nfrom pyspark.sql.functions import split, lower\nimport pyspark.sql.functions as F\nfrom pyspark import StorageLevel",
+      "user": "yuan",
+      "dateUpdated": "2020-07-21 01:31:39.036",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595286611379_-1632794539",
+      "id": "20200720-231011_1606529181",
+      "dateCreated": "2020-07-20 23:10:11.379",
+      "dateStarted": "2020-07-21 01:31:41.291",
+      "dateFinished": "2020-07-21 01:32:03.462",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n# Just some configuration for Spark to be able to use AWS S3\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)",
+      "user": "yuan",
+      "dateUpdated": "2020-07-21 01:32:11.423",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595286645959_52373581",
+      "id": "20200720-231045_1573199752",
+      "dateCreated": "2020-07-20 23:10:45.959",
+      "dateStarted": "2020-07-21 01:32:11.592",
+      "dateFinished": "2020-07-21 01:32:11.732",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n#  not run yet\n\nnames\u003d{\u0027subscriber\u0027:StringType(), \u0027site_id\u0027:StringType(), \u0027call_date\u0027:StringType(), \u0027STOP_ID\u0027:IntegerType(), \u0027start_time\u0027:StringType(), \u0027end_time\u0027:StringType(), \u0027frequency\u0027:IntegerType(), \u0027event_gap\u0027:IntegerType(), \u0027duration\u0027:IntegerType(), \u0027confidence\u0027: StringType()}\nfields\u003d[]\nfor header in names:\n    fields.append(StructField(header, names[header], False))\nschema \u003d StructType(fields)\n\ndftrips \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops/april/*.csv\u0027, schema\u003dschema)\ndftrips.persist(StorageLevel.MEMORY_AND_DISK)",
+      "user": "yuan",
+      "dateUpdated": "2020-07-21 02:09:19.610",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "DataFrame[subscriber: string, site_id: string, call_date: string, STOP_ID: int, start_time: string, end_time: string, frequency: int, event_gap: int, duration: int, confidence: string]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595286653919_958415968",
+      "id": "20200720-231053_216145988",
+      "dateCreated": "2020-07-20 23:10:53.919",
+      "dateStarted": "2020-07-21 01:47:00.224",
+      "dateFinished": "2020-07-21 01:47:01.893",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndftrips \u003d dftrips.withColumn(\"call_datetime\", F.to_date(\"call_date\"))\\\n        .withColumn(\"start_time\",F.to_timestamp(\"start_time\"))\\\n        .drop(\u0027call_date\u0027, \u0027end_time\u0027) # Drop columns which we\u0027ll not use\n\ndftrips.show()",
+      "user": "yuan",
+      "dateUpdated": "2020-07-21 01:49:36.740",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------+-------+-------------------+---------+---------+--------+-------------------+-------------+----------+--------+\n|          subscriber|site_id|STOP_ID|         start_time|frequency|event_gap|duration|         confidence|call_datetime|start_hour|day_week|\n+--------------------+-------+-------+-------------------+---------+---------+--------+-------------------+-------------+----------+--------+\n|0009493EE16C84216...|   2229|      1|2020-04-27 20:23:51|        7|     2405|    3372|  0.713226571767497|   2020-04-27|        20|       1|\n|000B94ADB92E74D7E...|   1014|      1|2020-04-21 16:20:54|        5|     4556|    5292| 0.8609221466364324|   2020-04-21|        16|       2|\n|000C888C024943EA7...|   1223|      1|2020-04-04 01:00:17|        5|    38313|   54029| 0.7091191767384183|   2020-04-04|         1|       6|\n|000C888C024943EA7...|   1070|      2|2020-04-04 08:01:53|        3|    25492|   25713| 0.9914051258118461|   2020-04-04|         8|       6|\n|000C888C024943EA7...|   1212|      3|2020-04-04 16:01:40|        2|    19344|   19380| 0.9981424148606811|   2020-04-04|        16|       6|\n|000C888C024943EA7...|   1070|      4|2020-04-03 08:16:04|       11|    26996|   48034| 0.5620185701794562|   2020-04-03|         8|       5|\n|000C888C024943EA7...|   1212|      5|2020-04-03 14:39:06|        2|    26710|   26737| 0.9989901634439167|   2020-04-03|        14|       5|\n|000C888C024943EA7...|   1006|      6|2020-04-03 16:23:04|        6|     1902|    3587| 0.5302481182046278|   2020-04-03|        16|       5|\n|000C888C024943EA7...|   1070|      7|2020-04-04 16:17:14|        7|    11097|   11747| 0.9446667234187452|   2020-04-04|        16|       6|\n|000C888C024943EA7...|   1223|      8|2020-04-03 15:21:37|        8|    22471|   22636| 0.9927107262767273|   2020-04-03|        15|       5|\n|000D6050841FCFF28...|   4099|      1|2020-04-02 19:20:38|       14|     5817|   10691| 0.5441025161350669|   2020-04-02|        19|       4|\n|000D6050841FCFF28...|   2217|      2|2020-04-30 07:22:12|       12|    20368|   47672|0.42725289478100353|   2020-04-30|         7|       4|\n|000D6050841FCFF28...|   2217|      3|2020-04-29 20:58:02|        5|     1634|    2415| 0.6766045548654245|   2020-04-29|        20|       3|\n|000D6050841FCFF28...|   2258|      4|2020-04-29 21:39:40|        2|     5579|    5583| 0.9992835393157801|   2020-04-29|        21|       3|\n|000D6050841FCFF28...|   4099|      5|2020-04-10 19:33:56|        3|     7773|    7962| 0.9762622456669179|   2020-04-10|        19|       5|\n|000D6050841FCFF28...|   4099|      6|2020-04-12 19:25:15|        2|      886|     886|                1.0|   2020-04-12|        19|       7|\n|000D6050841FCFF28...|   4099|      7|2020-04-04 17:09:34|        9|     8421|   19498|0.43189045030259515|   2020-04-04|        17|       6|\n|000D6050841FCFF28...|   4099|      8|2020-04-01 18:24:46|        5|    12143|   13618| 0.8916874724629167|   2020-04-01|        18|       3|\n|000D6050841FCFF28...|   4099|      9|2020-04-11 13:46:20|       10|    12765|   32147|0.39708215385572526|   2020-04-11|        13|       6|\n|000DF245DFA865984...|   1216|      1|2020-04-24 08:56:43|        3|    25704|   25921| 0.9916284093977856|   2020-04-24|         8|       5|\n+--------------------+-------+-------+-------------------+---------+---------+--------+-------------------+-------------+----------+--------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595286695112_960829531",
+      "id": "20200720-231135_445878095",
+      "dateCreated": "2020-07-20 23:11:35.112",
+      "dateStarted": "2020-07-21 01:47:20.587",
+      "dateFinished": "2020-07-21 01:47:36.712",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndftrips.count()",
+      "user": "yuan",
+      "dateUpdated": "2020-07-21 01:33:28.917",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "2337589\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595295203760_87365932",
+      "id": "20200721-013323_1569670550",
+      "dateCreated": "2020-07-21 01:33:23.760",
+      "dateStarted": "2020-07-21 01:33:28.998",
+      "dateFinished": "2020-07-21 01:33:46.211",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nfrom pyspark.sql.functions import lag, col\nfrom pyspark.sql.window import Window\n\n\nw \u003d Window().partitionBy([\u0027subscriber\u0027,\u0027call_datetime\u0027]).orderBy(col(\u0027start_time\u0027))\ndftrips\u003ddftrips.withColumn(\"des_id\", lag(\"site_id\", -1).over(w)).na.drop()\ndftrips\u003ddftrips.where(\"site_id!\u003ddes_id\")\ndftrips.show()\n",
+      "user": "yuan",
+      "dateUpdated": "2020-07-21 01:56:21.373",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------+-------+-------------------+---------+---------+--------+-------------------+-------------+----------+--------+------+\n|          subscriber|site_id|STOP_ID|         start_time|frequency|event_gap|duration|         confidence|call_datetime|start_hour|day_week|des_id|\n+--------------------+-------+-------+-------------------+---------+---------+--------+-------------------+-------------+----------+--------+------+\n|001D05292740DA9AB...|   4059|     17|2020-04-12 06:16:07|        5|    41261|   42958| 0.9604962987103682|   2020-04-12|         6|       7|  4070|\n|001D05292740DA9AB...|   4070|     18|2020-04-12 06:31:39|        3|    36369|   37165| 0.9785819991927889|   2020-04-12|         6|       7|  4004|\n|001D05292740DA9AB...|   4004|     27|2020-04-12 06:33:02|        2|     9589|    9598| 0.9990623046468015|   2020-04-12|         6|       7|  4004|\n|002A75EAA4067126B...|   2089|      1|2020-04-10 08:07:26|        4|    32561|   33124| 0.9830032604757879|   2020-04-10|         8|       5|  2089|\n|002A97DEC17D7E200...|   1025|      7|2020-04-20 09:03:04|        7|    33786|   43011| 0.7855199832600962|   2020-04-20|         9|       1|  1013|\n|002AA957F4B2C0CEF...|   3427|     18|2020-04-08 00:11:08|        2|    73002|   73109| 0.9985364319030489|   2020-04-08|         0|       3|  3665|\n|004074ED9C2926224...|   1408|     25|2020-04-26 07:33:32|       19|    19742|   55029|0.35875629213687327|   2020-04-26|         7|       7|  1417|\n|0049E8964C343C93F...|   2269|     17|2020-04-03 08:31:35|        4|    53053|   53190| 0.9974243278811806|   2020-04-03|         8|       5|  1225|\n|006185C5B0526C1F4...|   2079|     25|2020-04-23 11:01:02|        2|    20552|   20581|  0.998590933385161|   2020-04-23|        11|       4|  2040|\n|00636A485BF3A3681...|   1437|     21|2020-04-11 05:26:04|        2|     2304|    2331| 0.9884169884169884|   2020-04-11|         5|       6|  1407|\n|00636A485BF3A3681...|   1407|     36|2020-04-11 09:08:34|        3|     5465|    5536| 0.9871748554913294|   2020-04-11|         9|       6|  2270|\n|0068BBB0DE15B8A15...|   3481|     18|2020-04-24 09:08:35|        3|      559|     708|   0.78954802259887|   2020-04-24|         9|       5|  3534|\n|0073E0AD43D9622DC...|   1004|     26|2020-04-02 09:35:48|        4|    15994|   16987|  0.941543533290163|   2020-04-02|         9|       4|  3487|\n|0073E0AD43D9622DC...|   3487|     28|2020-04-02 10:01:02|        5|    12666|   13156| 0.9627546366676801|   2020-04-02|        10|       4|  3487|\n|0073E0AD43D9622DC...|   3487|     48|2020-04-02 14:19:23|        2|     1330|    1374| 0.9679767103347889|   2020-04-02|        14|       4|  1004|\n|0079C209FD4DA0055...|   1280|      5|2020-04-30 07:01:28|        4|    48344|   52569| 0.9196294394034507|   2020-04-30|         7|       4|  1201|\n|0079C209FD4DA0055...|   1201|      6|2020-04-30 10:37:57|        2|    40619|   40727| 0.9973481965281018|   2020-04-30|        10|       4|  1280|\n|009CB51624FB51CD7...|   2037|      1|2020-04-13 07:59:56|        4|    39054|   40298| 0.9691299816368057|   2020-04-13|         7|       1|  2021|\n|00A8992862AFC9443...|   1210|     25|2020-04-11 13:38:43|        5|      809|     846| 0.9562647754137116|   2020-04-11|        13|       6|  1210|\n|00A9F277EF4AC5CD6...|   1430|     31|2020-04-29 20:11:03|        3|     2172|    2192| 0.9908759124087592|   2020-04-29|        20|       3|  1430|\n+--------------------+-------+-------+-------------------+---------+---------+--------+-------------------+-------------+----------+--------+------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595288504938_1285410713",
+      "id": "20200720-234144_1260878687",
+      "dateCreated": "2020-07-20 23:41:44.938",
+      "dateStarted": "2020-07-21 01:49:46.148",
+      "dateFinished": "2020-07-21 01:54:25.121",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndftrips.count()",
+      "user": "yuan",
+      "dateUpdated": "2020-07-21 01:35:24.156",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "1015406\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595291424883_948723928",
+      "id": "20200721-003024_1473804950",
+      "dateCreated": "2020-07-21 00:30:24.883",
+      "dateStarted": "2020-07-21 01:35:24.217",
+      "dateFinished": "2020-07-21 01:36:01.756",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\ntrips\u003ddftrips.groupBy([\u0027site_id\u0027,\u0027des_id\u0027,\u0027call_datetime\u0027]).count()\ntrips.show()",
+      "user": "yuan",
+      "dateUpdated": "2020-07-21 01:54:35.894",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Py4JJavaError: An error occurred while calling o243.showString.\n: org.apache.spark.SparkException: Job aborted due to stage failure: Task 1 in stage 29.0 failed 1 times, most recent failure: Lost task 1.0 in stage 29.0 (TID 1463, localhost, executor driver): java.lang.OutOfMemoryError: GC overhead limit exceeded\n\tat java.util.Arrays.copyOfRange(Arrays.java:3664)\n\tat java.lang.String.\u003cinit\u003e(String.java:207)\n\tat java.lang.StringBuilder.toString(StringBuilder.java:407)\n\tat java.util.Formatter$FormatSpecifier.justify(Formatter.java:2927)\n\tat java.util.Formatter$FormatSpecifier.print(Formatter.java:3139)\n\tat java.util.Formatter$FormatSpecifier.print(Formatter.java:3083)\n\tat java.util.Formatter$FormatSpecifier.printInteger(Formatter.java:2787)\n\tat java.util.Formatter$FormatSpecifier.print(Formatter.java:2747)\n\tat java.util.Formatter.format(Formatter.java:2520)\n\tat java.util.Formatter.format(Formatter.java:2455)\n\tat java.lang.String.format(String.java:2940)\n\tat scala.collection.immutable.StringLike$class.format(StringLike.scala:319)\n\tat scala.collection.immutable.StringOps.format(StringOps.scala:29)\n\tat org.apache.spark.sql.catalyst.util.DateTimeUtils$.stringToTimestamp(DateTimeUtils.scala:433)\n\tat org.apache.spark.sql.catalyst.util.DateTimeUtils.stringToTimestamp(DateTimeUtils.scala)\n\tat org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)\n\tat org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)\n\tat org.apache.spark.sql.execution.WholeStageCodegenExec$$anonfun$13$$anon$1.hasNext(WholeStageCodegenExec.scala:636)\n\tat scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:409)\n\tat org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:148)\n\tat org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:99)\n\tat org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:55)\n\tat org.apache.spark.scheduler.Task.run(Task.scala:123)\n\tat org.apache.spark.executor.Executor$TaskRunner$$anonfun$10.apply(Executor.scala:408)\n\tat org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:1360)\n\tat org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:414)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n\nDriver stacktrace:\n\tat org.apache.spark.scheduler.DAGScheduler.org$apache$spark$scheduler$DAGScheduler$$failJobAndIndependentStages(DAGScheduler.scala:1891)\n\tat org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1879)\n\tat org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1878)\n\tat scala.collection.mutable.ResizableArray$class.foreach(ResizableArray.scala:59)\n\tat scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:48)\n\tat org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:1878)\n\tat org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:927)\n\tat org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:927)\n\tat scala.Option.foreach(Option.scala:257)\n\tat org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:927)\n\tat org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:2112)\n\tat org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2061)\n\tat org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2050)\n\tat org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)\n\tat org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:738)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2061)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2082)\n\tat org.apache.spark.SparkContext.runJob(SparkContext.scala:2101)\n\tat org.apache.spark.sql.execution.SparkPlan.executeTake(SparkPlan.scala:365)\n\tat org.apache.spark.sql.execution.CollectLimitExec.executeCollect(limit.scala:38)\n\tat org.apache.spark.sql.Dataset.org$apache$spark$sql$Dataset$$collectFromPlan(Dataset.scala:3389)\n\tat org.apache.spark.sql.Dataset$$anonfun$head$1.apply(Dataset.scala:2550)\n\tat org.apache.spark.sql.Dataset$$anonfun$head$1.apply(Dataset.scala:2550)\n\tat org.apache.spark.sql.Dataset$$anonfun$52.apply(Dataset.scala:3370)\n\tat org.apache.spark.sql.execution.SQLExecution$$anonfun$withNewExecutionId$1.apply(SQLExecution.scala:80)\n\tat org.apache.spark.sql.execution.SQLExecution$.withSQLConfPropagated(SQLExecution.scala:127)\n\tat org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:75)\n\tat org.apache.spark.sql.Dataset.withAction(Dataset.scala:3369)\n\tat org.apache.spark.sql.Dataset.head(Dataset.scala:2550)\n\tat org.apache.spark.sql.Dataset.take(Dataset.scala:2764)\n\tat org.apache.spark.sql.Dataset.getRows(Dataset.scala:254)\n\tat org.apache.spark.sql.Dataset.showString(Dataset.scala:291)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:498)\n\tat py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\n\tat py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\n\tat py4j.Gateway.invoke(Gateway.java:282)\n\tat py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\n\tat py4j.commands.CallCommand.execute(CallCommand.java:79)\n\tat py4j.GatewayConnection.run(GatewayConnection.java:238)\n\tat java.lang.Thread.run(Thread.java:748)\nCaused by: java.lang.OutOfMemoryError: GC overhead limit exceeded\n\tat java.util.Arrays.copyOfRange(Arrays.java:3664)\n\tat java.lang.String.\u003cinit\u003e(String.java:207)\n\tat java.lang.StringBuilder.toString(StringBuilder.java:407)\n\tat java.util.Formatter$FormatSpecifier.justify(Formatter.java:2927)\n\tat java.util.Formatter$FormatSpecifier.print(Formatter.java:3139)\n\tat java.util.Formatter$FormatSpecifier.print(Formatter.java:3083)\n\tat java.util.Formatter$FormatSpecifier.printInteger(Formatter.java:2787)\n\tat java.util.Formatter$FormatSpecifier.print(Formatter.java:2747)\n\tat java.util.Formatter.format(Formatter.java:2520)\n\tat java.util.Formatter.format(Formatter.java:2455)\n\tat java.lang.String.format(String.java:2940)\n\tat scala.collection.immutable.StringLike$class.format(StringLike.scala:319)\n\tat scala.collection.immutable.StringOps.format(StringOps.scala:29)\n\tat org.apache.spark.sql.catalyst.util.DateTimeUtils$.stringToTimestamp(DateTimeUtils.scala:433)\n\tat org.apache.spark.sql.catalyst.util.DateTimeUtils.stringToTimestamp(DateTimeUtils.scala)\n\tat org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIteratorForCodegenStage1.processNext(Unknown Source)\n\tat org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)\n\tat org.apache.spark.sql.execution.WholeStageCodegenExec$$anonfun$13$$anon$1.hasNext(WholeStageCodegenExec.scala:636)\n\tat scala.collection.Iterator$$anon$11.hasNext(Iterator.scala:409)\n\tat org.apache.spark.shuffle.sort.BypassMergeSortShuffleWriter.write(BypassMergeSortShuffleWriter.java:148)\n\tat org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:99)\n\tat org.apache.spark.scheduler.ShuffleMapTask.runTask(ShuffleMapTask.scala:55)\n\tat org.apache.spark.scheduler.Task.run(Task.scala:123)\n\tat org.apache.spark.executor.Executor$TaskRunner$$anonfun$10.apply(Executor.scala:408)\n\tat org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:1360)\n\tat org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:414)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\t... 1 more\n\n(\u003cclass \u0027py4j.protocol.Py4JJavaError\u0027\u003e, Py4JJavaError(\u0027An error occurred while calling o243.showString.\\n\u0027, JavaObject id\u003do244), \u003ctraceback object at 0x7fcf7ee2c550\u003e)"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595287811851_1494400217",
+      "id": "20200720-233011_2143200889",
+      "dateCreated": "2020-07-20 23:30:11.851",
+      "dateStarted": "2020-07-21 01:54:35.982",
+      "dateFinished": "2020-07-21 01:59:44.207",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ntrips.count()",
+      "user": "yuan",
+      "dateUpdated": "2020-07-21 01:37:20.189",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "52030\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595295436020_70728709",
+      "id": "20200721-013716_737472698",
+      "dateCreated": "2020-07-21 01:37:16.020",
+      "dateStarted": "2020-07-21 01:37:20.275",
+      "dateFinished": "2020-07-21 01:38:02.919",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ntripsaggpath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/towerOD/usertrips\"\ndftrips.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(tripsaggpath)",
+      "user": "yuan",
+      "dateUpdated": "2020-07-21 02:09:49.406",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Py4JJavaError: An error occurred while calling o293.save.\n: java.util.NoSuchElementException: None.get\n\tat scala.None$.get(Option.scala:347)\n\tat scala.None$.get(Option.scala:345)\n\tat org.apache.spark.sql.execution.datasources.BasicWriteJobStatsTracker$.metrics(BasicWriteStatsTracker.scala:173)\n\tat org.apache.spark.sql.execution.command.DataWritingCommand$class.metrics(DataWritingCommand.scala:51)\n\tat org.apache.spark.sql.execution.datasources.InsertIntoHadoopFsRelationCommand.metrics$lzycompute(InsertIntoHadoopFsRelationCommand.scala:47)\n\tat org.apache.spark.sql.execution.datasources.InsertIntoHadoopFsRelationCommand.metrics(InsertIntoHadoopFsRelationCommand.scala:47)\n\tat org.apache.spark.sql.execution.command.DataWritingCommandExec.metrics$lzycompute(commands.scala:100)\n\tat org.apache.spark.sql.execution.command.DataWritingCommandExec.metrics(commands.scala:100)\n\tat org.apache.spark.sql.execution.SparkPlanInfo$.fromSparkPlan(SparkPlanInfo.scala:56)\n\tat org.apache.spark.sql.execution.SQLExecution$$anonfun$withNewExecutionId$1.apply(SQLExecution.scala:78)\n\tat org.apache.spark.sql.execution.SQLExecution$.withSQLConfPropagated(SQLExecution.scala:127)\n\tat org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:75)\n\tat org.apache.spark.sql.DataFrameWriter.runCommand(DataFrameWriter.scala:677)\n\tat org.apache.spark.sql.DataFrameWriter.saveToV1Source(DataFrameWriter.scala:286)\n\tat org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:272)\n\tat org.apache.spark.sql.DataFrameWriter.save(DataFrameWriter.scala:230)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:498)\n\tat py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\n\tat py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\n\tat py4j.Gateway.invoke(Gateway.java:282)\n\tat py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\n\tat py4j.commands.CallCommand.execute(CallCommand.java:79)\n\tat py4j.GatewayConnection.run(GatewayConnection.java:238)\n\tat java.lang.Thread.run(Thread.java:748)\n\n(\u003cclass \u0027py4j.protocol.Py4JJavaError\u0027\u003e, Py4JJavaError(\u0027An error occurred while calling o293.save.\\n\u0027, JavaObject id\u003do294), \u003ctraceback object at 0x7fcf7ef2eb90\u003e)"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595291186752_-559869111",
+      "id": "20200721-002626_1799888463",
+      "dateCreated": "2020-07-21 00:26:26.752",
+      "dateStarted": "2020-07-21 01:54:42.046",
+      "dateFinished": "2020-07-21 01:59:45.585",
+      "status": "ERROR",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ntripcountpath\u003d\"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/towerOD/usertripscount\"\ntrips.coalesce(1).write.format(\"csv\").option(\"header\",\"true\").save(tripcountpath)",
+      "user": "yuan",
+      "dateUpdated": "2020-07-21 02:09:45.466",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "org.apache.thrift.transport.TTransportException\n\tat org.apache.thrift.transport.TIOStreamTransport.read(TIOStreamTransport.java:132)\n\tat org.apache.thrift.transport.TTransport.readAll(TTransport.java:86)\n\tat org.apache.thrift.protocol.TBinaryProtocol.readAll(TBinaryProtocol.java:429)\n\tat org.apache.thrift.protocol.TBinaryProtocol.readI32(TBinaryProtocol.java:318)\n\tat org.apache.thrift.protocol.TBinaryProtocol.readMessageBegin(TBinaryProtocol.java:219)\n\tat org.apache.thrift.TServiceClient.receiveBase(TServiceClient.java:69)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.recv_interpret(RemoteInterpreterService.java:274)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.interpret(RemoteInterpreterService.java:258)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:233)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:229)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:135)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:228)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:449)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:315)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595292033053_1182262628",
+      "id": "20200721-004033_1267612703",
+      "dateCreated": "2020-07-21 00:40:33.053",
+      "dateStarted": "2020-07-21 01:59:45.691",
+      "dateFinished": "2020-07-21 01:59:46.305",
+      "status": "ERROR",
+      "errorMessage": "org.apache.thrift.transport.TTransportException\n\tat org.apache.thrift.transport.TIOStreamTransport.read(TIOStreamTransport.java:132)\n\tat org.apache.thrift.transport.TTransport.readAll(TTransport.java:86)\n\tat org.apache.thrift.protocol.TBinaryProtocol.readAll(TBinaryProtocol.java:429)\n\tat org.apache.thrift.protocol.TBinaryProtocol.readI32(TBinaryProtocol.java:318)\n\tat org.apache.thrift.protocol.TBinaryProtocol.readMessageBegin(TBinaryProtocol.java:219)\n\tat org.apache.thrift.TServiceClient.receiveBase(TServiceClient.java:69)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.recv_interpret(RemoteInterpreterService.java:274)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.interpret(RemoteInterpreterService.java:258)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:233)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:229)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:135)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:228)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:449)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:315)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "yuan",
+      "dateUpdated": "2020-07-21 01:42:21.421",
       "config": {},
       "settings": {
         "params": {},
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1593816066630_-800983208",
-      "id": "20200703-224106_1336735098",
-      "dateCreated": "2020-07-03 22:41:06.630",
+      "jobName": "paragraph_1595295741420_-1364954160",
+      "id": "20200721-014221_120312085",
+      "dateCreated": "2020-07-21 01:42:21.420",
       "status": "READY",
       "progressUpdateIntervalMs": 500
     }

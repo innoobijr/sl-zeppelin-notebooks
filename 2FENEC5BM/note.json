@@ -32,7 +32,7 @@
     {
       "text": "%spark.pyspark\n\nimport os\nfrom datetime import datetime\nimport matplotlib.pyplot as plt\nfrom pyspark.sql import SQLContext\n\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\nfrom pyspark.sql.functions import split, lower\nimport pyspark.sql.functions as F",
       "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:29:57.530",
+      "dateUpdated": "2020-07-20 18:42:33.894",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -44,7 +44,7 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": false
       },
       "settings": {
         "params": {},
@@ -65,7 +65,7 @@
     {
       "text": "%spark.pyspark\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n# Just some configuration for Spark to be able to use AWS S3\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)",
       "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:29:57.530",
+      "dateUpdated": "2020-07-20 18:42:37.044",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -77,7 +77,7 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": false
       },
       "settings": {
         "params": {},
@@ -98,7 +98,7 @@
     {
       "text": "%spark.pyspark\n\nnames\u003d{\u0027subscriber\u0027:StringType(), \u0027site_id\u0027:StringType(), \u0027call_date\u0027:StringType(), \u0027STOP_ID\u0027:IntegerType(), \u0027start_time\u0027:StringType(), \u0027end_time\u0027:StringType(), \u0027frequency\u0027:IntegerType(), \u0027event_gap\u0027:IntegerType(), \u0027duration\u0027:IntegerType(), \u0027confidence\u0027: StringType()}\nfields\u003d[]\nfor header in names:\n    fields.append(StructField(header, names[header], False))\nschema \u003d StructType(fields)\n\ndf \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops/feb/*.csv\u0027, schema\u003dschema)\ndf1 \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops/march/*.csv\u0027, schema\u003dschema)\ndf2 \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops/april/*.csv\u0027, schema\u003dschema)\ndf1 \u003d df1.union(df).union(df2)",
       "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:32:57.830",
+      "dateUpdated": "2020-07-20 18:42:58.475",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -110,7 +110,7 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": false
       },
       "settings": {
         "params": {},
@@ -131,7 +131,7 @@
     {
       "text": "%spark.pyspark\n\ndf1 \u003d df1.withColumn(\"call_datetime\", F.to_date(\"call_date\"))\\\n        .withColumn(\"start\", F.to_timestamp(\"start_time\"))\\\n        .withColumn(\"end\", F.to_timestamp(\"end_time\"))\\\n        .withColumn(\"start_hour\", F.hour(\"start\"))\\\n        .withColumn(\"weekday\", F.date_format(\"start\", \"u\"))\\\n        .drop(\u0027call_date\u0027, \u0027start_time\u0027, \u0027end_time\u0027) # Drop columns which we\u0027ll not use",
       "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:29:57.531",
+      "dateUpdated": "2020-07-20 18:43:04.103",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -143,7 +143,7 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": false
       },
       "settings": {
         "params": {},
@@ -167,9 +167,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\ndf1 \u003d df1.withColumn(\"start_hour\", df1[\"start_hour\"].cast(IntegerType()))\nworktime \u003d df1.where(\"start_hour\u003e9 and start_hour\u003c18 and weekday \u003c\u003d 5\")\nworktime.show()\n",
+      "text": "%spark.pyspark\n#df1 \u003d df1.withColumn(\"start_hour\", df1[\"start_hour\"].cast(IntegerType()))\nworktime \u003d combined.where(\"start_hour\u003e9 and start_hour\u003c18 and weekday \u003c\u003d 5\")\n#worktime.show()\n",
       "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:29:57.531",
+      "dateUpdated": "2020-07-20 18:43:22.584",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -390,9 +390,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n# home- work OD generate\nwork_read \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/work_identification_feb_to_april/work_Iden_feb_to_april_0717_Ziyu*.csv\u0027)\nhome_read \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_identification_feb_to_april/home_identity_feb_to_april_0717_Ziyu/*.csv\u0027)",
+      "text": "%spark.pyspark\n# home- work OD generate\nwork_read \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/work_identification_feb_to_april/work_Iden_feb_to_april_0717_Ziyu/*.csv\u0027)\nhome_read \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_identification_feb_to_april/home_identity_feb_to_april_0717_Ziyu/*.csv\u0027)",
       "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:34:08.620",
+      "dateUpdated": "2020-07-20 18:46:00.871",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -425,7 +425,7 @@
     {
       "text": "%spark.pyspark\ntowers \u003d sq.read.csv(\"s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\", header\u003d\"true\")",
       "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:29:57.535",
+      "dateUpdated": "2020-07-20 18:43:29.376",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -437,7 +437,7 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": true
+        "enabled": false
       },
       "settings": {
         "params": {},
@@ -726,9 +726,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\nhome_work_agg_place \u003d home_work_agg_place.alias(\"h\")\\\n                    .join(towers.alias(\"t\"), towers.site_id\u003d\u003dhome_work_agg_place.work_site_id)\\\n                    .select(\"h.home_site_id\", \"h.work_site_id\", \"h.home_work_count\",\"h.home_lat\",\"h.home_long\",\"t.Latitude\",\"t.longitude\")",
+      "text": "%spark.pyspark\nhome_work_agg_place \u003d home_work_agg_place.alias(\"h\")\\\n                    .join(towers.alias(\"t\"), towers.site_id\u003d\u003dhome_work_agg_placte.work_site_id)\\\n                    .select(\"h.home_site_id\", \"h.work_site_id\", \"h.home_work_count\",\"h.home_lat\",\"h.home_long\",\"t.Latitude\",\"t.longitude\")",
       "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:29:57.537",
+      "dateUpdated": "2020-07-21 04:14:18.360",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -929,9 +929,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n# get the count\nd \u003d [{\u0027original\u0027: df.count(), \u0027afterfreq\u0027:work.count(), \u0027work\u0027:work4.count(),\u0027work_location\u0027:work_loc.count(),\u0027home_work\u0027:home_work.count(),\u0027home_work_agg\u0027:home_work_agg.count()}]\ncountdf \u003d spark.createDataFrame(d)",
+      "text": "%spark.pyspark\n# get the count\nd \u003d [{\u0027original\u0027: combined.count(), \u0027afterfreq\u0027:work.count(), \u0027work\u0027:work4.count(),\u0027work_location\u0027:work_loc.count(),\u0027home_work\u0027:home_work.count(),\u0027home_work_agg\u0027:home_work_agg.count()}]\ncountdf \u003d spark.createDataFrame(d)",
       "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:29:57.539",
+      "dateUpdated": "2020-07-20 18:43:50.418",
       "config": {
         "editorSetting": {
           "language": "python",

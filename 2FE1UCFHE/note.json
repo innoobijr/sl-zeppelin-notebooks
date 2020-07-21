@@ -3,7 +3,7 @@
     {
       "text": "%spark.pyspark\r\n\r\nimport os\r\nfrom datetime import datetime\r\nimport matplotlib.pyplot as plt\r\nfrom pyspark.sql import SQLContext\r\n\r\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\r\nfrom pyspark.sql.functions import split, lower\r\nimport pyspark.sql.functions as F\r\nfrom pyspark.sql.window import Window\r\nfrom pyspark import StorageLevel",
       "user": "prabhakar",
-      "dateUpdated": "2020-07-17 18:28:30.035",
+      "dateUpdated": "2020-07-20 03:24:42.111",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -29,8 +29,8 @@
       "jobName": "paragraph_1594224959072_789358027",
       "id": "20200708-161559_1145660513",
       "dateCreated": "2020-07-08 16:15:59.072",
-      "dateStarted": "2020-07-17 18:28:30.051",
-      "dateFinished": "2020-07-17 18:28:30.065",
+      "dateStarted": "2020-07-20 03:24:42.131",
+      "dateFinished": "2020-07-20 03:24:42.141",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -672,6 +672,7 @@
   "noteParams": {},
   "noteForms": {},
   "angularObjects": {
+    "python:shared_process": [],
     "spark:shared_process": []
   },
   "config": {

@@ -3,7 +3,7 @@
     {
       "text": "\n/**\n * title: OD matrix Tower to Tower\n * author: Zhuangyuan Fan\n * Time： 2020/07/13\n * description: \n **/\n// val pathToStop \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops-2020-07-11/part-0000[0-9]-ae0d2ec0-3605-46af-8236-2fa3ff14cd3f-c000.csv\"\n// val pathToTowers \u003d \"s3n://sierra-leone-lake/blob/towers/combined_towers_district_07_11.csv\"\n// val pathToMorning \u003d \"s3n://sierra-leone-lake/blob/AGGEGATED_CDRS/africell/towerOD/ODtower_morning\"\n// val pathToAfternoon \u003d \"s3n://sierra-leone-lake/blob/AGGEGATED_CDRS/africell/towerOD/ODtower_afternoon\"",
       "user": "yuan",
-      "dateUpdated": "2020-07-15 12:22:23.557",
+      "dateUpdated": "2020-07-20 23:00:09.088",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -29,15 +29,15 @@
       "jobName": "paragraph_1593816085648_-280589306",
       "id": "20200703-224125_1213989695",
       "dateCreated": "2020-07-03 22:41:25.648",
-      "dateStarted": "2020-07-15 12:22:23.592",
-      "dateFinished": "2020-07-15 12:22:55.416",
+      "dateStarted": "2020-07-20 23:00:09.108",
+      "dateFinished": "2020-07-20 23:00:12.153",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\n\n\nimport os\nfrom datetime import datetime\nimport matplotlib.pyplot as plt\nfrom pyspark.sql import SQLContext\n\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\nfrom pyspark.sql.functions import split, lower\nimport pyspark.sql.functions as F\nfrom pyspark import StorageLevel\n",
       "user": "yuan",
-      "dateUpdated": "2020-07-15 12:21:59.233",
+      "dateUpdated": "2020-07-20 23:00:15.075",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -56,27 +56,22 @@
         "forms": {}
       },
       "results": {
-        "code": "ERROR",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "pyspark is not responding"
-          }
-        ]
+        "code": "SUCCESS",
+        "msg": []
       },
       "apps": [],
       "jobName": "paragraph_1594694114350_959117595",
       "id": "20200714-023514_1300295417",
       "dateCreated": "2020-07-14 02:35:14.350",
-      "dateStarted": "2020-07-15 12:21:59.261",
-      "dateFinished": "2020-07-15 12:22:12.782",
-      "status": "ERROR",
+      "dateStarted": "2020-07-20 23:00:15.109",
+      "dateFinished": "2020-07-20 23:00:16.724",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\n\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)\n\n\n",
       "user": "yuan",
-      "dateUpdated": "2020-07-15 12:22:07.125",
+      "dateUpdated": "2020-07-20 23:00:35.728",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -95,27 +90,22 @@
         "forms": {}
       },
       "results": {
-        "code": "ERROR",
-        "msg": [
-          {
-            "type": "TEXT",
-            "data": "pyspark is not responding"
-          }
-        ]
+        "code": "SUCCESS",
+        "msg": []
       },
       "apps": [],
       "jobName": "paragraph_1594694138090_795636530",
       "id": "20200714-023538_201116719",
       "dateCreated": "2020-07-14 02:35:38.090",
-      "dateStarted": "2020-07-15 12:22:07.163",
-      "dateFinished": "2020-07-15 12:22:24.646",
-      "status": "ERROR",
+      "dateStarted": "2020-07-20 23:00:35.753",
+      "dateFinished": "2020-07-20 23:00:35.764",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\n\n\ndftrips \u003d sq.read.csv(\"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops-2020-07-11/part-00000-ae0d2ec0-3605-46af-8236-2fa3ff14cd3f-c000.csv\", header\u003d\"true\", inferSchema\u003d\"true\")\n\ndftrips.persist(StorageLevel.MEMORY_AND_DISK)",
       "user": "yuan",
-      "dateUpdated": "2020-07-15 00:28:35.883",
+      "dateUpdated": "2020-07-20 23:17:57.897",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -148,7 +138,7 @@
       "dateCreated": "2020-07-14 14:03:32.467",
       "dateStarted": "2020-07-15 00:28:35.957",
       "dateFinished": "2020-07-15 00:33:56.369",
-      "status": "FINISHED",
+      "status": "ABORT",
       "progressUpdateIntervalMs": 500
     },
     {
@@ -383,9 +373,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\nmorningdf \u003d dftrips.where(\"start_hour \u003c 12 or start_hour \u003e 6\")\nmorningdf.show()",
+      "text": "%spark.pyspark\nmorningdf \u003d dftrips.where(\"start_hour \u003c\u003d 12 or start_hour \u003e\u003d 6\")\nmorningdf.show()",
       "user": "yuan",
-      "dateUpdated": "2020-07-15 00:29:11.697",
+      "dateUpdated": "2020-07-20 12:53:05.537",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -567,9 +557,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\nafternoondf \u003d dftrips.where(\"start_hour \u003c 20 or start_hour \u003e 14\")\nafternoondf.show()",
+      "text": "%spark.pyspark\nafternoondf \u003d dftrips.where(\"start_hour \u003c\u003d 20 or start_hour \u003e\u003d 14\")\nafternoondf.show()",
       "user": "yuan",
-      "dateUpdated": "2020-07-14 19:13:24.595",
+      "dateUpdated": "2020-07-20 12:53:50.352",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,

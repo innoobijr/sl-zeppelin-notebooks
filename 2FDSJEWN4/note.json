@@ -1,0 +1,905 @@
+{
+  "paragraphs": [
+    {
+      "text": "%spark.pyspark\r\n\r\nimport os\r\nfrom datetime import datetime\r\nimport matplotlib.pyplot as plt\r\nfrom pyspark.sql import SQLContext\r\n\r\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\r\nimport pyspark.sql.functions as F\r\nfrom pyspark.sql.window import Window\r\nfrom pyspark import StorageLevel",
+      "user": "admin",
+      "dateUpdated": "2020-07-21 01:25:50.570",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595215507952_-453850076",
+      "id": "20200708-161559_1145660513",
+      "dateCreated": "2020-07-20 03:25:07.952",
+      "dateStarted": "2020-07-21 01:13:43.085",
+      "dateFinished": "2020-07-21 01:13:59.141",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)\n\ndailyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-daily\"\nweeklyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-weekly\"\nhourlyPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-hourly\"\ndailyPatternPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/user_queries-daily-avg\"\ndistrictQueriesPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/summaries/district_queries\"",
+      "user": "admin",
+      "dateUpdated": "2020-07-21 01:14:52.171",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595215507953_1586662092",
+      "id": "20200708-162317_1250270320",
+      "dateCreated": "2020-07-20 03:25:07.953",
+      "dateStarted": "2020-07-21 01:14:52.199",
+      "dateFinished": "2020-07-21 01:14:52.264",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nnames\u003d{\u0027antenna_id\u0027: StringType(),\u0027time\u0027: StringType(),\u0027cdr_type\u0027: StringType(),\u0027source\u0027: StringType(),\u0027target\u0027: StringType(),\u0027duration\u0027: IntegerType()}\nfields\u003d[]\nfor header in names:\n    fields.append(StructField(header, names[header], False))\nschema \u003d StructType(fields)\n# df \u003d sq.read.csv(\u0027./data/20200321_20.csv\u0027, schema\u003dschema)\ndf \u003d sq.read.csv(\u0027s3n://sierra-leone-lake/blob/cdrs/africell-raw/2020030[3-9]_[0-2]0.csv\u0027, schema\u003dschema)\n# df \u003d sq.read.csv(\u0027s3n://sierra-leone-lake/blob/cdrs/africell-raw/2020*.csv\u0027, schema\u003dschema)\n\ndf \u003d df.withColumn(\u0027direction\u0027, F.lower(F.split(df[\u0027cdr_type\u0027], \u0027 \u0027).getItem(0)))\\\n        .withColumn(\u0027subscriber\u0027, F.col(\u0027source\u0027))\\\n        .withColumn(\"call_datetime\", F.to_timestamp(\"time\"))\\\n        .withColumn(\"call_date\", F.to_date(\"call_datetime\"))\\\n        .withColumn(\"week\", F.weekofyear(\"call_date\"))\\\n        .withColumn(\"hour\", F.hour(\"call_datetime\"))\\\n        .withColumn(\"site\", F.expr(\"substring(antenna_id, 1, length(antenna_id)-1)\"))\ndf \u003d df.drop(\u0027time\u0027, \u0027cdr_type\u0027, \u0027source\u0027, \u0027target\u0027, \u0027direction\u0027, \u0027antenna_id\u0027)",
+      "user": "admin",
+      "dateUpdated": "2020-07-21 01:14:53.966",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595215507954_735856726",
+      "id": "20200708-162333_433705629",
+      "dateCreated": "2020-07-20 03:25:07.954",
+      "dateStarted": "2020-07-21 01:14:53.988",
+      "dateFinished": "2020-07-21 01:15:01.615",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n# towers \u003d sq.read.csv(\"s3n://sierra-leone-lake/blob/towers/combined_towers_district_07_11.csv\", header\u003d\"true\")\ntowers \u003d sq.read.csv(\"s3n://sierra-leone-lake/blob/towers/towers_current.csv\", header\u003d\"true\")\ntowers.show()",
+      "user": "admin",
+      "dateUpdated": "2020-07-21 01:15:04.648",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------+---------------+--------+----------+-----+--------+----------+----------+----------+----------+----------+----------+----------+------------+----------+----------+----------+-------+-------------+-------------+----------+----------+------+-----------------+----------+----------+-----------------+-----------------+--------+\n|site_id|           Name|Latitude| longitude|   CI|OBJECTID|admin2Name|admin2Pcod|admin2RefN|admin2AltN|admin2Al_1|admin1Name|admin1Pcod|  admin0Name|admin0Pcod|      date|   validOn|ValidTo|   Shape_Leng|   Shape_Area|OBJECTID_1|OBJECTID_2|CCODE1|     Shape_Leng_2| New_Chief|SUM_SUM_Fi|       Shape_Le_1|     Shape_Area_2|New_Dist|\n+-------+---------------+--------+----------+-----+--------+----------+----------+----------+----------+----------+----------+----------+------------+----------+----------+----------+-------+-------------+-------------+----------+----------+------+-----------------+----------+----------+-----------------+-----------------+--------+\n|   2082|         SULIMA| 6.96844| -11.57535|20823|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       196|       194|  3410|1.316535180940000|Soro Gbema|     42292|1.316535180940000|0.059779681790500| Pujehun|\n|   2082|         SULIMA| 6.96844| -11.57535|20822|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       196|       194|  3410|1.316535180940000|Soro Gbema|     42292|1.316535180940000|0.059779681790500| Pujehun|\n|   2082|         SULIMA| 6.96844| -11.57535|20821|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       196|       194|  3410|1.316535180940000|Soro Gbema|     42292|1.316535180940000|0.059779681790500| Pujehun|\n|   2080|         MALEMA| 7.02457| -11.38846|20804|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       196|       194|  3410|1.316535180940000|Soro Gbema|     42292|1.316535180940000|0.059779681790500| Pujehun|\n|   2080|         MALEMA| 7.02457| -11.38846|20803|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       196|       194|  3410|1.316535180940000|Soro Gbema|     42292|1.316535180940000|0.059779681790500| Pujehun|\n|   2080|         MALEMA| 7.02457| -11.38846|20802|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       196|       194|  3410|1.316535180940000|Soro Gbema|     42292|1.316535180940000|0.059779681790500| Pujehun|\n|   2080|         MALEMA| 7.02457| -11.38846|20801|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       196|       194|  3410|1.316535180940000|Soro Gbema|     42292|1.316535180940000|0.059779681790500| Pujehun|\n|   2081|MALEMA_REPEATER| 7.15579| -11.37431|20814|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       196|       194|  3410|1.316535180940000|Soro Gbema|     42292|1.316535180940000|0.059779681790500| Pujehun|\n|   2081|MALEMA_REPEATER| 7.15579| -11.37431|20813|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       196|       194|  3410|1.316535180940000|Soro Gbema|     42292|1.316535180940000|0.059779681790500| Pujehun|\n|   2081|MALEMA_REPEATER| 7.15579| -11.37431|20812|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       196|       194|  3410|1.316535180940000|Soro Gbema|     42292|1.316535180940000|0.059779681790500| Pujehun|\n|   2081|MALEMA_REPEATER| 7.15579| -11.37431|20811|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       196|       194|  3410|1.316535180940000|Soro Gbema|     42292|1.316535180940000|0.059779681790500| Pujehun|\n|   2238|       ZIMMI_II|7.315155|-11.306095|22384|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       191|       189|  3405|0.985388583527000|   Makpele|     31080|0.985388583527000|0.032768594430300| Pujehun|\n|   2238|       ZIMMI_II|7.315155|-11.306095|22383|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       191|       189|  3405|0.985388583527000|   Makpele|     31080|0.985388583527000|0.032768594430300| Pujehun|\n|   2238|       ZIMMI_II|7.315155|-11.306095|22382|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       191|       189|  3405|0.985388583527000|   Makpele|     31080|0.985388583527000|0.032768594430300| Pujehun|\n|   2238|       ZIMMI_II|7.315155|-11.306095|22381|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       191|       189|  3405|0.985388583527000|   Makpele|     31080|0.985388583527000|0.032768594430300| Pujehun|\n|   2070|       GBUNDAPI| 7.31859| -11.84826|20703|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       190|       188|  3404|1.473816135990000|     Panga|     45771|1.473816135990000|0.036772106471800| Pujehun|\n|   2070|       GBUNDAPI| 7.31859| -11.84826|20702|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       190|       188|  3404|1.473816135990000|     Panga|     45771|1.473816135990000|0.036772106471800| Pujehun|\n|   2070|       GBUNDAPI| 7.31859| -11.84826|20701|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       190|       188|  3404|1.473816135990000|     Panga|     45771|1.473816135990000|0.036772106471800| Pujehun|\n|   4033|     PUJEHUN_II|7.350478|-11.717965|40338|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       190|       188|  3404|1.473816135990000|     Panga|     45771|1.473816135990000|0.036772106471800| Pujehun|\n|   4033|     PUJEHUN_II|7.350478|-11.717965|40337|       1|   Pujehun|    SL0304|   Pujehun|      null|      null|  Southern|      SL03|Sierra Leone|        SL|2016-08-01|2016-10-17|   null|3.51876286048|0.34253920126|       190|       188|  3404|1.473816135990000|     Panga|     45771|1.473816135990000|0.036772106471800| Pujehun|\n+-------+---------------+--------+----------+-----+--------+----------+----------+----------+----------+----------+----------+----------+------------+----------+----------+----------+-------+-------------+-------------+----------+----------+------+-----------------+----------+----------+-----------------+-----------------+--------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595215589310_1463502665",
+      "id": "20200720-032629_1186965025",
+      "dateCreated": "2020-07-20 03:26:29.310",
+      "dateStarted": "2020-07-21 01:15:04.669",
+      "dateFinished": "2020-07-21 01:15:08.877",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndef bin_count(count):\n    if count\u003d\u003d0: \n        return \u00270\u0027\n    elif 0\u003ccount\u003c\u003d1:\n        return \u00270-1\u0027\n    elif 1\u003ccount\u003c\u003d3:\n        return \u00271-3\u0027\n    elif 3\u003ccount\u003c\u003d5:\n        return \u00273-5\u0027\n    elif 5\u003ccount\u003c\u003d10:\n        return \u00275-10\u0027\n    elif 10\u003ccount\u003c\u003d15:\n        return \u002710-15\u0027\n    elif 15\u003ccount\u003c\u003d20:\n        return \u002715-20\u0027\n    elif 20\u003ccount\u003c\u003d30:\n        return \u002720-30\u0027\n    elif 30\u003ccount\u003c\u003d50:\n        return \u002730-50\u0027\n    elif 50\u003ccount\u003c\u003d75:\n        return \u002750-75\u0027\n    elif 75\u003ccount\u003c\u003d100:\n        return \u002775-100\u0027\n    elif 100\u003ccount\u003c\u003d150:\n        return \u0027100-150\u0027\n    elif 150\u003ccount\u003c\u003d250:\n        return \u0027150-250\u0027\n    elif 250\u003ccount\u003c\u003d350:\n        return \u0027250-350\u0027\n    else:\n        return \u0027350-inf\u0027\n\nbin \u003d F.udf(bin_count, StringType())",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-20 20:18:17.160",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595215507954_1613011128",
+      "id": "20200716-051832_788036241",
+      "dateCreated": "2020-07-20 03:25:07.954",
+      "dateStarted": "2020-07-20 20:18:17.180",
+      "dateFinished": "2020-07-20 20:18:17.186",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndistrict \u003d Window.partitionBy(\u0027admin2Name\u0027, \u0027call_date\u0027)\n        # .groupBy(\u0027admin2name\u0027, \u0027subscriber\u0027)\\\n        # .agg(F.avg(\u0027count\u0027).alias(\u0027count\u0027))\\\njoined \u003d df\\\n        .join(towers, df.site\u003d\u003dtowers.site_id)\\\n        .groupBy(\u0027admin2Name\u0027, \u0027subscriber\u0027, \u0027call_date\u0027)\\\n        .agg(F.count(\u0027call_date\u0027).alias(\u0027count\u0027))\\\n        .withColumn(\u0027bin\u0027, bin(F.col(\u0027count\u0027)))\\\n        .groupBy(\u0027call_date\u0027, \u0027admin2Name\u0027, \u0027bin\u0027)\\\n        .agg(F.count(\u0027subscriber\u0027).alias(\u0027users\u0027))\\\n        .withColumn(\u0027sort\u0027, F.split(F.col(\u0027bin\u0027), \u0027-\u0027).getItem(0).cast(IntegerType()))\\\n        .orderBy(\u0027admin2Name\u0027, \u0027call_date\u0027, \u0027sort\u0027)\nrelative_freq \u003d joined\\\n        .withColumn(\u0027total\u0027, F.sum(\u0027users\u0027).over(district))\\\n        .withColumn(\u0027relative\u0027, F.col(\u0027users\u0027)/F.col(\u0027total\u0027))\nrelative_freq.createOrReplaceTempView(\"relative_freq\")",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-20 20:45:19.438",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595215737002_-419856855",
+      "id": "20200720-032857_907189503",
+      "dateCreated": "2020-07-20 03:28:57.002",
+      "dateStarted": "2020-07-20 20:45:19.455",
+      "dateFinished": "2020-07-20 20:45:19.714",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\njoined.show()",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-20 21:32:49.887",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+----------+----------+-------+-----+----+\n| call_date|admin2Name|    bin|users|sort|\n+----------+----------+-------+-----+----+\n|2020-03-03|      null|    1-3| 5550|   1|\n|2020-03-03|      null|    3-5| 1985|   3|\n|2020-03-03|      null|   5-10| 2796|   5|\n|2020-03-03|      null|  10-15|  635|  10|\n|2020-03-03|      null|  15-20|  488|  15|\n|2020-03-03|      null|  20-30|  378|  20|\n|2020-03-03|      null|  30-50|  206|  30|\n|2020-03-03|      null|  50-75|   71|  50|\n|2020-03-03|      null| 75-100|   18|  75|\n|2020-03-03|      null|100-150|    8| 100|\n|2020-03-03|      null|150-250|    1| 150|\n|2020-03-03|      null|250-350|    1| 250|\n|2020-03-04|      null|    1-3| 5701|   1|\n|2020-03-04|      null|    3-5| 2009|   3|\n|2020-03-04|      null|   5-10| 2855|   5|\n|2020-03-04|      null|  10-15|  586|  10|\n|2020-03-04|      null|  15-20|  550|  15|\n|2020-03-04|      null|  20-30|  399|  20|\n|2020-03-04|      null|  30-50|  216|  30|\n|2020-03-04|      null|  50-75|   79|  50|\n+----------+----------+-------+-----+----+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595280388757_-1508556781",
+      "id": "20200720-212628_1510403719",
+      "dateCreated": "2020-07-20 21:26:28.757",
+      "dateStarted": "2020-07-20 21:32:49.916",
+      "dateFinished": "2020-07-20 21:36:07.568",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\nselect * from relative_freq",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-20 21:26:11.716",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300.0,
+              "optionOpen": true,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "call_date": "string",
+                      "admin2Name": "string",
+                      "bin": "string",
+                      "users": "string",
+                      "sort": "string",
+                      "total": "string",
+                      "relative": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default",
+                  "stacked": false
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "admin2Name",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [
+                {
+                  "name": "bin",
+                  "index": 2.0,
+                  "aggr": "sum"
+                }
+              ],
+              "values": [
+                {
+                  "name": "relative",
+                  "index": 6.0,
+                  "aggr": "avg"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "call_date\tadmin2Name\tbin\tusers\tsort\ttotal\trelative\n2020-03-03\tKailahun\t1-3\t3635\t1\t22461\t0.16183607141267084\n2020-03-03\tKailahun\t3-5\t2742\t3\t22461\t0.12207826899959931\n2020-03-03\tKailahun\t5-10\t6260\t5\t22461\t0.27870531142869864\n2020-03-03\tKailahun\t10-15\t2490\t10\t22461\t0.11085882195806064\n2020-03-03\tKailahun\t15-20\t2420\t15\t22461\t0.10774230889096656\n2020-03-03\tKailahun\t20-30\t2010\t20\t22461\t0.08948844664084413\n2020-03-03\tKailahun\t30-50\t1779\t30\t22461\t0.07920395351943368\n2020-03-03\tKailahun\t50-75\t675\t50\t22461\t0.030052090289835715\n2020-03-03\tKailahun\t75-100\t254\t75\t22461\t0.011308490272027068\n2020-03-03\tKailahun\t100-150\t137\t100\t22461\t0.0060994612884555455\n2020-03-03\tKailahun\t150-250\t47\t150\t22461\t0.00209251591647745\n2020-03-03\tKailahun\t250-350\t10\t250\t22461\t4.452161524420106E-4\n2020-03-03\tKailahun\t350-inf\t2\t350\t22461\t8.904323048840212E-5\n2020-03-09\tWestern Area Rural\t1-3\t11777\t1\t181691\t0.064818840779125\n2020-03-09\tWestern Area Rural\t3-5\t16789\t3\t181691\t0.09240413669361719\n2020-03-09\tWestern Area Rural\t5-10\t51163\t5\t181691\t0.28159347463550755\n2020-03-09\tWestern Area Rural\t10-15\t19466\t10\t181691\t0.1071379429911223\n2020-03-09\tWestern Area Rural\t15-20\t21711\t15\t181691\t0.11949408611323621\n2020-03-09\tWestern Area Rural\t20-30\t22949\t20\t181691\t0.12630785234271372\n2020-03-09\tWestern Area Rural\t30-50\t21099\t30\t181691\t0.1161257299480987\n2020-03-09\tWestern Area Rural\t50-75\t9477\t50\t181691\t0.05215998591014415\n2020-03-09\tWestern Area Rural\t75-100\t3908\t75\t181691\t0.02150904557738138\n2020-03-09\tWestern Area Rural\t100-150\t2320\t100\t181691\t0.012768931867841555\n2020-03-09\tWestern Area Rural\t150-250\t836\t150\t181691\t0.0046012185523773876\n2020-03-09\tWestern Area Rural\t250-350\t120\t250\t181691\t6.604619931642184E-4\n2020-03-09\tWestern Area Rural\t350-inf\t76\t350\t181691\t4.1829259567067166E-4\n2020-03-05\tKenema\t1-3\t3188\t1\t47373\t0.06729571696958182\n2020-03-05\tKenema\t3-5\t1998\t3\t47373\t0.04217592299411057\n2020-03-05\tKenema\t5-10\t15573\t5\t47373\t0.3287315559495915\n2020-03-05\tKenema\t10-15\t6282\t10\t47373\t0.1326071813058071\n2020-03-05\tKenema\t15-20\t5783\t15\t47373\t0.12207375509256327\n2020-03-05\tKenema\t20-30\t5768\t20\t47373\t0.12175711903404893\n2020-03-05\tKenema\t30-50\t5010\t30\t47373\t0.10575644354379077\n2020-03-05\tKenema\t50-75\t2187\t50\t47373\t0.046165537331391296\n2020-03-05\tKenema\t75-100\t877\t75\t47373\t0.01851265488780529\n2020-03-05\tKenema\t100-150\t489\t100\t47373\t0.010322335507567601\n2020-03-05\tKenema\t150-250\t174\t150\t47373\t0.0036729782787663858\n2020-03-05\tKenema\t250-350\t34\t250\t47373\t7.177083992991789E-4\n2020-03-05\tKenema\t350-inf\t10\t350\t47373\t2.1109070567622908E-4\n2020-03-03\tBonthe\t0-1\t73\t0\t9183\t0.0079494718501579\n2020-03-03\tBonthe\t1-3\t590\t1\t9183\t0.06424915604922139\n2020-03-03\tBonthe\t3-5\t1985\t3\t9183\t0.21616029619949909\n2020-03-03\tBonthe\t5-10\t2506\t5\t9183\t0.2728955678972014\n2020-03-03\tBonthe\t10-15\t1400\t10\t9183\t0.15245562452357617\n2020-03-03\tBonthe\t15-20\t698\t15\t9183\t0.07601001851246869\n2020-03-03\tBonthe\t20-30\t969\t20\t9183\t0.10552107154524665\n2020-03-03\tBonthe\t30-50\t597\t30\t9183\t0.06501143417183927\n2020-03-03\tBonthe\t50-75\t203\t50\t9183\t0.022106065555918545\n2020-03-03\tBonthe\t75-100\t84\t75\t9183\t0.00914733747141457\n2020-03-03\tBonthe\t100-150\t51\t100\t9183\t0.00555374060764456\n2020-03-03\tBonthe\t150-250\t23\t150\t9183\t0.002504628117173037\n2020-03-03\tBonthe\t250-350\t2\t250\t9183\t2.1779374931939454E-4\n2020-03-03\tBonthe\t350-inf\t2\t350\t9183\t2.1779374931939454E-4\n2020-03-03\tMoyamba\t1-3\t1656\t1\t15269\t0.10845503962276508\n2020-03-03\tMoyamba\t3-5\t3806\t3\t15269\t0.249263213046041\n2020-03-03\tMoyamba\t5-10\t3794\t5\t15269\t0.24847730696181805\n2020-03-03\tMoyamba\t10-15\t2004\t10\t15269\t0.1312463160652302\n2020-03-03\tMoyamba\t15-20\t1403\t15\t15269\t0.0918855196803982\n2020-03-03\tMoyamba\t20-30\t1224\t20\t15269\t0.0801624205907394\n2020-03-03\tMoyamba\t30-50\t886\t30\t15269\t0.05802606588512673\n2020-03-03\tMoyamba\t50-75\t327\t50\t15269\t0.02141594079507499\n2020-03-03\tMoyamba\t75-100\t102\t75\t15269\t0.00668020171589495\n2020-03-03\tMoyamba\t100-150\t54\t100\t15269\t0.003536577379003209\n2020-03-03\tMoyamba\t150-250\t11\t150\t15269\t7.204139105376908E-4\n2020-03-03\tMoyamba\t250-350\t2\t250\t15269\t1.3098434737048923E-4\n2020-03-03\tTonkolili\t1-3\t1391\t1\t48882\t0.028456282476167095\n2020-03-03\tTonkolili\t3-5\t6645\t3\t48882\t0.135939609672272\n2020-03-03\tTonkolili\t5-10\t11801\t5\t48882\t0.24141810891534715\n2020-03-03\tTonkolili\t10-15\t4771\t10\t48882\t0.09760238942760116\n2020-03-03\tTonkolili\t15-20\t6658\t15\t48882\t0.13620555623746983\n2020-03-03\tTonkolili\t20-30\t5979\t20\t48882\t0.1223149625629066\n2020-03-03\tTonkolili\t30-50\t6349\t30\t48882\t0.12988421095699848\n2020-03-03\tTonkolili\t50-75\t2886\t50\t48882\t0.05904013747391678\n2020-03-03\tTonkolili\t75-100\t1257\t75\t48882\t0.0257149871118203\n2020-03-03\tTonkolili\t100-150\t819\t100\t48882\t0.01675463360746287\n2020-03-03\tTonkolili\t150-250\t271\t150\t48882\t0.0055439630129700095\n2020-03-03\tTonkolili\t250-350\t40\t250\t48882\t8.182971236856102E-4\n2020-03-03\tTonkolili\t350-inf\t15\t350\t48882\t3.0686142138210387E-4\n2020-03-05\tPujehun\t1-3\t1581\t1\t12516\t0.1263183125599233\n2020-03-05\tPujehun\t3-5\t2514\t3\t12516\t0.20086289549376798\n2020-03-05\tPujehun\t5-10\t3162\t5\t12516\t0.2526366251198466\n2020-03-05\tPujehun\t10-15\t1725\t10\t12516\t0.137823585810163\n2020-03-05\tPujehun\t15-20\t1087\t15\t12516\t0.0868488334931288\n2020-03-05\tPujehun\t20-30\t1213\t20\t12516\t0.09691594758708853\n2020-03-05\tPujehun\t30-50\t802\t30\t12516\t0.06407798018536273\n2020-03-05\tPujehun\t50-75\t299\t50\t12516\t0.02388942154042825\n2020-03-05\tPujehun\t75-100\t90\t75\t12516\t0.007190795781399808\n2020-03-05\tPujehun\t100-150\t35\t100\t12516\t0.002796420581655481\n2020-03-05\tPujehun\t150-250\t7\t150\t12516\t5.592841163310962E-4\n2020-03-05\tPujehun\t250-350\t1\t250\t12516\t7.989773090444231E-5\n2020-03-09\tnull\t1-3\t5069\t1\t10621\t0.4772620280576217\n2020-03-09\tnull\t3-5\t1962\t3\t10621\t0.18472836832689954\n2020-03-09\tnull\t5-10\t2316\t5\t10621\t0.2180585632238019\n2020-03-09\tnull\t10-15\t459\t10\t10621\t0.04321626965445815\n2020-03-09\tnull\t15-20\t371\t15\t10621\t0.03493079747669711\n2020-03-09\tnull\t20-30\t253\t20\t10621\t0.023820732511062988\n2020-03-09\tnull\t30-50\t133\t30\t10621\t0.012522361359570662\n2020-03-09\tnull\t50-75\t44\t50\t10621\t0.004142736088880519\n2020-03-09\tnull\t75-100\t7\t75\t10621\t6.59071650503719E-4\n2020-03-09\tnull\t100-150\t5\t100\t10621\t4.7076546464551363E-4\n2020-03-09\tnull\t150-250\t2\t150\t10621\t1.8830618585820544E-4\n2020-03-06\tBombali\t1-3\t2464\t1\t86075\t0.028626198083067093\n2020-03-06\tBombali\t3-5\t2106\t3\t86075\t0.02446703456288121\n2020-03-06\tBombali\t5-10\t22077\t5\t86075\t0.2564856230031949\n2020-03-06\tBombali\t10-15\t9897\t10\t86075\t0.11498112111530642\n2020-03-06\tBombali\t15-20\t10134\t15\t86075\t0.11773453383677025\n2020-03-06\tBombali\t20-30\t13152\t20\t86075\t0.15279697937844902\n2020-03-06\tBombali\t30-50\t13012\t30\t86075\t0.15117049085100204\n2020-03-06\tBombali\t50-75\t6955\t50\t86075\t0.08080162648852744\n2020-03-06\tBombali\t75-100\t3208\t75\t86075\t0.03726982282892826\n2020-03-06\tBombali\t100-150\t2138\t100\t86075\t0.024838803369154807\n2020-03-06\tBombali\t150-250\t759\t150\t86075\t0.008817891373801916\n2020-03-06\tBombali\t250-350\t126\t250\t86075\t0.0014638396747022945\n2020-03-06\tBombali\t350-inf\t47\t350\t86075\t5.460354342143479E-4\n2020-03-09\tPujehun\t1-3\t1485\t1\t12078\t0.12295081967213115\n2020-03-09\tPujehun\t3-5\t2361\t3\t12078\t0.19547938400397416\n2020-03-09\tPujehun\t5-10\t2959\t5\t12078\t0.24499089253187614\n2020-03-09\tPujehun\t10-15\t1719\t10\t12078\t0.14232488822652756\n2020-03-09\tPujehun\t15-20\t1076\t15\t12078\t0.0890875972843186\n2020-03-09\tPujehun\t20-30\t1168\t20\t12078\t0.09670475244245737\n2020-03-09\tPujehun\t30-50\t839\t30\t12078\t0.06946514323563503\n2020-03-09\tPujehun\t50-75\t320\t50\t12078\t0.02649445272396092\n2020-03-09\tPujehun\t75-100\t84\t75\t12078\t0.006954793840039742\n2020-03-09\tPujehun\t100-150\t52\t100\t12078\t0.00430534856764365\n2020-03-09\tPujehun\t150-250\t13\t150\t12078\t0.0010763371419109124\n2020-03-09\tPujehun\t250-350\t2\t250\t12078\t1.6559032952475575E-4\n2020-03-06\tWestern Area Rural\t1-3\t11643\t1\t184064\t0.06325517211404728\n2020-03-06\tWestern Area Rural\t3-5\t16671\t3\t184064\t0.09057175764951321\n2020-03-06\tWestern Area Rural\t5-10\t49713\t5\t184064\t0.27008540507649514\n2020-03-06\tWestern Area Rural\t10-15\t19651\t10\t184064\t0.10676177851182198\n2020-03-06\tWestern Area Rural\t15-20\t21554\t15\t184064\t0.11710057371349096\n2020-03-06\tWestern Area Rural\t20-30\t23448\t20\t184064\t0.1273904728789986\n2020-03-06\tWestern Area Rural\t30-50\t22349\t30\t184064\t0.1214197235744089\n2020-03-06\tWestern Area Rural\t50-75\t10718\t50\t184064\t0.058229746175243395\n2020-03-06\tWestern Area Rural\t75-100\t4435\t75\t184064\t0.024094880041724616\n2020-03-06\tWestern Area Rural\t100-150\t2704\t100\t184064\t0.014690542420027817\n2020-03-06\tWestern Area Rural\t150-250\t963\t150\t184064\t0.005231875869262865\n2020-03-06\tWestern Area Rural\t250-350\t148\t250\t184064\t8.040681502086231E-4\n2020-03-06\tWestern Area Rural\t350-inf\t67\t350\t184064\t3.640038247566064E-4\n2020-03-04\tBo\t1-3\t2302\t1\t47513\t0.0484498979226738\n2020-03-04\tBo\t3-5\t2319\t3\t47513\t0.048807694736177465\n2020-03-04\tBo\t5-10\t15647\t5\t47513\t0.32932039652305684\n2020-03-04\tBo\t10-15\t7545\t10\t47513\t0.15879864458148296\n2020-03-04\tBo\t15-20\t5092\t15\t47513\t0.10717066908004125\n2020-03-04\tBo\t20-30\t6154\t20\t47513\t0.1295224464883295\n2020-03-04\tBo\t30-50\t4929\t30\t47513\t0.1037400290446825\n2020-03-04\tBo\t50-75\t2087\t50\t47513\t0.043924820575421464\n2020-03-04\tBo\t75-100\t797\t75\t47513\t0.016774356491907477\n2020-03-04\tBo\t100-150\t477\t100\t47513\t0.010039357649485403\n2020-03-04\tBo\t150-250\t139\t150\t47513\t0.0029255151221770884\n2020-03-04\tBo\t250-350\t19\t250\t47513\t3.9989055626881066E-4\n2020-03-04\tBo\t350-inf\t6\t350\t47513\t1.2628122829541388E-4\n2020-03-06\tPort Loko\t0-1\t518\t0\t70428\t0.007355029249730221\n2020-03-06\tPort Loko\t1-3\t3496\t1\t70428\t0.04963934798659624\n2020-03-06\tPort Loko\t3-5\t7517\t3\t70428\t0.10673311751008122\n2020-03-06\tPort Loko\t5-10\t18217\t5\t70428\t0.2586613278809564\n2020-03-06\tPort Loko\t10-15\t8979\t10\t70428\t0.12749190662804566\n2020-03-06\tPort Loko\t15-20\t8396\t15\t70428\t0.11921394899755779\n2020-03-06\tPort Loko\t20-30\t8654\t20\t70428\t0.1228772647242574\n2020-03-06\tPort Loko\t30-50\t7993\t30\t70428\t0.11349179303686034\n2020-03-06\tPort Loko\t50-75\t3900\t50\t70428\t0.055375702845459195\n2020-03-06\tPort Loko\t75-100\t1531\t75\t70428\t0.02173851309138411\n2020-03-06\tPort Loko\t100-150\t876\t100\t70428\t0.012438234792980065\n2020-03-06\tPort Loko\t150-250\t279\t150\t70428\t0.0039614925881751575\n2020-03-06\tPort Loko\t250-350\t49\t250\t70428\t6.957460101096155E-4\n2020-03-06\tPort Loko\t350-inf\t23\t350\t70428\t3.2657465780655423E-4\n2020-03-06\tTonkolili\t1-3\t1457\t1\t51109\t0.028507699231055197\n2020-03-06\tTonkolili\t3-5\t7036\t3\t51109\t0.13766655579252188\n2020-03-06\tTonkolili\t5-10\t11977\t5\t51109\t0.2343422880510282\n2020-03-06\tTonkolili\t10-15\t5097\t10\t51109\t0.09972803224481011\n2020-03-06\tTonkolili\t15-20\t6938\t15\t51109\t0.1357490852883054\n2020-03-06\tTonkolili\t20-30\t6021\t20\t51109\t0.11780703985599406\n2020-03-06\tTonkolili\t30-50\t6822\t30\t51109\t0.1334794263241308\n2020-03-06\tTonkolili\t50-75\t3088\t50\t51109\t0.0604198869083723\n2020-03-06\tTonkolili\t75-100\t1351\t75\t51109\t0.02643370052241288\n2020-03-06\tTonkolili\t100-150\t898\t100\t51109\t0.017570290946799978\n2020-03-06\tTonkolili\t150-250\t355\t150\t51109\t0.006945939071396427\n2020-03-06\tTonkolili\t250-350\t46\t250\t51109\t9.000371754485511E-4\n2020-03-06\tTonkolili\t350-inf\t23\t350\t51109\t4.5001858772427555E-4\n2020-03-03\tKono\t1-3\t2758\t1\t48828\t0.05648398459900057\n2020-03-03\tKono\t3-5\t2359\t3\t48828\t0.04831244367985582\n2020-03-03\tKono\t5-10\t12605\t5\t48828\t0.2581510608667158\n2020-03-03\tKono\t10-15\t5588\t10\t48828\t0.11444253297288441\n2020-03-03\tKono\t15-20\t5804\t15\t48828\t0.1188662242975342\n2020-03-03\tKono\t20-30\t6725\t20\t48828\t0.1377283525845826\n2020-03-03\tKono\t30-50\t6736\t30\t48828\t0.13795363316130088\n2020-03-03\tKono\t50-75\t3434\t50\t48828\t0.0703285000409601\n2020-03-03\tKono\t75-100\t1512\t75\t48828\t0.030965839272548538\n2020-03-03\tKono\t100-150\t928\t100\t48828\t0.019005488654050953\n2020-03-03\tKono\t150-250\t310\t150\t48828\t0.006348816252969607\n2020-03-03\tKono\t250-350\t53\t250\t48828\t0.0010854427787335135\n2020-03-03\tKono\t350-inf\t16\t350\t48828\t3.276808388629475E-4\n2020-03-05\tMoyamba\t1-3\t1720\t1\t15592\t0.11031298101590559\n2020-03-05\tMoyamba\t3-5\t3878\t3\t15592\t0.2487172909184197\n2020-03-05\tMoyamba\t5-10\t3766\t5\t15592\t0.24153412006157005\n2020-03-05\tMoyamba\t10-15\t2024\t10\t15592\t0.1298101590559261\n2020-03-05\tMoyamba\t15-20\t1437\t15\t15592\t0.09216264751154438\n2020-03-05\tMoyamba\t20-30\t1324\t20\t15592\t0.0849153412006157\n2020-03-05\tMoyamba\t30-50\t974\t30\t15592\t0.06246793227296049\n2020-03-05\tMoyamba\t50-75\t307\t50\t15592\t0.019689584402257567\n2020-03-05\tMoyamba\t75-100\t100\t75\t15592\t0.006413545407901488\n2020-03-05\tMoyamba\t100-150\t51\t100\t15592\t0.003270908158029759\n2020-03-05\tMoyamba\t150-250\t6\t150\t15592\t3.848127244740893E-4\n2020-03-05\tMoyamba\t250-350\t4\t250\t15592\t2.565418163160595E-4\n2020-03-05\tMoyamba\t350-inf\t1\t350\t15592\t6.413545407901488E-5\n2020-03-09\tWestern Area Urban\t0-1\t388\t0\t325259\t0.0011928955078875604\n2020-03-09\tWestern Area Urban\t1-3\t15128\t1\t325259\t0.046510626915780964\n2020-03-09\tWestern Area Urban\t3-5\t30065\t3\t325259\t0.09243402949649357\n2020-03-09\tWestern Area Urban\t5-10\t91485\t5\t325259\t0.281268158605911\n2020-03-09\tWestern Area Urban\t10-15\t35449\t10\t325259\t0.1089869919049127\n2020-03-09\tWestern Area Urban\t15-20\t41416\t15\t325259\t0.12733237204812164\n2020-03-09\tWestern Area Urban\t20-30\t41965\t20\t325259\t0.12902025770232337\n2020-03-09\tWestern Area Urban\t30-50\t38958\t30\t325259\t0.11977531751619479\n2020-03-09\tWestern Area Urban\t50-75\t17591\t50\t325259\t0.05408305381250019\n2020-03-09\tWestern Area Urban\t75-100\t6963\t75\t325259\t0.02140755520984815\n2020-03-09\tWestern Area Urban\t100-150\t4117\t100\t325259\t0.012657605170033727\n2020-03-09\tWestern Area Urban\t150-250\t1388\t150\t325259\t0.004267368466360654\n2020-03-09\tWestern Area Urban\t250-350\t227\t250\t325259\t6.979053615733923E-4\n2020-03-09\tWestern Area Urban\t350-inf\t119\t350\t325259\t3.6586228205829816E-4\n2020-03-04\tKoinadugu\t0-1\t260\t0\t22041\t0.01179619799464634\n2020-03-04\tKoinadugu\t1-3\t1872\t1\t22041\t0.08493262556145366\n2020-03-04\tKoinadugu\t3-5\t2695\t3\t22041\t0.12227212921373803\n2020-03-04\tKoinadugu\t5-10\t5503\t5\t22041\t0.2496710675559185\n2020-03-04\tKoinadugu\t10-15\t2628\t10\t22041\t0.11923233973050225\n2020-03-04\tKoinadugu\t15-20\t2584\t15\t22041\t0.1172360600698698\n2020-03-04\tKoinadugu\t20-30\t2553\t20\t22041\t0.11582959030896965\n2020-03-04\tKoinadugu\t30-50\t2177\t30\t22041\t0.09877047320901955\n2020-03-04\tKoinadugu\t50-75\t1078\t50\t22041\t0.04890885168549521\n2020-03-04\tKoinadugu\t75-100\t387\t75\t22041\t0.017558187015108206\n2020-03-04\tKoinadugu\t100-150\t238\t100\t22041\t0.010798058164330111\n2020-03-04\tKoinadugu\t150-250\t57\t150\t22041\t0.0025860895603647747\n2020-03-04\tKoinadugu\t250-350\t6\t250\t22041\t2.7221995372260786E-4\n2020-03-04\tKoinadugu\t350-inf\t3\t350\t22041\t1.3610997686130393E-4\n2020-03-05\tBo\t1-3\t2402\t1\t46119\t0.052082655738415834\n2020-03-05\tBo\t3-5\t2312\t3\t46119\t0.050131182376027233\n2020-03-05\tBo\t5-10\t14998\t5\t46119\t0.3252021943233808\n2020-03-05\tBo\t10-15\t7291\t10\t46119\t0.15809102539083675\n2020-03-05\tBo\t15-20\t4950\t15\t46119\t0.10733103493137319\n2020-03-05\tBo\t20-30\t5917\t20\t46119\t0.12829853205837075\n2020-03-05\tBo\t30-50\t4855\t30\t46119\t0.10527114638218521\n2020-03-05\tBo\t50-75\t2084\t50\t46119\t0.045187449857976104\n2020-03-05\tBo\t75-100\t727\t75\t46119\t0.01576356816062794\n2020-03-05\tBo\t100-150\t445\t100\t46119\t0.00964895162514365\n2020-03-05\tBo\t150-250\t118\t150\t46119\t0.002558598408465058\n2020-03-05\tBo\t250-350\t12\t250\t46119\t2.6019644831848046E-4\n2020-03-05\tBo\t350-inf\t8\t350\t46119\t1.7346429887898698E-4\n2020-03-09\tTonkolili\t1-3\t1380\t1\t46453\t0.029707446235980452\n2020-03-09\tTonkolili\t3-5\t6369\t3\t46453\t0.13710632251953586\n2020-03-09\tTonkolili\t5-10\t11222\t5\t46453\t0.24157750844940046\n2020-03-09\tTonkolili\t10-15\t4569\t10\t46453\t0.09835747960303963\n2020-03-09\tTonkolili\t15-20\t6408\t15\t46453\t0.13794588078272663\n2020-03-09\tTonkolili\t20-30\t5473\t20\t46453\t0.11781800960110218\n2020-03-09\tTonkolili\t30-50\t6003\t30\t46453\t0.12922739112651496\n2020-03-09\tTonkolili\t50-75\t2725\t50\t46453\t0.05866144274858459\n2020-03-09\tTonkolili\t75-100\t1172\t75\t46453\t0.025229802165629776\n2020-03-09\tTonkolili\t100-150\t751\t100\t46453\t0.016166878350160375\n2020-03-09\tTonkolili\t150-250\t318\t150\t46453\t0.00684562891524767\n2020-03-09\tTonkolili\t250-350\t41\t250\t46453\t8.8261253309797E-4\n2020-03-09\tTonkolili\t350-inf\t22\t350\t46453\t4.735969689793985E-4\n2020-03-03\tWestern Area Urban\t0-1\t674\t0\t361829\t0.0018627583748124113\n2020-03-03\tWestern Area Urban\t1-3\t16165\t1\t361829\t0.044675799894425265\n2020-03-03\tWestern Area Urban\t3-5\t30067\t3\t361829\t0.08309726417727711\n2020-03-03\tWestern Area Urban\t5-10\t97688\t5\t361829\t0.26998388741643153\n2020-03-03\tWestern Area Urban\t10-15\t39225\t10\t361829\t0.10840756268845228\n2020-03-03\tWestern Area Urban\t15-20\t45396\t15\t361829\t0.12546258039018432\n2020-03-03\tWestern Area Urban\t20-30\t47981\t20\t361829\t0.13260683914224675\n2020-03-03\tWestern Area Urban\t30-50\t46801\t30\t361829\t0.12934563011809447\n2020-03-03\tWestern Area Urban\t50-75\t21906\t50\t361829\t0.06054241091786452\n2020-03-03\tWestern Area Urban\t75-100\t8854\t75\t361829\t0.024470122626986782\n2020-03-03\tWestern Area Urban\t100-150\t5163\t100\t361829\t0.014269171348896855\n2020-03-03\tWestern Area Urban\t150-250\t1577\t150\t361829\t0.00435841239922726\n2020-03-03\tWestern Area Urban\t250-350\t230\t250\t361829\t6.356593860635825E-4\n2020-03-03\tWestern Area Urban\t350-inf\t102\t350\t361829\t2.819011190368931E-4\n2020-03-03\tnull\t1-3\t5550\t1\t12137\t0.4572793935898492\n2020-03-03\tnull\t3-5\t1985\t3\t12137\t0.1635494768064596\n2020-03-03\tnull\t5-10\t2796\t5\t12137\t0.23036994314904835\n2020-03-03\tnull\t10-15\t635\t10\t12137\t0.05231935404136113\n2020-03-03\tnull\t15-20\t488\t15\t12137\t0.04020762956249485\n2020-03-03\tnull\t20-30\t378\t20\t12137\t0.031144434374227568\n2020-03-03\tnull\t30-50\t206\t30\t12137\t0.01697289280711873\n2020-03-03\tnull\t50-75\t71\t50\t12137\t0.005849880530608882\n2020-03-03\tnull\t75-100\t18\t75\t12137\t0.0014830683035346461\n2020-03-03\tnull\t100-150\t8\t100\t12137\t6.591414682376205E-4\n2020-03-03\tnull\t150-250\t1\t150\t12137\t8.239268352970256E-5\n2020-03-03\tnull\t250-350\t1\t250\t12137\t8.239268352970256E-5\n2020-03-04\tTonkolili\t1-3\t1298\t1\t49829\t0.026049087880551484\n2020-03-04\tTonkolili\t3-5\t6807\t3\t49829\t0.13660719661241447\n2020-03-04\tTonkolili\t5-10\t11558\t5\t49829\t0.23195328021834674\n2020-03-04\tTonkolili\t10-15\t4899\t10\t49829\t0.09831624154608762\n2020-03-04\tTonkolili\t15-20\t6846\t15\t49829\t0.13738987336691486\n2020-03-04\tTonkolili\t20-30\t6107\t20\t49829\t0.12255915230086897\n2020-03-04\tTonkolili\t30-50\t6591\t30\t49829\t0.13227237151056614\n2020-03-04\tTonkolili\t50-75\t3140\t50\t49829\t0.0630155130546469\n2020-03-04\tTonkolili\t75-100\t1320\t75\t49829\t0.02649059784462863\n2020-03-04\tTonkolili\t100-150\t914\t100\t49829\t0.01834273214393225\n2020-03-04\tTonkolili\t150-250\t289\t150\t49829\t0.005799835437195208\n2020-03-04\tTonkolili\t250-350\t44\t250\t49829\t8.830199281542877E-4\n2020-03-04\tTonkolili\t350-inf\t16\t350\t49829\t3.210981556924682E-4\n2020-03-05\tTonkolili\t1-3\t1396\t1\t49667\t0.028107193911450258\n2020-03-05\tTonkolili\t3-5\t6822\t3\t49667\t0.13735478285380634\n2020-03-05\tTonkolili\t5-10\t11540\t5\t49667\t0.23234743390983953\n2020-03-05\tTonkolili\t10-15\t4909\t10\t49667\t0.0988382628304508\n2020-03-05\tTonkolili\t15-20\t6837\t15\t49667\t0.13765679424970304\n2020-03-05\tTonkolili\t20-30\t6084\t20\t49667\t0.12249582217569009\n2020-03-05\tTonkolili\t30-50\t6741\t30\t49667\t0.13572392131596434\n2020-03-05\tTonkolili\t50-75\t2907\t50\t49667\t0.058529808524775004\n2020-03-05\tTonkolili\t75-100\t1253\t75\t49667\t0.02522801860390199\n2020-03-05\tTonkolili\t100-150\t803\t100\t49667\t0.016167676727001833\n2020-03-05\tTonkolili\t150-250\t321\t150\t49667\t0.006463043872188777\n2020-03-05\tTonkolili\t250-350\t44\t250\t49667\t8.859000946302374E-4\n2020-03-05\tTonkolili\t350-inf\t10\t350\t49667\t2.0134093059778123E-4\n2020-03-05\tKailahun\t1-3\t3507\t1\t22486\t0.15596371075335763\n2020-03-05\tKailahun\t3-5\t2789\t3\t22486\t0.1240327314773637\n2020-03-05\tKailahun\t5-10\t6210\t5\t22486\t0.2761718402561594\n2020-03-05\tKailahun\t10-15\t2585\t10\t22486\t0.11496041981677488\n2020-03-05\tKailahun\t15-20\t2557\t15\t22486\t0.11371520056924309\n2020-03-05\tKailahun\t20-30\t1968\t20\t22486\t0.08752112425509205\n2020-03-05\tKailahun\t30-50\t1758\t30\t22486\t0.07818197989860358\n2020-03-05\tKailahun\t50-75\t676\t50\t22486\t0.030063150404696256\n2020-03-05\tKailahun\t75-100\t248\t75\t22486\t0.011029084763853064\n2020-03-05\tKailahun\t100-150\t130\t100\t22486\t0.005781375077826203\n2020-03-05\tKailahun\t150-250\t53\t150\t22486\t0.00235702214711376\n2020-03-05\tKailahun\t250-350\t1\t250\t22486\t4.4472115983278487E-5\n2020-03-05\tKailahun\t350-inf\t4\t350\t22486\t1.7788846393311395E-4\n2020-03-09\tKoinadugu\t0-1\t274\t0\t21434\t0.012783428198189792\n2020-03-09\tKoinadugu\t1-3\t1895\t1\t21434\t0.08841093589623962\n2020-03-09\tKoinadugu\t3-5\t3309\t3\t21434\t0.15438089017448914\n2020-03-09\tKoinadugu\t5-10\t5148\t5\t21434\t0.24017915461416442\n2020-03-09\tKoinadugu\t10-15\t2532\t10\t21434\t0.11813007371465896\n2020-03-09\tKoinadugu\t15-20\t2290\t15\t21434\t0.10683960063450593\n2020-03-09\tKoinadugu\t20-30\t2335\t20\t21434\t0.10893906876924513\n2020-03-09\tKoinadugu\t30-50\t2034\t30\t21434\t0.0948959596902118\n2020-03-09\tKoinadugu\t50-75\t984\t50\t21434\t0.04590836987963049\n2020-03-09\tKoinadugu\t75-100\t340\t75\t21434\t0.01586264812914062\n2020-03-09\tKoinadugu\t100-150\t221\t100\t21434\t0.010310721283941402\n2020-03-09\tKoinadugu\t150-250\t62\t150\t21434\t0.00289260054119623\n2020-03-09\tKoinadugu\t250-350\t7\t250\t21434\t3.2658393207054214E-4\n2020-03-09\tKoinadugu\t350-inf\t3\t350\t21434\t1.3996454231594662E-4\n2020-03-05\tWestern Area Urban\t0-1\t545\t0\t353524\t0.0015416209366266504\n2020-03-05\tWestern Area Urban\t1-3\t16006\t1\t353524\t0.04527556827824985\n2020-03-05\tWestern Area Urban\t3-5\t29917\t3\t353524\t0.08462508910286147\n2020-03-05\tWestern Area Urban\t5-10\t94018\t5\t353524\t0.2659451692105769\n2020-03-05\tWestern Area Urban\t10-15\t38879\t10\t353524\t0.1099755603579955\n2020-03-05\tWestern Area Urban\t15-20\t44602\t15\t353524\t0.12616399452370985\n2020-03-05\tWestern Area Urban\t20-30\t47355\t20\t353524\t0.1339513017503762\n2020-03-05\tWestern Area Urban\t30-50\t45250\t30\t353524\t0.12799696767404758\n2020-03-05\tWestern Area Urban\t50-75\t21489\t50\t353524\t0.06078512349939467\n2020-03-05\tWestern Area Urban\t75-100\t8652\t75\t353524\t0.024473585951731706\n2020-03-05\tWestern Area Urban\t100-150\t4978\t100\t353524\t0.014081080775279755\n2020-03-05\tWestern Area Urban\t150-250\t1516\t150\t353524\t0.004288251999864224\n2020-03-05\tWestern Area Urban\t250-350\t208\t250\t353524\t5.88361751960263E-4\n2020-03-05\tWestern Area Urban\t350-inf\t109\t350\t353524\t3.083241873253301E-4\n2020-03-05\tnull\t1-3\t5607\t1\t12183\t0.46023147008126075\n2020-03-05\tnull\t3-5\t2092\t3\t12183\t0.17171468439628992\n2020-03-05\tnull\t5-10\t2711\t5\t12183\t0.22252318804892063\n2020-03-05\tnull\t10-15\t620\t10\t12183\t0.05089058524173028\n2020-03-05\tnull\t15-20\t499\t15\t12183\t0.040958712960682916\n2020-03-05\tnull\t20-30\t369\t20\t12183\t0.030288106377739474\n2020-03-05\tnull\t30-50\t194\t30\t12183\t0.015923828285315602\n2020-03-05\tnull\t50-75\t74\t50\t12183\t0.006074037593367808\n2020-03-05\tnull\t75-100\t14\t75\t12183\t0.0011491422473939095\n2020-03-05\tnull\t100-150\t2\t100\t12183\t1.6416317819912992E-4\n2020-03-05\tnull\t150-250\t1\t150\t12183\t8.208158909956496E-5\n2020-03-06\tnull\t1-3\t5732\t1\t12574\t0.4558613010975028\n2020-03-06\tnull\t3-5\t2139\t3\t12574\t0.17011293144584064\n2020-03-06\tnull\t5-10\t2890\t5\t12574\t0.22983935104183234\n2020-03-06\tnull\t10-15\t608\t10\t12574\t0.04835374582471767\n2020-03-06\tnull\t15-20\t557\t15\t12574\t0.04429775727692063\n2020-03-06\tnull\t20-30\t340\t20\t12574\t0.027039923651980276\n2020-03-06\tnull\t30-50\t211\t30\t12574\t0.016780658501670112\n2020-03-06\tnull\t50-75\t75\t50\t12574\t0.005964689040878002\n2020-03-06\tnull\t75-100\t15\t75\t12574\t0.0011929378081756005\n2020-03-06\tnull\t100-150\t6\t100\t12574\t4.771751232702402E-4\n2020-03-06\tnull\t150-250\t1\t150\t12574\t7.95291872117067E-5\n2020-03-06\tBonthe\t0-1\t57\t0\t9415\t0.0060541688794476895\n2020-03-06\tBonthe\t1-3\t637\t1\t9415\t0.06765799256505577\n2020-03-06\tBonthe\t3-5\t1998\t3\t9415\t0.2122145512480085\n2020-03-06\tBonthe\t5-10\t2555\t5\t9415\t0.27137546468401486\n2020-03-06\tBonthe\t10-15\t1401\t10\t9415\t0.14880509824747742\n2020-03-06\tBonthe\t15-20\t699\t15\t9415\t0.07424322889006904\n2020-03-06\tBonthe\t20-30\t974\t20\t9415\t0.10345193839617632\n2020-03-06\tBonthe\t30-50\t681\t30\t9415\t0.07233138608603293\n2020-03-06\tBonthe\t50-75\t245\t50\t9415\t0.026022304832713755\n2020-03-06\tBonthe\t75-100\t102\t75\t9415\t0.010833775889537971\n2020-03-06\tBonthe\t100-150\t49\t100\t9415\t0.0052044609665427505\n2020-03-06\tBonthe\t150-250\t14\t150\t9415\t0.001486988847583643\n2020-03-06\tBonthe\t250-350\t1\t250\t9415\t1.0621348911311737E-4\n2020-03-06\tBonthe\t350-inf\t2\t350\t9415\t2.1242697822623473E-4\n2020-03-06\tKailahun\t1-3\t3762\t1\t23237\t0.16189697465249386\n2020-03-06\tKailahun\t3-5\t2826\t3\t23237\t0.12161638765761501\n2020-03-06\tKailahun\t5-10\t6513\t5\t23237\t0.2802857511726987\n2020-03-06\tKailahun\t10-15\t2577\t10\t23237\t0.11090071868141327\n2020-03-06\tKailahun\t15-20\t2530\t15\t23237\t0.10887808236863622\n2020-03-06\tKailahun\t20-30\t2033\t20\t23237\t0.0874897792313982\n2020-03-06\tKailahun\t30-50\t1867\t30\t23237\t0.08034599991393036\n2020-03-06\tKailahun\t50-75\t668\t50\t23237\t0.028747256530533203\n2020-03-06\tKailahun\t75-100\t242\t75\t23237\t0.010414425270043465\n2020-03-06\tKailahun\t100-150\t140\t100\t23237\t0.006024874123165641\n2020-03-06\tKailahun\t150-250\t65\t150\t23237\t0.0027972629857554764\n2020-03-06\tKailahun\t250-350\t9\t250\t23237\t3.8731333648921976E-4\n2020-03-06\tKailahun\t350-inf\t5\t350\t23237\t2.1517407582734432E-4\n2020-03-09\tBo\t1-3\t2262\t1\t45920\t0.0492595818815331\n2020-03-09\tBo\t3-5\t2323\t3\t45920\t0.050587979094076654\n2020-03-09\tBo\t5-10\t15109\t5\t45920\t0.32902874564459933\n2020-03-09\tBo\t10-15\t7339\t10\t45920\t0.15982142857142856\n2020-03-09\tBo\t15-20\t4941\t15\t45920\t0.10760017421602787\n2020-03-09\tBo\t20-30\t5958\t20\t45920\t0.1297473867595819\n2020-03-09\tBo\t30-50\t4649\t30\t45920\t0.10124128919860627\n2020-03-09\tBo\t50-75\t1976\t50\t45920\t0.04303135888501742\n2020-03-09\tBo\t75-100\t753\t75\t45920\t0.01639808362369338\n2020-03-09\tBo\t100-150\t448\t100\t45920\t0.00975609756097561\n2020-03-09\tBo\t150-250\t136\t150\t45920\t0.002961672473867596\n2020-03-09\tBo\t250-350\t18\t250\t45920\t3.9198606271777003E-4\n2020-03-09\tBo\t350-inf\t8\t350\t45920\t1.7421602787456446E-4\n2020-03-04\tKailahun\t1-3\t3573\t1\t22604\t0.15806936825340648\n2020-03-04\tKailahun\t3-5\t2726\t3\t22604\t0.12059812422580074\n2020-03-04\tKailahun\t5-10\t6387\t5\t22604\t0.2825606087418156\n2020-03-04\tKailahun\t10-15\t2542\t10\t22604\t0.11245797204034684\n2020-03-04\tKailahun\t15-20\t2407\t15\t22604\t0.10648557777384533\n2020-03-04\tKailahun\t20-30\t2062\t20\t22604\t0.09122279242611928\n2020-03-04\tKailahun\t30-50\t1766\t30\t22604\t0.0781277649973456\n2020-03-04\tKailahun\t50-75\t664\t50\t22604\t0.02937533179968147\n2020-03-04\tKailahun\t75-100\t277\t75\t22604\t0.012254468235710494\n2020-03-04\tKailahun\t100-150\t145\t100\t22604\t0.006414793841797912\n2020-03-04\tKailahun\t150-250\t49\t150\t22604\t0.002167757918952398\n2020-03-04\tKailahun\t250-350\t4\t250\t22604\t1.7695983011856308E-4\n2020-03-04\tKailahun\t350-inf\t2\t350\t22604\t8.847991505928154E-5\n2020-03-04\tKenema\t1-3\t3121\t1\t49017\t0.06367178733908643\n2020-03-04\tKenema\t3-5\t1983\t3\t49017\t0.04045535222473835\n2020-03-04\tKenema\t5-10\t15814\t5\t49017\t0.3226227635310199\n2020-03-04\tKenema\t10-15\t6386\t10\t49017\t0.13028133096680744\n2020-03-04\tKenema\t15-20\t6190\t15\t49017\t0.1262827182406104\n2020-03-04\tKenema\t20-30\t6085\t20\t49017\t0.1241406042801477\n2020-03-04\tKenema\t30-50\t5253\t30\t49017\t0.10716690127914805\n2020-03-04\tKenema\t50-75\t2378\t50\t49017\t0.048513780933145643\n2020-03-04\tKenema\t75-100\t985\t75\t49017\t0.02009506905767387\n2020-03-04\tKenema\t100-150\t571\t100\t49017\t0.011649019727849522\n2020-03-04\tKenema\t150-250\t203\t150\t49017\t0.004141420323561213\n2020-03-04\tKenema\t250-350\t32\t250\t49017\t6.528347308076789E-4\n2020-03-04\tKenema\t350-inf\t16\t350\t49017\t3.2641736540383947E-4\n2020-03-03\tBombali\t1-3\t2232\t1\t84559\t0.026395771000130085\n2020-03-03\tBombali\t3-5\t2009\t3\t84559\t0.023758559112572287\n2020-03-03\tBombali\t5-10\t21717\t5\t84559\t0.25682659444884637\n2020-03-03\tBombali\t10-15\t9646\t10\t84559\t0.1140741967147199\n2020-03-03\tBombali\t15-20\t9898\t15\t84559\t0.11705436440828297\n2020-03-03\tBombali\t20-30\t12966\t20\t84559\t0.1533367234711858\n2020-03-03\tBombali\t30-50\t13176\t30\t84559\t0.15582019654915502\n2020-03-03\tBombali\t50-75\t6862\t50\t84559\t0.08115043933821356\n2020-03-03\tBombali\t75-100\t3123\t75\t84559\t0.036932792488085245\n2020-03-03\tBombali\t100-150\t2076\t100\t84559\t0.02455090528506723\n2020-03-03\tBombali\t150-250\t722\t150\t84559\t0.008538416963303729\n2020-03-03\tBombali\t250-350\t100\t250\t84559\t0.0011826062276043946\n2020-03-03\tBombali\t350-inf\t32\t350\t84559\t3.7843399283340627E-4\n2020-03-03\tPort Loko\t0-1\t473\t0\t67867\t0.00696951390219105\n2020-03-03\tPort Loko\t1-3\t3322\t1\t67867\t0.048948679033992956\n2020-03-03\tPort Loko\t3-5\t7670\t3\t67867\t0.11301516200804515\n2020-03-03\tPort Loko\t5-10\t17797\t5\t67867\t0.26223348608307423\n2020-03-03\tPort Loko\t10-15\t8407\t10\t67867\t0.12387463715797074\n2020-03-03\tPort Loko\t15-20\t8345\t15\t67867\t0.12296108565282096\n2020-03-03\tPort Loko\t20-30\t8253\t20\t67867\t0.12160549309679225\n2020-03-03\tPort Loko\t30-50\t7488\t30\t67867\t0.11033344629937968\n2020-03-03\tPort Loko\t50-75\t3600\t50\t67867\t0.05304492610547099\n2020-03-03\tPort Loko\t75-100\t1423\t75\t67867\t0.020967480513357006\n2020-03-03\tPort Loko\t100-150\t778\t100\t67867\t0.01146359791946012\n2020-03-03\tPort Loko\t150-250\t252\t150\t67867\t0.0037131448273829697\n2020-03-03\tPort Loko\t250-350\t39\t250\t67867\t5.746533661426024E-4\n2020-03-03\tPort Loko\t350-inf\t20\t350\t67867\t2.946940339192833E-4\n2020-03-06\tWestern Area Urban\t0-1\t499\t0\t352844\t0.001414222715987802\n2020-03-06\tWestern Area Urban\t1-3\t15648\t1\t352844\t0.04434821054063552\n2020-03-06\tWestern Area Urban\t3-5\t30039\t3\t352844\t0.08513394021153825\n2020-03-06\tWestern Area Urban\t5-10\t93197\t5\t352844\t0.2641308907052408\n2020-03-06\tWestern Area Urban\t10-15\t38497\t10\t352844\t0.10910487354184852\n2020-03-06\tWestern Area Urban\t15-20\t44386\t15\t352844\t0.12579496888143202\n2020-03-06\tWestern Area Urban\t20-30\t47005\t20\t352844\t0.1332175125551235\n2020-03-06\tWestern Area Urban\t30-50\t45687\t30\t352844\t0.12948215075217376\n2020-03-06\tWestern Area Urban\t50-75\t21701\t50\t352844\t0.061503100520343267\n2020-03-06\tWestern Area Urban\t75-100\t8877\t75\t352844\t0.025158426953554545\n2020-03-06\tWestern Area Urban\t100-150\t5183\t100\t352844\t0.014689211096121799\n2020-03-06\tWestern Area Urban\t150-250\t1746\t150\t352844\t0.00494836244912766\n2020-03-06\tWestern Area Urban\t250-350\t249\t250\t352844\t7.056943011642539E-4\n2020-03-06\tWestern Area Urban\t350-inf\t130\t350\t352844\t3.68434775708245E-4\n2020-03-06\tBo\t1-3\t2603\t1\t48340\t0.05384774513860157\n2020-03-06\tBo\t3-5\t2333\t3\t48340\t0.04826230864708316\n2020-03-06\tBo\t5-10\t15359\t5\t48340\t0.31772858916011587\n2020-03-06\tBo\t10-15\t7787\t10\t48340\t0.16108812577575507\n2020-03-06\tBo\t15-20\t5207\t15\t48340\t0.10771617707902359\n2020-03-06\tBo\t20-30\t6247\t20\t48340\t0.1292304509722797\n2020-03-06\tBo\t30-50\t5062\t30\t48340\t0.10471659081505999\n2020-03-06\tBo\t50-75\t2247\t50\t48340\t0.04648324369052544\n2020-03-06\tBo\t75-100\t830\t75\t48340\t0.017170045510964006\n2020-03-06\tBo\t100-150\t469\t100\t48340\t0.009702110053785684\n2020-03-06\tBo\t150-250\t163\t150\t48340\t0.0033719486967314855\n2020-03-06\tBo\t250-350\t17\t250\t48340\t3.5167563094745555E-4\n2020-03-06\tBo\t350-inf\t16\t350\t48340\t3.30988829127017E-4\n2020-03-04\tKono\t1-3\t2803\t1\t48899\t0.05732223562854046\n2020-03-04\tKono\t3-5\t2381\t3\t48899\t0.04869220229452545\n2020-03-04\tKono\t5-10\t12551\t5\t48899\t0.25667191558109576\n2020-03-04\tKono\t10-15\t5602\t10\t48899\t0.11456266999325139\n2020-03-04\tKono\t15-20\t5947\t15\t48899\t0.12161802899854803\n2020-03-04\tKono\t20-30\t6674\t20\t48899\t0.1364854086995644\n2020-03-04\tKono\t30-50\t6596\t30\t48899\t0.13489028405488865\n2020-03-04\tKono\t50-75\t3482\t50\t48899\t0.07120800016360253\n2020-03-04\tKono\t75-100\t1512\t75\t48899\t0.03092087772756089\n2020-03-04\tKono\t100-150\t955\t100\t48899\t0.01953005173929937\n2020-03-04\tKono\t150-250\t328\t150\t48899\t0.006707703634021145\n2020-03-04\tKono\t250-350\t49\t250\t48899\t0.0010020654819116956\n2020-03-04\tKono\t350-inf\t19\t350\t48899\t3.885560031902493E-4\n2020-03-05\tKambia\t1-3\t872\t1\t28920\t0.030152143845089904\n2020-03-05\tKambia\t3-5\t3558\t3\t28920\t0.12302904564315352\n2020-03-05\tKambia\t5-10\t7779\t5\t28920\t0.26898340248962654\n2020-03-05\tKambia\t10-15\t4552\t10\t28920\t0.1573997233748271\n2020-03-05\tKambia\t15-20\t3530\t15\t28920\t0.12206085753803596\n2020-03-05\tKambia\t20-30\t3822\t20\t28920\t0.13215767634854772\n2020-03-05\tKambia\t30-50\t2819\t30\t28920\t0.09747579529737206\n2020-03-05\tKambia\t50-75\t1299\t50\t28920\t0.04491701244813278\n2020-03-05\tKambia\t75-100\t365\t75\t28920\t0.012621023513139696\n2020-03-05\tKambia\t100-150\t256\t100\t28920\t0.008852005532503458\n2020-03-05\tKambia\t150-250\t62\t150\t28920\t0.0021438450899031814\n2020-03-05\tKambia\t250-350\t2\t250\t28920\t6.915629322268326E-5\n2020-03-05\tKambia\t350-inf\t4\t350\t28920\t1.3831258644536652E-4\n2020-03-03\tKoinadugu\t0-1\t252\t0\t21777\t0.011571841851494697\n2020-03-03\tKoinadugu\t1-3\t1897\t1\t21777\t0.08711025393764063\n2020-03-03\tKoinadugu\t3-5\t2657\t3\t21777\t0.12200945952151353\n2020-03-03\tKoinadugu\t5-10\t5388\t5\t21777\t0.24741699958671992\n2020-03-03\tKoinadugu\t10-15\t2723\t10\t21777\t0.1250401800064288\n2020-03-03\tKoinadugu\t15-20\t2488\t15\t21777\t0.11424897827983653\n2020-03-03\tKoinadugu\t20-30\t2488\t20\t21777\t0.11424897827983653\n2020-03-03\tKoinadugu\t30-50\t2197\t30\t21777\t0.10088625614180098\n2020-03-03\tKoinadugu\t50-75\t1013\t50\t21777\t0.04651696744271479\n2020-03-03\tKoinadugu\t75-100\t377\t75\t21777\t0.017311842769894843\n2020-03-03\tKoinadugu\t100-150\t221\t100\t21777\t0.01014832162373146\n2020-03-03\tKoinadugu\t150-250\t65\t150\t21777\t0.0029848004775680764\n2020-03-03\tKoinadugu\t250-350\t8\t250\t21777\t3.673600587776094E-4\n2020-03-03\tKoinadugu\t350-inf\t3\t350\t21777\t1.3776002204160352E-4\n2020-03-03\tKambia\t1-3\t860\t1\t28503\t0.0301722625688524\n2020-03-03\tKambia\t3-5\t3465\t3\t28503\t0.12156615093148089\n2020-03-03\tKambia\t5-10\t7781\t5\t28503\t0.27298880819562854\n2020-03-03\tKambia\t10-15\t4516\t10\t28503\t0.15843946251271795\n2020-03-03\tKambia\t15-20\t3433\t15\t28503\t0.12044346209170964\n2020-03-03\tKambia\t20-30\t3716\t20\t28503\t0.13037224151843665\n2020-03-03\tKambia\t30-50\t2722\t30\t28503\t0.09549871943304214\n2020-03-03\tKambia\t50-75\t1252\t50\t28503\t0.04392520085605024\n2020-03-03\tKambia\t75-100\t438\t75\t28503\t0.015366803494369015\n2020-03-03\tKambia\t100-150\t227\t100\t28503\t0.00796407395712732\n2020-03-03\tKambia\t150-250\t84\t150\t28503\t0.002947058204399537\n2020-03-03\tKambia\t250-350\t7\t250\t28503\t2.455881836999614E-4\n2020-03-03\tKambia\t350-inf\t2\t350\t28503\t7.016805248570325E-5\n2020-03-09\tBombali\t1-3\t2318\t1\t80788\t0.028692380056444027\n2020-03-09\tBombali\t3-5\t2006\t3\t80788\t0.024830420359459326\n2020-03-09\tBombali\t5-10\t21708\t5\t80788\t0.26870327276328165\n2020-03-09\tBombali\t10-15\t9358\t10\t80788\t0.11583403475763727\n2020-03-09\tBombali\t15-20\t9782\t15\t80788\t0.12108233896123187\n2020-03-09\tBombali\t20-30\t12066\t20\t80788\t0.14935386443531218\n2020-03-09\tBombali\t30-50\t11891\t30\t80788\t0.14718770114373422\n2020-03-09\tBombali\t50-75\t6175\t50\t80788\t0.0764346190028222\n2020-03-09\tBombali\t75-100\t2814\t75\t80788\t0.03483190572857355\n2020-03-09\tBombali\t100-150\t1824\t100\t80788\t0.022577610536218252\n2020-03-09\tBombali\t150-250\t673\t150\t80788\t0.00833044511561123\n2020-03-09\tBombali\t250-350\t123\t250\t80788\t0.001522503342080507\n2020-03-09\tBombali\t350-inf\t50\t350\t80788\t6.18903797593702E-4\n2020-03-09\tBonthe\t0-1\t130\t0\t8776\t0.014813126709206929\n2020-03-09\tBonthe\t1-3\t693\t1\t8776\t0.07896536007292616\n2020-03-09\tBonthe\t3-5\t1859\t3\t8776\t0.21182771194165906\n2020-03-09\tBonthe\t5-10\t2319\t5\t8776\t0.2642433910665451\n2020-03-09\tBonthe\t10-15\t1259\t10\t8776\t0.1434594348222425\n2020-03-09\tBonthe\t15-20\t625\t15\t8776\t0.07121695533272561\n2020-03-09\tBonthe\t20-30\t962\t20\t8776\t0.10961713764813126\n2020-03-09\tBonthe\t30-50\t580\t30\t8776\t0.06608933454876938\n2020-03-09\tBonthe\t50-75\t177\t50\t8776\t0.020168641750227895\n2020-03-09\tBonthe\t75-100\t97\t75\t8776\t0.011052871467639015\n2020-03-09\tBonthe\t100-150\t56\t100\t8776\t0.006381039197812215\n2020-03-09\tBonthe\t150-250\t17\t150\t8776\t0.0019371011850501368\n2020-03-09\tBonthe\t250-350\t2\t250\t8776\t2.2789425706472196E-4\n2020-03-04\tWestern Area Rural\t1-3\t11767\t1\t186114\t0.06322469024361413\n2020-03-04\tWestern Area Rural\t3-5\t16614\t3\t186114\t0.08926786808085367\n2020-03-04\tWestern Area Rural\t5-10\t50146\t5\t186114\t0.26943701172399714\n2020-03-04\tWestern Area Rural\t10-15\t19840\t10\t186114\t0.10660133036740922\n2020-03-04\tWestern Area Rural\t15-20\t21882\t15\t186114\t0.1175731003578452\n2020-03-04\tWestern Area Rural\t20-30\t23682\t20\t186114\t0.1272445920242432\n2020-03-04\tWestern Area Rural\t30-50\t23017\t30\t186114\t0.12367151315860171\n2020-03-04\tWestern Area Rural\t50-75\t10931\t50\t186114\t0.05873281966966483\n2020-03-04\tWestern Area Rural\t75-100\t4465\t75\t186114\t0.023990672383592853\n2020-03-04\tWestern Area Rural\t100-150\t2694\t100\t186114\t0.01447499919404236\n2020-03-04\tWestern Area Rural\t150-250\t885\t150\t186114\t0.004755150069312357\n2020-03-04\tWestern Area Rural\t250-350\t135\t250\t186114\t7.25361874979851E-4\n2020-03-04\tWestern Area Rural\t350-inf\t56\t350\t186114\t3.0089085184349375E-4\n2020-03-04\tKambia\t1-3\t778\t1\t29150\t0.026689536878216125\n2020-03-04\tKambia\t3-5\t3502\t3\t29150\t0.12013722126929674\n2020-03-04\tKambia\t5-10\t7891\t5\t29150\t0.2707032590051458\n2020-03-04\tKambia\t10-15\t4584\t10\t29150\t0.15725557461406517\n2020-03-04\tKambia\t15-20\t3531\t15\t29150\t0.12113207547169812\n2020-03-04\tKambia\t20-30\t3792\t20\t29150\t0.13008576329331045\n2020-03-04\tKambia\t30-50\t2856\t30\t29150\t0.09797598627787307\n2020-03-04\tKambia\t50-75\t1372\t50\t29150\t0.04706689536878216\n2020-03-04\tKambia\t75-100\t499\t75\t29150\t0.01711835334476844\n2020-03-04\tKambia\t100-150\t268\t100\t29150\t0.009193825042881647\n2020-03-04\tKambia\t150-250\t63\t150\t29150\t0.0021612349914236707\n2020-03-04\tKambia\t250-350\t11\t250\t29150\t3.773584905660377E-4\n2020-03-04\tKambia\t350-inf\t3\t350\t29150\t1.0291595197255574E-4\n2020-03-04\tMoyamba\t1-3\t1674\t1\t15650\t0.10696485623003195\n2020-03-04\tMoyamba\t3-5\t3969\t3\t15650\t0.2536102236421725\n2020-03-04\tMoyamba\t5-10\t3789\t5\t15650\t0.24210862619808307\n2020-03-04\tMoyamba\t10-15\t2005\t10\t15650\t0.1281150159744409\n2020-03-04\tMoyamba\t15-20\t1391\t15\t15650\t0.0888817891373802\n2020-03-04\tMoyamba\t20-30\t1371\t20\t15650\t0.08760383386581469\n2020-03-04\tMoyamba\t30-50\t954\t30\t15650\t0.06095846645367412\n2020-03-04\tMoyamba\t50-75\t332\t50\t15650\t0.02121405750798722\n2020-03-04\tMoyamba\t75-100\t104\t75\t15650\t0.006645367412140575\n2020-03-04\tMoyamba\t100-150\t44\t100\t15650\t0.0028115015974440895\n2020-03-04\tMoyamba\t150-250\t12\t150\t15650\t7.667731629392971E-4\n2020-03-04\tMoyamba\t250-350\t1\t250\t15650\t6.389776357827476E-5\n2020-03-04\tMoyamba\t350-inf\t4\t350\t15650\t2.5559105431309905E-4\n2020-03-03\tWestern Area Rural\t1-3\t11683\t1\t188159\t0.06209110380050915\n2020-03-03\tWestern Area Rural\t3-5\t17067\t3\t188159\t0.0907052014519635\n2020-03-03\tWestern Area Rural\t5-10\t51424\t5\t188159\t0.2733007722192401\n2020-03-03\tWestern Area Rural\t10-15\t19993\t10\t188159\t0.10625587933609341\n2020-03-03\tWestern Area Rural\t15-20\t22354\t15\t188159\t0.11880377765613125\n2020-03-03\tWestern Area Rural\t20-30\t24011\t20\t188159\t0.1276101594927694\n2020-03-03\tWestern Area Rural\t30-50\t22866\t30\t188159\t0.1215248805531492\n2020-03-03\tWestern Area Rural\t50-75\t10736\t50\t188159\t0.05705812637184509\n2020-03-03\tWestern Area Rural\t75-100\t4332\t75\t188159\t0.02302308154273779\n2020-03-03\tWestern Area Rural\t100-150\t2632\t100\t188159\t0.013988169579982886\n2020-03-03\tWestern Area Rural\t150-250\t884\t150\t188159\t0.00469815422063255\n2020-03-03\tWestern Area Rural\t250-350\t125\t250\t188159\t6.643317619672724E-4\n2020-03-03\tWestern Area Rural\t350-inf\t52\t350\t188159\t2.763620129783853E-4\n2020-03-03\tBo\t1-3\t2242\t1\t47379\t0.04732054285653982\n2020-03-03\tBo\t3-5\t2434\t3\t47379\t0.051372971147554826\n2020-03-03\tBo\t5-10\t15512\t5\t47379\t0.32740243567825406\n2020-03-03\tBo\t10-15\t7515\t10\t47379\t0.15861457607800925\n2020-03-03\tBo\t15-20\t5016\t15\t47379\t0.10586968910276705\n2020-03-03\tBo\t20-30\t6056\t20\t47379\t0.127820342345765\n2020-03-03\tBo\t30-50\t5023\t30\t47379\t0.10601743388421031\n2020-03-03\tBo\t50-75\t2119\t50\t47379\t0.04472445598260833\n2020-03-03\tBo\t75-100\t803\t75\t47379\t0.016948437071276305\n2020-03-03\tBo\t100-150\t482\t100\t47379\t0.01017328352223559\n2020-03-03\tBo\t150-250\t143\t150\t47379\t0.0030182148209122184\n2020-03-03\tBo\t250-350\t20\t250\t47379\t4.2212794698072984E-4\n2020-03-03\tBo\t350-inf\t14\t350\t47379\t2.954895628865109E-4\n2020-03-04\tBonthe\t0-1\t47\t0\t9356\t0.005023514322359983\n2020-03-04\tBonthe\t1-3\t579\t1\t9356\t0.06188542112013681\n2020-03-04\tBonthe\t3-5\t2048\t3\t9356\t0.21889696451474988\n2020-03-04\tBonthe\t5-10\t2617\t5\t9356\t0.27971355280034205\n2020-03-04\tBonthe\t10-15\t1377\t10\t9356\t0.14717828131680205\n2020-03-04\tBonthe\t15-20\t667\t15\t9356\t0.07129115006412998\n2020-03-04\tBonthe\t20-30\t952\t20\t9356\t0.10175288584865327\n2020-03-04\tBonthe\t30-50\t663\t30\t9356\t0.0708636169303121\n2020-03-04\tBonthe\t50-75\t244\t50\t9356\t0.026079521162890123\n2020-03-04\tBonthe\t75-100\t90\t75\t9356\t0.009619495510902095\n2020-03-04\tBonthe\t100-150\t55\t100\t9356\t0.005878580589995725\n2020-03-04\tBonthe\t150-250\t14\t150\t9356\t0.001496365968362548\n2020-03-04\tBonthe\t250-350\t2\t250\t9356\t2.1376656690893543E-4\n2020-03-04\tBonthe\t350-inf\t1\t350\t9356\t1.0688328345446772E-4\n2020-03-05\tPort Loko\t0-1\t472\t0\t69160\t0.0068247541931752455\n2020-03-05\tPort Loko\t1-3\t3419\t1\t69160\t0.04943609022556391\n2020-03-05\tPort Loko\t3-5\t7378\t3\t69160\t0.10668016194331983\n2020-03-05\tPort Loko\t5-10\t17865\t5\t69160\t0.2583140543666859\n2020-03-05\tPort Loko\t10-15\t8761\t10\t69160\t0.12667727009832272\n2020-03-05\tPort Loko\t15-20\t8426\t15\t69160\t0.12183342972816658\n2020-03-05\tPort Loko\t20-30\t8540\t20\t69160\t0.12348178137651822\n2020-03-05\tPort Loko\t30-50\t7811\t30\t69160\t0.11294100636205899\n2020-03-05\tPort Loko\t50-75\t3802\t50\t69160\t0.05497397339502603\n2020-03-05\tPort Loko\t75-100\t1526\t75\t69160\t0.02206477732793522\n2020-03-05\tPort Loko\t100-150\t860\t100\t69160\t0.012434933487565067\n2020-03-05\tPort Loko\t150-250\t254\t150\t69160\t0.0036726431463273567\n2020-03-05\tPort Loko\t250-350\t33\t250\t69160\t4.7715442452284557E-4\n2020-03-05\tPort Loko\t350-inf\t13\t350\t69160\t1.8796992481203009E-4\n2020-03-09\tMoyamba\t1-3\t1643\t1\t14885\t0.11037957675512261\n2020-03-09\tMoyamba\t3-5\t3812\t3\t14885\t0.25609674168626134\n2020-03-09\tMoyamba\t5-10\t3628\t5\t14885\t0.24373530399731272\n2020-03-09\tMoyamba\t10-15\t1929\t10\t14885\t0.12959355055424923\n2020-03-09\tMoyamba\t15-20\t1303\t15\t14885\t0.08753778972119583\n2020-03-09\tMoyamba\t20-30\t1237\t20\t14885\t0.08310379576755123\n2020-03-09\tMoyamba\t30-50\t852\t30\t14885\t0.057238831037957676\n2020-03-09\tMoyamba\t50-75\t292\t50\t14885\t0.019617064158548875\n2020-03-09\tMoyamba\t75-100\t100\t75\t14885\t0.006718172657037286\n2020-03-09\tMoyamba\t100-150\t60\t100\t14885\t0.004030903594222372\n2020-03-09\tMoyamba\t150-250\t23\t150\t14885\t0.0015451797111185757\n2020-03-09\tMoyamba\t250-350\t4\t250\t14885\t2.687269062814914E-4\n2020-03-09\tMoyamba\t350-inf\t2\t350\t14885\t1.343634531407457E-4\n2020-03-06\tMoyamba\t1-3\t1681\t1\t15976\t0.10522033049574361\n2020-03-06\tMoyamba\t3-5\t4142\t3\t15976\t0.25926389584376563\n2020-03-06\tMoyamba\t5-10\t3821\t5\t15976\t0.239171256885328\n2020-03-06\tMoyamba\t10-15\t2077\t10\t15976\t0.13000751126690036\n2020-03-06\tMoyamba\t15-20\t1486\t15\t15976\t0.09301452178267401\n2020-03-06\tMoyamba\t20-30\t1341\t20\t15976\t0.08393840761141713\n2020-03-06\tMoyamba\t30-50\t919\t30\t15976\t0.05752378567851778\n2020-03-06\tMoyamba\t50-75\t322\t50\t15976\t0.02015523284927391\n2020-03-06\tMoyamba\t75-100\t111\t75\t15976\t0.006947921882824237\n2020-03-06\tMoyamba\t100-150\t59\t100\t15976\t0.0036930395593390087\n2020-03-06\tMoyamba\t150-250\t13\t150\t15976\t8.13720580871307E-4\n2020-03-06\tMoyamba\t250-350\t1\t250\t15976\t6.259389083625437E-5\n2020-03-06\tMoyamba\t350-inf\t3\t350\t15976\t1.8778167250876315E-4\n2020-03-09\tKambia\t1-3\t809\t1\t27410\t0.02951477562933236\n2020-03-09\tKambia\t3-5\t3432\t3\t27410\t0.12520977745348413\n2020-03-09\tKambia\t5-10\t7749\t5\t27410\t0.28270704122583\n2020-03-09\tKambia\t10-15\t4543\t10\t27410\t0.16574242977015688\n2020-03-09\tKambia\t15-20\t3326\t15\t27410\t0.12134257570229844\n2020-03-09\tKambia\t20-30\t3342\t20\t27410\t0.12192630426851514\n2020-03-09\tKambia\t30-50\t2450\t30\t27410\t0.0893834367019336\n2020-03-09\tKambia\t50-75\t1103\t50\t27410\t0.040240788033564394\n2020-03-09\tKambia\t75-100\t358\t75\t27410\t0.013060926669098869\n2020-03-09\tKambia\t100-150\t206\t100\t27410\t0.007515505290040131\n2020-03-09\tKambia\t150-250\t73\t150\t27410\t0.002663261583363736\n2020-03-09\tKambia\t250-350\t10\t250\t27410\t3.6483035388544326E-4\n2020-03-09\tKambia\t350-inf\t9\t350\t27410\t3.2834731849689893E-4\n2020-03-06\tKambia\t1-3\t862\t1\t29183\t0.029537744577322413\n2020-03-06\tKambia\t3-5\t3499\t3\t29183\t0.11989857108590618\n2020-03-06\tKambia\t5-10\t7948\t5\t29183\t0.27235034095192406\n2020-03-06\tKambia\t10-15\t4595\t10\t29183\t0.1574546825206456\n2020-03-06\tKambia\t15-20\t3568\t15\t29183\t0.12226296131309324\n2020-03-06\tKambia\t20-30\t3695\t20\t29183\t0.1266148099921187\n2020-03-06\tKambia\t30-50\t2835\t30\t29183\t0.09714559846485968\n2020-03-06\tKambia\t50-75\t1372\t50\t29183\t0.04701367234348765\n2020-03-06\tKambia\t75-100\t462\t75\t29183\t0.0158311345646438\n2020-03-06\tKambia\t100-150\t243\t100\t29183\t0.008326765582702258\n2020-03-06\tKambia\t150-250\t89\t150\t29183\t0.0030497207278209915\n2020-03-06\tKambia\t250-350\t9\t250\t29183\t3.0839872528526884E-4\n2020-03-06\tKambia\t350-inf\t6\t350\t29183\t2.0559915019017922E-4\n2020-03-04\tBombali\t1-3\t2409\t1\t86897\t0.02772247603484585\n2020-03-04\tBombali\t3-5\t2025\t3\t86897\t0.023303451212354855\n2020-03-04\tBombali\t5-10\t21701\t5\t86897\t0.24973244185645074\n2020-03-04\tBombali\t10-15\t9880\t10\t86897\t0.1136978261620079\n2020-03-04\tBombali\t15-20\t10135\t15\t86897\t0.11663233483319332\n2020-03-04\tBombali\t20-30\t13191\t20\t86897\t0.1518004073788508\n2020-03-04\tBombali\t30-50\t13638\t30\t86897\t0.15694442846128176\n2020-03-04\tBombali\t50-75\t7294\t50\t86897\t0.0839384558730451\n2020-03-04\tBombali\t75-100\t3483\t75\t86897\t0.040081936085250354\n2020-03-04\tBombali\t100-150\t2215\t100\t86897\t0.025489947869316548\n2020-03-04\tBombali\t150-250\t781\t150\t86897\t0.008987652047826738\n2020-03-04\tBombali\t250-350\t96\t250\t86897\t0.0011047562056227488\n2020-03-04\tBombali\t350-inf\t49\t350\t86897\t5.63885979953278E-4\n2020-03-03\tPujehun\t1-3\t1602\t1\t12631\t0.1268308130789328\n2020-03-03\tPujehun\t3-5\t2504\t3\t12631\t0.19824241944422452\n2020-03-03\tPujehun\t5-10\t3198\t5\t12631\t0.25318660438603435\n2020-03-03\tPujehun\t10-15\t1709\t10\t12631\t0.13530203467658936\n2020-03-03\tPujehun\t15-20\t1055\t15\t12631\t0.08352466154698757\n2020-03-03\tPujehun\t20-30\t1217\t20\t12631\t0.0963502493864302\n2020-03-03\tPujehun\t30-50\t895\t30\t12631\t0.07085741429815533\n2020-03-03\tPujehun\t50-75\t291\t50\t12631\t0.023038555933813633\n2020-03-03\tPujehun\t75-100\t96\t75\t12631\t0.007600348349299343\n2020-03-03\tPujehun\t100-150\t48\t100\t12631\t0.0038001741746496714\n2020-03-03\tPujehun\t150-250\t13\t150\t12631\t0.0010292138389676193\n2020-03-03\tPujehun\t250-350\t3\t250\t12631\t2.3751088591560446E-4\n2020-03-09\tKono\t1-3\t2865\t1\t44966\t0.06371480674287239\n2020-03-09\tKono\t3-5\t2436\t3\t44966\t0.05417426500022239\n2020-03-09\tKono\t5-10\t12833\t5\t44966\t0.28539340835297783\n2020-03-09\tKono\t10-15\t5276\t10\t44966\t0.11733309611706623\n2020-03-09\tKono\t15-20\t5499\t15\t44966\t0.12229239870124094\n2020-03-09\tKono\t20-30\t5942\t20\t44966\t0.13214428679446694\n2020-03-09\tKono\t30-50\t5483\t30\t44966\t0.12193657430058266\n2020-03-09\tKono\t50-75\t2485\t50\t44966\t0.05526397722723836\n2020-03-09\tKono\t75-100\t1114\t75\t44966\t0.024774273895832408\n2020-03-09\tKono\t100-150\t668\t100\t44966\t0.014855668727482988\n2020-03-09\tKono\t150-250\t286\t150\t44966\t0.006360361161766668\n2020-03-09\tKono\t250-350\t55\t250\t44966\t0.0012231463772628209\n2020-03-09\tKono\t350-inf\t24\t350\t44966\t5.337366009874128E-4\n2020-03-05\tKoinadugu\t0-1\t274\t0\t21572\t0.012701650287409605\n2020-03-05\tKoinadugu\t1-3\t1811\t1\t21572\t0.08395141850547005\n2020-03-05\tKoinadugu\t3-5\t2616\t3\t21572\t0.12126831077322454\n2020-03-05\tKoinadugu\t5-10\t5454\t5\t21572\t0.2528277396625255\n2020-03-05\tKoinadugu\t10-15\t2658\t10\t21572\t0.12321527906545522\n2020-03-05\tKoinadugu\t15-20\t2353\t15\t21572\t0.10907658075282774\n2020-03-05\tKoinadugu\t20-30\t2447\t20\t21572\t0.11343408121639162\n2020-03-05\tKoinadugu\t30-50\t2248\t30\t21572\t0.10420916002225107\n2020-03-05\tKoinadugu\t50-75\t1053\t50\t21572\t0.0488132764694975\n2020-03-05\tKoinadugu\t75-100\t376\t75\t21572\t0.017430001854255518\n2020-03-05\tKoinadugu\t100-150\t223\t100\t21572\t0.010337474503986649\n2020-03-05\tKoinadugu\t150-250\t49\t150\t21572\t0.002271463007602448\n2020-03-05\tKoinadugu\t250-350\t8\t250\t21572\t3.708511032820323E-4\n2020-03-05\tKoinadugu\t350-inf\t2\t350\t21572\t9.271277582050807E-5\n2020-03-06\tKono\t1-3\t2860\t1\t49001\t0.058366155792738926\n2020-03-06\tKono\t3-5\t2377\t3\t49001\t0.04850921409767148\n2020-03-06\tKono\t5-10\t12900\t5\t49001\t0.2632599334707455\n2020-03-06\tKono\t10-15\t5536\t10\t49001\t0.1129772861778331\n2020-03-06\tKono\t15-20\t5834\t15\t49001\t0.11905879471847514\n2020-03-06\tKono\t20-30\t6638\t20\t49001\t0.1354666231301402\n2020-03-06\tKono\t30-50\t6609\t30\t49001\t0.13487479847350053\n2020-03-06\tKono\t50-75\t3406\t50\t49001\t0.06950878553498908\n2020-03-06\tKono\t75-100\t1491\t75\t49001\t0.030427950449990818\n2020-03-06\tKono\t100-150\t947\t100\t49001\t0.019326136201302014\n2020-03-06\tKono\t150-250\t335\t150\t49001\t0.006836595171527112\n2020-03-06\tKono\t250-350\t51\t250\t49001\t0.0010407950858145752\n2020-03-06\tKono\t350-inf\t17\t350\t49001\t3.4693169527152506E-4\n2020-03-04\tPujehun\t1-3\t1669\t1\t12021\t0.13884036269861078\n2020-03-04\tPujehun\t3-5\t2462\t3\t12021\t0.20480825222527244\n2020-03-04\tPujehun\t5-10\t3063\t5\t12021\t0.2548040928375343\n2020-03-04\tPujehun\t10-15\t1647\t10\t12021\t0.13701023209383578\n2020-03-04\tPujehun\t15-20\t992\t15\t12021\t0.08252225272439896\n2020-03-04\tPujehun\t20-30\t1084\t20\t12021\t0.09017552616254887\n2020-03-04\tPujehun\t30-50\t732\t30\t12021\t0.06089343648614924\n2020-03-04\tPujehun\t50-75\t246\t50\t12021\t0.020464187671574745\n2020-03-04\tPujehun\t75-100\t74\t75\t12021\t0.006155893852424923\n2020-03-04\tPujehun\t100-150\t39\t100\t12021\t0.0032443224357374596\n2020-03-04\tPujehun\t150-250\t12\t150\t12021\t9.982530571499876E-4\n2020-03-04\tPujehun\t250-350\t1\t250\t12021\t8.318775476249896E-5\n2020-03-04\tnull\t1-3\t5701\t1\t12418\t0.4590916411660493\n2020-03-04\tnull\t3-5\t2009\t3\t12418\t0.16178128523111612\n2020-03-04\tnull\t5-10\t2855\t5\t12418\t0.2299081977774199\n2020-03-04\tnull\t10-15\t586\t10\t12418\t0.04718956353680142\n2020-03-04\tnull\t15-20\t550\t15\t12418\t0.044290545981639555\n2020-03-04\tnull\t20-30\t399\t20\t12418\t0.032130777903043965\n2020-03-04\tnull\t30-50\t216\t30\t12418\t0.01739410533097117\n2020-03-04\tnull\t50-75\t79\t50\t12418\t0.006361732968271863\n2020-03-04\tnull\t75-100\t16\t75\t12418\t0.0012884522467386053\n2020-03-04\tnull\t100-150\t6\t100\t12418\t4.8316959252697695E-4\n2020-03-04\tnull\t250-350\t1\t250\t12418\t8.052826542116283E-5\n2020-03-03\tKenema\t1-3\t3104\t1\t47351\t0.06555299782475554\n2020-03-03\tKenema\t3-5\t1900\t3\t47351\t0.04012586851386454\n2020-03-03\tKenema\t5-10\t15495\t5\t47351\t0.3272370171696479\n2020-03-03\tKenema\t10-15\t6340\t10\t47351\t0.13389368756731643\n2020-03-03\tKenema\t15-20\t6005\t15\t47351\t0.12681886338197715\n2020-03-03\tKenema\t20-30\t5806\t20\t47351\t0.12261620662710397\n2020-03-03\tKenema\t30-50\t4882\t30\t47351\t0.10310236320246668\n2020-03-03\tKenema\t50-75\t2251\t50\t47351\t0.04753859474984689\n2020-03-03\tKenema\t75-100\t871\t75\t47351\t0.018394542881882116\n2020-03-03\tKenema\t100-150\t497\t100\t47351\t0.010496082448100357\n2020-03-03\tKenema\t150-250\t166\t150\t47351\t0.0035057337754218496\n2020-03-03\tKenema\t250-350\t23\t250\t47351\t4.857341977994129E-4\n2020-03-03\tKenema\t350-inf\t11\t350\t47351\t2.3230765981711052E-4\n2020-03-05\tBonthe\t0-1\t52\t0\t9377\t0.005545483630158899\n2020-03-05\tBonthe\t1-3\t588\t1\t9377\t0.0627066225871814\n2020-03-05\tBonthe\t3-5\t1958\t3\t9377\t0.20880878745867548\n2020-03-05\tBonthe\t5-10\t2604\t5\t9377\t0.27770075717180337\n2020-03-05\tBonthe\t10-15\t1431\t10\t9377\t0.15260744374533433\n2020-03-05\tBonthe\t15-20\t655\t15\t9377\t0.06985176495680921\n2020-03-05\tBonthe\t20-30\t1025\t20\t9377\t0.10931001386370907\n2020-03-05\tBonthe\t30-50\t663\t30\t9377\t0.07070491628452596\n2020-03-05\tBonthe\t50-75\t241\t50\t9377\t0.02570118374746721\n2020-03-05\tBonthe\t75-100\t91\t75\t9377\t0.009704596352778073\n2020-03-05\tBonthe\t100-150\t48\t100\t9377\t0.005118907966300523\n2020-03-05\tBonthe\t150-250\t17\t150\t9377\t0.0018129465713981018\n2020-03-05\tBonthe\t250-350\t3\t250\t9377\t3.199317478937827E-4\n2020-03-05\tBonthe\t350-inf\t1\t350\t9377\t1.0664391596459421E-4\n2020-03-09\tKailahun\t1-3\t3301\t1\t19755\t0.16709693748418122\n2020-03-09\tKailahun\t3-5\t2553\t3\t19755\t0.12923310554290054\n2020-03-09\tKailahun\t5-10\t5670\t5\t19755\t0.2870159453302961\n2020-03-09\tKailahun\t10-15\t2039\t10\t19755\t0.1032143761073146\n2020-03-09\tKailahun\t15-20\t2092\t15\t19755\t0.10589724120475828\n2020-03-09\tKailahun\t20-30\t1680\t20\t19755\t0.085041761579347\n2020-03-09\tKailahun\t30-50\t1502\t30\t19755\t0.07603138445963048\n2020-03-09\tKailahun\t50-75\t546\t50\t19755\t0.027638572513287774\n2020-03-09\tKailahun\t75-100\t210\t75\t19755\t0.010630220197418374\n2020-03-09\tKailahun\t100-150\t111\t100\t19755\t0.005618830675778284\n2020-03-09\tKailahun\t150-250\t42\t150\t19755\t0.002126044039483675\n2020-03-09\tKailahun\t250-350\t6\t250\t19755\t3.0372057706909645E-4\n2020-03-09\tKailahun\t350-inf\t3\t350\t19755\t1.5186028853454822E-4\n2020-03-05\tKono\t1-3\t2836\t1\t48549\t0.058415209376094256\n2020-03-05\tKono\t3-5\t2350\t3\t48549\t0.04840470452532493\n2020-03-05\tKono\t5-10\t12612\t5\t48549\t0.25977878020144596\n2020-03-05\tKono\t10-15\t5630\t10\t48549\t0.11596531339471462\n2020-03-05\tKono\t15-20\t5756\t15\t48549\t0.11856062946713629\n2020-03-05\tKono\t20-30\t6603\t20\t48549\t0.13600692084285979\n2020-03-05\tKono\t30-50\t6698\t30\t48549\t0.1379637067704793\n2020-03-05\tKono\t50-75\t3302\t50\t48549\t0.06801375929473316\n2020-03-05\tKono\t75-100\t1427\t75\t48549\t0.029392984407505818\n2020-03-05\tKono\t100-150\t960\t100\t48549\t0.019773836742260395\n2020-03-05\tKono\t150-250\t315\t150\t48549\t0.006488290181054192\n2020-03-05\tKono\t250-350\t47\t250\t48549\t9.680940905064986E-4\n2020-03-05\tKono\t350-inf\t13\t350\t48549\t2.677707058847762E-4\n2020-03-06\tKoinadugu\t0-1\t293\t0\t22306\t0.013135479243252937\n2020-03-06\tKoinadugu\t1-3\t1957\t1\t22306\t0.08773424190800681\n2020-03-06\tKoinadugu\t3-5\t2802\t3\t22306\t0.12561642607370213\n2020-03-06\tKoinadugu\t5-10\t5518\t5\t22306\t0.24737738725006725\n2020-03-06\tKoinadugu\t10-15\t2649\t10\t22306\t0.11875728503541648\n2020-03-06\tKoinadugu\t15-20\t2536\t15\t22306\t0.11369138348426433\n2020-03-06\tKoinadugu\t20-30\t2565\t20\t22306\t0.11499148211243612\n2020-03-06\tKoinadugu\t30-50\t2203\t30\t22306\t0.09876266475387788\n2020-03-06\tKoinadugu\t50-75\t1075\t50\t22306\t0.04819331121671299\n2020-03-06\tKoinadugu\t75-100\t417\t75\t22306\t0.018694521653366807\n2020-03-06\tKoinadugu\t100-150\t215\t100\t22306\t0.009638662243342599\n2020-03-06\tKoinadugu\t150-250\t69\t150\t22306\t0.003093338115305299\n2020-03-06\tKoinadugu\t250-350\t6\t250\t22306\t2.6898592307002603E-4\n2020-03-06\tKoinadugu\t350-inf\t1\t350\t22306\t4.483098717833767E-5\n2020-03-09\tPort Loko\t0-1\t521\t0\t65628\t0.007938684707746694\n2020-03-09\tPort Loko\t1-3\t3320\t1\t65628\t0.05058816358871213\n2020-03-09\tPort Loko\t3-5\t7194\t3\t65628\t0.10961784604132382\n2020-03-09\tPort Loko\t5-10\t17792\t5\t65628\t0.27110379715974886\n2020-03-09\tPort Loko\t10-15\t8110\t10\t65628\t0.12357530322423356\n2020-03-09\tPort Loko\t15-20\t8092\t15\t65628\t0.12330103004815018\n2020-03-09\tPort Loko\t20-30\t7917\t20\t65628\t0.12063448528067289\n2020-03-09\tPort Loko\t30-50\t7104\t30\t65628\t0.10824648016090693\n2020-03-09\tPort Loko\t50-75\t3229\t50\t65628\t0.04920156030962394\n2020-03-09\tPort Loko\t75-100\t1224\t75\t65628\t0.018650575973669776\n2020-03-09\tPort Loko\t100-150\t800\t100\t65628\t0.012189918937039069\n2020-03-09\tPort Loko\t150-250\t260\t150\t65628\t0.003961723654537697\n2020-03-09\tPort Loko\t250-350\t38\t250\t65628\t5.790211495093557E-4\n2020-03-09\tPort Loko\t350-inf\t27\t350\t65628\t4.1140976412506856E-4\n2020-03-05\tBombali\t1-3\t2286\t1\t86261\t0.026500967992487915\n2020-03-05\tBombali\t3-5\t2072\t3\t86261\t0.0240201249695691\n2020-03-05\tBombali\t5-10\t21977\t5\t86261\t0.2547733042742375\n2020-03-05\tBombali\t10-15\t10163\t10\t86261\t0.11781685813983145\n2020-03-05\tBombali\t15-20\t10161\t15\t86261\t0.11779367269101912\n2020-03-05\tBombali\t20-30\t13266\t20\t86261\t0.15378908197215427\n2020-03-05\tBombali\t30-50\t13471\t30\t86261\t0.15616559047541761\n2020-03-05\tBombali\t50-75\t6887\t50\t86261\t0.07983909298524246\n2020-03-05\tBombali\t75-100\t3164\t75\t86261\t0.03667938002109876\n2020-03-05\tBombali\t100-150\t1977\t100\t86261\t0.022918816150983644\n2020-03-05\tBombali\t150-250\t709\t150\t86261\t0.008219241603969349\n2020-03-05\tBombali\t250-350\t99\t250\t86261\t0.0011476797162101066\n2020-03-05\tBombali\t350-inf\t29\t350\t86261\t3.361890077787181E-4\n2020-03-04\tPort Loko\t0-1\t452\t0\t69784\t0.0064771294279491005\n2020-03-04\tPort Loko\t1-3\t3285\t1\t69784\t0.04707382781153273\n2020-03-04\tPort Loko\t3-5\t7132\t3\t69784\t0.10220107761091368\n2020-03-04\tPort Loko\t5-10\t17522\t5\t69784\t0.25108907485956666\n2020-03-04\tPort Loko\t10-15\t8812\t10\t69784\t0.12627536398028202\n2020-03-04\tPort Loko\t15-20\t8475\t15\t69784\t0.12144617677404562\n2020-03-04\tPort Loko\t20-30\t8772\t20\t69784\t0.12570216668577325\n2020-03-04\tPort Loko\t30-50\t8194\t30\t69784\t0.11741946578012152\n2020-03-04\tPort Loko\t50-75\t4046\t50\t69784\t0.05797890633956208\n2020-03-04\tPort Loko\t75-100\t1684\t75\t69784\t0.024131606098819213\n2020-03-04\tPort Loko\t100-150\t1001\t100\t69784\t0.014344262295081968\n2020-03-04\tPort Loko\t150-250\t335\t150\t69784\t0.004800527341510948\n2020-03-04\tPort Loko\t250-350\t45\t250\t69784\t6.448469563223662E-4\n2020-03-04\tPort Loko\t350-inf\t29\t350\t69784\t4.155680385188582E-4\n2020-03-06\tKenema\t1-3\t3248\t1\t49283\t0.06590507883042834\n2020-03-06\tKenema\t3-5\t1953\t3\t49283\t0.039628269382951525\n2020-03-06\tKenema\t5-10\t15766\t5\t49283\t0.3199074731651888\n2020-03-06\tKenema\t10-15\t6397\t10\t49283\t0.12980135137877158\n2020-03-06\tKenema\t15-20\t6120\t15\t49283\t0.12418075198344257\n2020-03-06\tKenema\t20-30\t6095\t20\t49283\t0.12367347766978472\n2020-03-06\tKenema\t30-50\t5395\t30\t49283\t0.10946979688736481\n2020-03-06\tKenema\t50-75\t2454\t50\t49283\t0.049794046628654914\n2020-03-06\tKenema\t75-100\t1009\t75\t49283\t0.020473591299230973\n2020-03-06\tKenema\t100-150\t612\t100\t49283\t0.012418075198344257\n2020-03-06\tKenema\t150-250\t184\t150\t49283\t0.0037335389485218026\n2020-03-06\tKenema\t250-350\t36\t250\t49283\t7.304750116673092E-4\n2020-03-06\tKenema\t350-inf\t14\t350\t49283\t2.84073615648398E-4\n2020-03-06\tPujehun\t1-3\t1569\t1\t12552\t0.125\n2020-03-06\tPujehun\t3-5\t2552\t3\t12552\t0.20331421287444232\n2020-03-06\tPujehun\t5-10\t3187\t5\t12552\t0.25390376035691525\n2020-03-06\tPujehun\t10-15\t1650\t10\t12552\t0.13145315487571702\n2020-03-06\tPujehun\t15-20\t1082\t15\t12552\t0.08620140216698534\n2020-03-06\tPujehun\t20-30\t1193\t20\t12552\t0.09504461440407903\n2020-03-06\tPujehun\t30-50\t856\t30\t12552\t0.06819630337794774\n2020-03-06\tPujehun\t50-75\t288\t50\t12552\t0.022944550669216062\n2020-03-06\tPujehun\t75-100\t100\t75\t12552\t0.007966857871255577\n2020-03-06\tPujehun\t100-150\t57\t100\t12552\t0.004541108986615679\n2020-03-06\tPujehun\t150-250\t16\t150\t12552\t0.0012746972594008922\n2020-03-06\tPujehun\t250-350\t1\t250\t12552\t7.966857871255577E-5\n2020-03-06\tPujehun\t350-inf\t1\t350\t12552\t7.966857871255577E-5\n2020-03-05\tWestern Area Rural\t1-3\t11101\t1\t184008\t0.06032889874353289\n2020-03-05\tWestern Area Rural\t3-5\t16917\t3\t184008\t0.09193622016434068\n2020-03-05\tWestern Area Rural\t5-10\t49853\t5\t184008\t0.2709284378940046\n2020-03-05\tWestern Area Rural\t10-15\t19778\t10\t184008\t0.10748445719751315\n2020-03-05\tWestern Area Rural\t15-20\t21755\t15\t184008\t0.1182285552802052\n2020-03-05\tWestern Area Rural\t20-30\t23633\t20\t184008\t0.12843463327681406\n2020-03-05\tWestern Area Rural\t30-50\t22482\t30\t184008\t0.12217947045780618\n2020-03-05\tWestern Area Rural\t50-75\t10465\t50\t184008\t0.056872527281422544\n2020-03-05\tWestern Area Rural\t75-100\t4432\t75\t184008\t0.024085909308290944\n2020-03-05\tWestern Area Rural\t100-150\t2637\t100\t184008\t0.01433089865658015\n2020-03-05\tWestern Area Rural\t150-250\t796\t150\t184008\t0.004325898873962002\n2020-03-05\tWestern Area Rural\t250-350\t107\t250\t184008\t5.814964566757967E-4\n2020-03-05\tWestern Area Rural\t350-inf\t52\t350\t184008\t2.8259640885178904E-4\n2020-03-09\tKenema\t1-3\t2994\t1\t46024\t0.06505301581783417\n2020-03-09\tKenema\t3-5\t1870\t3\t46024\t0.04063097514340344\n2020-03-09\tKenema\t5-10\t15253\t5\t46024\t0.3314140448461672\n2020-03-09\tKenema\t10-15\t5980\t10\t46024\t0.1299322092821137\n2020-03-09\tKenema\t15-20\t5698\t15\t46024\t0.12380497131931166\n2020-03-09\tKenema\t20-30\t5558\t20\t46024\t0.12076308013210499\n2020-03-09\tKenema\t30-50\t4922\t30\t46024\t0.10694420302450895\n2020-03-09\tKenema\t50-75\t2110\t50\t46024\t0.045845645750043455\n2020-03-09\tKenema\t75-100\t887\t75\t46024\t0.01927255345037372\n2020-03-09\tKenema\t100-150\t511\t100\t46024\t0.011102902833304363\n2020-03-09\tKenema\t150-250\t198\t150\t46024\t0.004302103250478011\n2020-03-09\tKenema\t250-350\t29\t250\t46024\t6.301060316356683E-4\n2020-03-09\tKenema\t350-inf\t14\t350\t46024\t3.041891187206675E-4\n2020-03-04\tWestern Area Urban\t0-1\t730\t0\t358465\t0.0020364610212991506\n2020-03-04\tWestern Area Urban\t1-3\t15772\t1\t358465\t0.04399871675058932\n2020-03-04\tWestern Area Urban\t3-5\t29548\t3\t358465\t0.08242924692787301\n2020-03-04\tWestern Area Urban\t5-10\t94453\t5\t358465\t0.2634929491024228\n2020-03-04\tWestern Area Urban\t10-15\t39143\t10\t358465\t0.10919615583111322\n2020-03-04\tWestern Area Urban\t15-20\t45059\t15\t358465\t0.1256998591215321\n2020-03-04\tWestern Area Urban\t20-30\t47328\t20\t358465\t0.13202962632335097\n2020-03-04\tWestern Area Urban\t30-50\t46941\t30\t358465\t0.13095002301479922\n2020-03-04\tWestern Area Urban\t50-75\t22551\t50\t358465\t0.06290990752235225\n2020-03-04\tWestern Area Urban\t75-100\t9442\t75\t358465\t0.026340088990556957\n2020-03-04\tWestern Area Urban\t100-150\t5476\t100\t358465\t0.015276247332375545\n2020-03-04\tWestern Area Urban\t150-250\t1691\t150\t358465\t0.004717336420571046\n2020-03-04\tWestern Area Urban\t250-350\t198\t250\t358465\t5.523551811194956E-4\n2020-03-04\tWestern Area Urban\t350-inf\t133\t350\t358465\t3.710264600449137E-4\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595216855710_-683680555",
+      "id": "20200720-034735_1958459631",
+      "dateCreated": "2020-07-20 03:47:35.710",
+      "dateStarted": "2020-07-20 20:45:24.582",
+      "dateFinished": "2020-07-20 20:49:40.523",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# daily \u003d df.groupBy(\u0027subscriber\u0027, \u0027call_date\u0027).agg(F.count(\u0027call_date\u0027).alias(\u0027count\u0027))\n# daily.persist(StorageLevel.MEMORY_AND_DISK)\n\n# weekly \u003d daily\\\n#         .withColumn(\"week\", F.weekofyear(\"call_date\"))\\\n#         .groupBy(\u0027subscriber\u0027, \u0027week\u0027)\\\n#         .agg(F.sum(\u0027count\u0027).alias(\u0027count\u0027))\n\n# hourly \u003d df.groupBy(\u0027subscriber\u0027, \u0027hour\u0027, \u0027call_date\u0027).agg(F.count(\u0027hour\u0027).alias(\u0027count\u0027)).groupBy(\u0027hour\u0027).agg(F.avg(\u0027count\u0027).alias(\u0027count\u0027))\ndaily_pattern \u003d df.groupBy(\u0027subscriber\u0027, \u0027call_date\u0027, \u0027hour\u0027)\\\n            .agg(F.count(\u0027call_date\u0027).alias(\u0027count\u0027))\\\n            .groupBy(\u0027call_date\u0027, \u0027hour\u0027)\\\n            .agg(F.count(\u0027subscriber\u0027).alias(\u0027users\u0027), F.avg(\u0027count\u0027).alias(\u0027per_user\u0027))\\\n            .orderBy(\u0027call_date\u0027, \u0027hour\u0027)\nduration \u003d df.where(F.col(\u0027duration\u0027)\u003e0)\\\n            .groupBy(\u0027subscriber\u0027, \u0027call_date\u0027, \u0027hour\u0027)\\\n            .agg(F.avg(\u0027duration\u0027).alias(\u0027avg_duration\u0027))\nduration_bins \u003d duration\\\n            .withColumn(\u0027bin\u0027, bin(F.col(\u0027avg_duration\u0027)))\\\n            .groupBy(\u0027bin\u0027)\\\n            .agg(F.count(\u0027avg_duration\u0027).alias(\u0027numUsers\u0027))\\\n            .withColumn(\u0027sort\u0027, split(F.col(\u0027bin\u0027), \u0027-\u0027).getItem(0).cast(IntegerType()))\\\n            .orderBy(\u0027sort\u0027)\nduration_pattern \u003d duration\\\n            .groupBy(\u0027call_date\u0027, \u0027hour\u0027)\\\n            .agg(F.avg(\u0027avg_duration\u0027).alias(\u0027avg_duration\u0027))\nduration_bins.createOrReplaceTempView(\"duration_bins\")",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-20 03:25:07.955",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595215507955_-90400395",
+      "id": "20200708-162352_1876247922",
+      "dateCreated": "2020-07-20 03:25:07.955",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\ndaily_pattern.show()",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-20 03:25:07.956",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+----------+----+------+------------------+\n| call_date|hour| users|          per_user|\n+----------+----+------+------------------+\n|2020-04-21|  10|433021|2.5919597432918957|\n|2020-04-25|  10|400662|2.5178604409701943|\n|2020-04-23|  10|467767| 2.493448661406213|\n|2020-04-25|  20|512198|3.0056540634676434|\n|2020-04-23|  20|454172|2.7582413711105045|\n|2020-04-22|  20|553891|2.9665493752380883|\n|2020-04-22|   0| 51314| 2.161125618739525|\n|2020-04-21|   0| 40724| 2.044445535801984|\n|2020-04-22|  10|430330|2.5200125485092837|\n|2020-04-24|  10|476341|2.4777165937847045|\n|2020-04-21|  20|590177|  2.93595819559217|\n|2020-04-25|   0| 51258|1.9964103164384097|\n|2020-04-23|   0| 49423|2.0349230115533254|\n|2020-04-24|   0| 39438| 1.896977534357726|\n|2020-04-24|  20|517641|2.9148425259977473|\n+----------+----+------+------------------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595215507955_-1239055628",
+      "id": "20200708-165516_706035272",
+      "dateCreated": "2020-07-20 03:25:07.955",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nduration_pattern.createOrReplaceTempView(\"duration_pattern\")\ndaily_pattern.createOrReplaceTempView(\"daily_pattern\")",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-20 03:25:07.956",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595215507956_-1534410980",
+      "id": "20200716-044604_1877853005",
+      "dateCreated": "2020-07-20 03:25:07.956",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\nselect * from duration_pattern",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-20 03:25:07.957",
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "lineChart",
+              "height": 300.0,
+              "optionOpen": true,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "call_date": "string",
+                      "avg_duration": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default",
+                  "isDateFormat": true,
+                  "dateFormat": "MMM DD"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "call_date",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [
+                {
+                  "name": "hour",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ],
+              "values": [
+                {
+                  "name": "avg_duration",
+                  "index": 2.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "call_date\thour\tavg_duration\n2020-03-03\t0\t45.733064437582115\n2020-03-06\t0\t47.658312736074336\n2020-03-09\t20\t40.14636925251341\n2020-03-03\t10\t45.071111187876035\n2020-03-05\t20\t56.840411446958555\n2020-03-05\t0\t48.25507504716363\n2020-03-04\t10\t45.59151657453734\n2020-03-03\t20\t55.19079212860841\n2020-03-04\t20\t56.42176389144265\n2020-03-06\t20\t46.72022341282488\n2020-03-09\t10\t37.57052687840829\n2020-03-04\t0\t44.576400110258454\n2020-03-06\t10\t42.604401963163006\n2020-03-05\t10\t46.97424456474617\n2020-03-09\t0\t29.263077709189943\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595215507956_1625241580",
+      "id": "20200716-050648_590636351",
+      "dateCreated": "2020-07-20 03:25:07.956",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\nselect * from daily_pattern",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-20 03:25:07.957",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": true,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "call_date": "string",
+                      "hour": "string",
+                      "users": "string",
+                      "per_user": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "call_date",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [
+                {
+                  "name": "hour",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ],
+              "values": [
+                {
+                  "name": "per_user",
+                  "index": 3.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "call_date\thour\tusers\tper_user\n2020-03-03\t0\t113678\t2.2849188057495735\n2020-03-06\t0\t125860\t2.3142539329413636\n2020-03-09\t20\t601861\t3.1371047467770796\n2020-03-03\t10\t512369\t2.7057829303042724\n2020-03-05\t20\t663299\t3.1809983129780086\n2020-03-05\t0\t122152\t2.2726439190516734\n2020-03-04\t10\t527099\t2.7521532915955227\n2020-03-03\t20\t680552\t3.159996591002598\n2020-03-04\t20\t669830\t3.230497290357255\n2020-03-06\t20\t658307\t3.2341567080404734\n2020-03-09\t10\t493231\t2.694062214256606\n2020-03-04\t0\t117822\t2.246074587088999\n2020-03-06\t10\t523424\t2.759806581280186\n2020-03-05\t10\t513194\t2.687441786147149\n2020-03-09\t0\t109700\t2.2709206927985415\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595215507957_-672305244",
+      "id": "20200716-163846_1727855297",
+      "dateCreated": "2020-07-20 03:25:07.957",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\nselect * from duration_bins",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-20 03:25:07.971",
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300.0,
+              "optionOpen": true,
+              "setting": {
+                "table": {
+                  "tableGridState": {
+                    "columns": [
+                      {
+                        "name": "bin",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "numUsers",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "sort",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {
+                          "priority": 0.0,
+                          "direction": "asc"
+                        },
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      }
+                    ],
+                    "scrollFocus": {},
+                    "selection": [],
+                    "grouping": {
+                      "grouping": [],
+                      "aggregations": [],
+                      "rowExpandedStates": {}
+                    },
+                    "treeView": {},
+                    "pagination": {
+                      "paginationCurrentPage": 1.0,
+                      "paginationPageSize": 250.0
+                    }
+                  },
+                  "tableColumnTypeState": {
+                    "names": {
+                      "bin": "string",
+                      "numUsers": "string",
+                      "sort": "number"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default",
+                  "isDateFormat": false,
+                  "dateFormat": "MMM DD"
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "bin",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "numUsers",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "bin\tnumUsers\tsort\n0-5\t805705\t0\n5-10\t497642\t5\n10-20\t886929\t10\n20-35\t1115098\t20\n35-50\t740237\t35\n50-75\t661440\t50\n75-100\t334276\t75\n100-150\t285381\t100\n150-210\t169932\t150\n210-300\t41519\t210\n300-400\t33925\t300\n400-540\t19889\t400\n540-720\t10593\t540\n720-900\t4829\t720\n900-inf\t6422\t900\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595215507957_1561942456",
+      "id": "20200716-051148_937797418",
+      "dateCreated": "2020-07-20 03:25:07.957",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n# daily.coalesce(5).write.format(\"csv\").option(\"header\", \"true\").save(dailyPath)\n\n# weekly.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(weeklyPath)\n\n# hourly.coalesce(50).write.format(\"csv\").option(\"header\", \"true\").save(hourlyPath)\n\ndaily_pattern.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(dailyPatternPath)\n\nduration_pattern.coalesce(1).write.format(\"csv\").option(\"header\", \"true\").save(durationPatternPath)",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-20 03:25:07.972",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595215507972_-1093642696",
+      "id": "20200708-170717_2103919054",
+      "dateCreated": "2020-07-20 03:25:07.972",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.sql\n",
+      "user": "prabhakar",
+      "dateUpdated": "2020-07-20 03:25:07.973",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595215507972_-836993323",
+      "id": "20200717-183313_1760872263",
+      "dateCreated": "2020-07-20 03:25:07.972",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "MIT/districtQueries",
+  "id": "2FDSJEWN4",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

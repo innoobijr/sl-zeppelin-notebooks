@@ -1,31 +1,37 @@
 {
   "paragraphs": [
     {
-      "text": "%spark.pyspark\n/**\n * title: Home Identification \n * author: Ziyu Ran\n * Time： 2020/07/03\n * description: \n */",
-      "user": "anonymous",
-      "dateUpdated": "2020-07-13 16:30:27.201",
+      "text": "/**\n * title: Home Identification \n * author: Ziyu Ran\n * Time： 2020/07/03\n * description: \n */",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:13:54.761",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
         "enabled": true,
         "results": {},
         "editorSetting": {
-          "language": "python",
+          "language": "scala",
           "editOnDblClick": false,
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/python"
+        "editorMode": "ace/mode/scala"
       },
       "settings": {
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
       "apps": [],
       "jobName": "paragraph_1594657754350_-733556520",
       "id": "20200713-162914_1692007856",
       "dateCreated": "2020-07-13 16:29:14.350",
-      "status": "READY",
+      "dateStarted": "2020-07-20 17:13:42.915",
+      "dateFinished": "2020-07-20 17:13:43.313",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {

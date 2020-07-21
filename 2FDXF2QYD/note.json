@@ -3,7 +3,7 @@
     {
       "text": "/**\n * title: create_temp_views\n * author: Innocent Obi Jr\n * description: \n */\n \n//Default configuration\\ (Remove in production)\nsc.hadoopConfiguration.set(\"fs.s3n.awsAccessKeyId\", System.getenv(\"AWS_ID\"))\nsc.hadoopConfiguration.set(\"fs.s3n.awsSecretAccessKey\", System.getenv(\"AWS_SECRET\"))\n\nval path_to_cdrs \u003d \"s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\"\nval path_to_towers \u003d \"s3n://sierra-leone-lake/blob/towers/tower_current.csv\"\nval cutoff : Int  \u003d 15\nval locality : String \u003d \"admin3Name\"",
       "user": "innocent",
-      "dateUpdated": "2020-07-20 02:07:48.313",
+      "dateUpdated": "2020-07-20 14:13:39.502",
       "config": {
         "editorSetting": {
           "language": "scala",
@@ -26,7 +26,7 @@
         "msg": [
           {
             "type": "TEXT",
-            "data": "path_to_cdrs: String \u003d s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\npath_to_towers: String \u003d s3n://sierra-leone-lake/blob/towers/combined_towers_district_07_11.csv\ncutoff: Int \u003d 15\n"
+            "data": "path_to_cdrs: String \u003d s3n://sierra-leone-lake/blob/cdrs/africell-raw/20200403_1[4-6].csv\npath_to_towers: String \u003d s3n://sierra-leone-lake/blob/towers/tower_current.csv\ncutoff: Int \u003d 15\nlocality: String \u003d admin3Name\n"
           }
         ]
       },
@@ -34,8 +34,9 @@
       "jobName": "paragraph_1594892689479_-1489683365",
       "id": "20200706-035802_1432653419",
       "dateCreated": "2020-07-16 09:44:49.479",
-      "status": "READY",
-      "errorMessage": "",
+      "dateStarted": "2020-07-20 14:13:39.587",
+      "dateFinished": "2020-07-20 14:13:57.201",
+      "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
@@ -120,7 +121,6 @@
   "noteParams": {},
   "noteForms": {},
   "angularObjects": {
-    "python:shared_process": [],
     "spark:shared_process": []
   },
   "config": {

@@ -1,18 +1,18 @@
 {
   "paragraphs": [
     {
-      "text": "%spark.pyspark\n/**\n * title: Home Identification \n * author: Ziyu Ran\n * Time： 2020/07/03\n * description: \n */",
-      "user": "yuan",
-      "dateUpdated": "2020-07-20 12:50:24.273",
+      "text": "/**\n * title: Home Identification \n * author: Ziyu Ran\n * Time： 2020/07/03\n * description: \n */",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:32:11.182",
       "config": {
         "editorSetting": {
-          "language": "python",
+          "language": "scala",
           "editOnDblClick": false,
           "completionKey": "TAB",
           "completionSupport": true
         },
         "colWidth": 12.0,
-        "editorMode": "ace/mode/python",
+        "editorMode": "ace/mode/scala",
         "fontSize": 9.0,
         "results": {},
         "enabled": true
@@ -31,19 +31,17 @@
         ]
       },
       "apps": [],
-      "jobName": "paragraph_1595038542520_1406242320",
+      "jobName": "paragraph_1595266312734_688795175",
       "id": "20200713-162914_1692007856",
-      "dateCreated": "2020-07-18 02:15:42.520",
-      "dateStarted": "2020-07-20 12:50:24.292",
-      "dateFinished": "2020-07-20 12:50:24.296",
-      "status": "ERROR",
-      "errorMessage": "java.net.ConnectException: Connection refused (Connection refused)\n\tat java.net.PlainSocketImpl.socketConnect(Native Method)\n\tat java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)\n\tat java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)\n\tat java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)\n\tat java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)\n\tat java.net.Socket.connect(Socket.java:607)\n\tat org.apache.thrift.transport.TSocket.open(TSocket.java:182)\n\tat org.apache.zeppelin.interpreter.remote.ClientFactory.create(ClientFactory.java:51)\n\tat org.apache.zeppelin.interpreter.remote.ClientFactory.create(ClientFactory.java:37)\n\tat org.apache.commons.pool2.BasePooledObjectFactory.makeObject(BasePooledObjectFactory.java:60)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.create(GenericObjectPool.java:861)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:435)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:363)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.getClient(RemoteInterpreterProcess.java:62)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:133)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.internal_create(RemoteInterpreter.java:165)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.open(RemoteInterpreter.java:132)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.getFormType(RemoteInterpreter.java:299)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:408)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:315)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n",
+      "dateCreated": "2020-07-20 17:31:52.734",
+      "status": "READY",
+      "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\nimport os\nfrom datetime import datetime\nimport matplotlib.pyplot as plt\nfrom pyspark.sql import SQLContext\n\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\nfrom pyspark.sql.functions import split, lower\nimport pyspark.sql.functions as F",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-20 18:31:08.179",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.738",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -55,7 +53,7 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": false
+        "enabled": true
       },
       "settings": {
         "params": {},
@@ -66,17 +64,17 @@
         "msg": []
       },
       "apps": [],
-      "jobName": "paragraph_1595038542521_469436961",
+      "jobName": "paragraph_1595266312737_586532445",
       "id": "20200715-134628_1435706817",
-      "dateCreated": "2020-07-18 02:15:42.521",
+      "dateCreated": "2020-07-20 17:31:52.737",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n# Just some configuration for Spark to be able to use AWS S3\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)\n",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-20 18:31:13.120",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.738",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -88,7 +86,7 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": false
+        "enabled": true
       },
       "settings": {
         "params": {},
@@ -99,17 +97,17 @@
         "msg": []
       },
       "apps": [],
-      "jobName": "paragraph_1595038542521_-2099177818",
+      "jobName": "paragraph_1595266312738_511106015",
       "id": "20200712-230457_673617609",
-      "dateCreated": "2020-07-18 02:15:42.521",
+      "dateCreated": "2020-07-20 17:31:52.738",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\n\nnames\u003d{\u0027subscriber\u0027:StringType(), \u0027site_id\u0027:StringType(), \u0027call_date\u0027:StringType(), \u0027STOP_ID\u0027:IntegerType(), \u0027start_time\u0027:StringType(), \u0027end_time\u0027:StringType(), \u0027frequency\u0027:IntegerType(), \u0027event_gap\u0027:IntegerType(), \u0027duration\u0027:IntegerType(), \u0027confidence\u0027: StringType()}\nfields\u003d[]\nfor header in names:\n    fields.append(StructField(header, names[header], False))\nschema \u003d StructType(fields)\n\ndf \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops/feb/*.csv\u0027, schema\u003dschema)",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-20 18:28:48.991",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.739",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -121,7 +119,7 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": false
+        "enabled": true
       },
       "settings": {
         "params": {},
@@ -132,17 +130,17 @@
         "msg": []
       },
       "apps": [],
-      "jobName": "paragraph_1595038542522_62884831",
+      "jobName": "paragraph_1595266312738_695936440",
       "id": "20200712-231307_2108629871",
-      "dateCreated": "2020-07-18 02:15:42.522",
+      "dateCreated": "2020-07-20 17:31:52.738",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\ndf \u003d df.withColumn(\"call_datetime\", F.to_date(\"call_date\"))\\\n        .withColumn(\"start\", F.to_timestamp(\"start_time\"))\\\n        .withColumn(\"end\", F.to_timestamp(\"end_time\"))\\\n        .withColumn(\"start_hour\", F.hour(\"start\"))\\\n        .withColumn(\"weekday\", F.date_format(\"start\", \"u\"))\\\n        .drop(\u0027call_date\u0027, \u0027start_time\u0027, \u0027end_time\u0027) # Drop columns which we\u0027ll not use",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-20 18:28:55.995",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.740",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -154,7 +152,7 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": false
+        "enabled": true
       },
       "settings": {
         "params": {},
@@ -165,17 +163,17 @@
         "msg": []
       },
       "apps": [],
-      "jobName": "paragraph_1595038542522_-568941670",
+      "jobName": "paragraph_1595266312739_2025713682",
       "id": "20200712-231632_918139233",
-      "dateCreated": "2020-07-18 02:15:42.522",
+      "dateCreated": "2020-07-20 17:31:52.739",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\ndf \u003d df.withColumn(\"start_hour\", df[\"start_hour\"].cast(IntegerType()))\n",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-20 18:29:00.388",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.742",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -187,7 +185,7 @@
         "editorMode": "ace/mode/python",
         "fontSize": 9.0,
         "results": {},
-        "enabled": false
+        "enabled": true
       },
       "settings": {
         "params": {},
@@ -198,17 +196,17 @@
         "msg": []
       },
       "apps": [],
-      "jobName": "paragraph_1595038542523_-610970084",
+      "jobName": "paragraph_1595266312740_-1268245063",
       "id": "20200713-170504_401747544",
-      "dateCreated": "2020-07-18 02:15:42.523",
+      "dateCreated": "2020-07-20 17:31:52.740",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\nhometime \u003d feb.where(\"start_hour \u003c 8 or start_hour \u003e 20\")\n",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-20 18:39:06.217",
+      "text": "%spark.pyspark\n\nhometime \u003d df.where(\"start_hour \u003c 8 or start_hour \u003e 20\")\n",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.743",
       "config": {
         "lineNumbers": false,
         "editorSetting": {
@@ -232,17 +230,17 @@
         "msg": []
       },
       "apps": [],
-      "jobName": "paragraph_1595038542523_-1889846385",
+      "jobName": "paragraph_1595266312742_1122613243",
       "id": "20200713-164816_2019173487",
-      "dateCreated": "2020-07-18 02:15:42.523",
+      "dateCreated": "2020-07-20 17:31:52.742",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\nhome \u003d hometime\\\n        .groupBy(\u0027subscriber\u0027, \u0027site_id\u0027)\\\n        .agg(F.sum(\u0027frequency\u0027).alias(\u0027total_freq\u0027))\\\n        .where(\"total_freq \u003e\u003d 5\")",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:15:42.524",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.743",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -265,17 +263,17 @@
         "msg": []
       },
       "apps": [],
-      "jobName": "paragraph_1595038542524_-1038313203",
+      "jobName": "paragraph_1595266312743_259711181",
       "id": "20200713-171704_1371373909",
-      "dateCreated": "2020-07-18 02:15:42.524",
+      "dateCreated": "2020-07-20 17:31:52.743",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\nhome.count()",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:15:42.524",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.745",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -303,17 +301,17 @@
         ]
       },
       "apps": [],
-      "jobName": "paragraph_1595038542524_-57098046",
+      "jobName": "paragraph_1595266312744_-402096327",
       "id": "20200713-173824_286377115",
-      "dateCreated": "2020-07-18 02:15:42.524",
+      "dateCreated": "2020-07-20 17:31:52.744",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\nfrom pyspark.sql import Window\nw \u003d Window.partitionBy(\u0027subscriber\u0027)\nhome2 \u003d home.withColumn(\u0027maxfreq\u0027, F.max(\u0027total_freq\u0027).over(w))\\\n        .where(F.col(\u0027total_freq\u0027) \u003d\u003d F.col(\u0027maxfreq\u0027))\\\n        .drop(\u0027total_freq\u0027)",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:15:42.525",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.746",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -336,17 +334,17 @@
         "msg": []
       },
       "apps": [],
-      "jobName": "paragraph_1595038542525_-153996216",
+      "jobName": "paragraph_1595266312745_-639082630",
       "id": "20200713-204011_1957155020",
-      "dateCreated": "2020-07-18 02:15:42.525",
+      "dateCreated": "2020-07-20 17:31:52.745",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\nhome4 \u003d home2.dropDuplicates([\"subscriber\"])",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:15:42.525",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.747",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -369,17 +367,17 @@
         "msg": []
       },
       "apps": [],
-      "jobName": "paragraph_1595038542525_-554233356",
+      "jobName": "paragraph_1595266312747_1275017157",
       "id": "20200715-134815_2059341763",
-      "dateCreated": "2020-07-18 02:15:42.525",
+      "dateCreated": "2020-07-20 17:31:52.747",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\nhome4.count()",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:15:42.526",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.748",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -407,34 +405,34 @@
         ]
       },
       "apps": [],
-      "jobName": "paragraph_1595038542525_1772441233",
+      "jobName": "paragraph_1595266312747_-617963421",
       "id": "20200714-145833_1366964030",
-      "dateCreated": "2020-07-18 02:15:42.525",
+      "dateCreated": "2020-07-20 17:31:52.747",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\n",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:15:42.526",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.749",
       "config": {},
       "settings": {
         "params": {},
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1595038542526_-394797224",
+      "jobName": "paragraph_1595266312749_-1669995815",
       "id": "20200717-213811_619210320",
-      "dateCreated": "2020-07-18 02:15:42.526",
+      "dateCreated": "2020-07-20 17:31:52.749",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\nhomeIdenPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_identification_feb/home_identity_feb_0717_Ziyu\"\nhome4.write.format(\"csv\").option(\"header\", \"true\").save(homeIdenPath)",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:16:25.611",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.751",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -453,17 +451,17 @@
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1595038542526_1111306017",
+      "jobName": "paragraph_1595266312750_1085464233",
       "id": "20200716-211911_1939123741",
-      "dateCreated": "2020-07-18 02:15:42.526",
+      "dateCreated": "2020-07-20 17:31:52.750",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\nhome_location \u003d home4\\\n                .groupBy(\u0027site_id\u0027)\\\n                .agg(F.count(\u0027subscriber\u0027).alias(\u0027home_number\u0027))",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:15:42.527",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.752",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -491,17 +489,17 @@
         ]
       },
       "apps": [],
-      "jobName": "paragraph_1595038542527_424569265",
+      "jobName": "paragraph_1595266312751_908920808",
       "id": "20200714-154706_1003174720",
-      "dateCreated": "2020-07-18 02:15:42.527",
+      "dateCreated": "2020-07-20 17:31:52.751",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\nhome_location.count()",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:15:42.527",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.753",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -529,17 +527,17 @@
         ]
       },
       "apps": [],
-      "jobName": "paragraph_1595038542527_-844875160",
+      "jobName": "paragraph_1595266312752_-154035652",
       "id": "20200714-163653_2061101743",
-      "dateCreated": "2020-07-18 02:15:42.527",
+      "dateCreated": "2020-07-20 17:31:52.752",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\ntowers \u003d sq.read.csv(\"s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\", header\u003d\"true\")",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:15:42.528",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.754",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -567,17 +565,17 @@
         ]
       },
       "apps": [],
-      "jobName": "paragraph_1595038542527_-111920258",
+      "jobName": "paragraph_1595266312753_1438076452",
       "id": "20200714-192350_1911724967",
-      "dateCreated": "2020-07-18 02:15:42.527",
+      "dateCreated": "2020-07-20 17:31:52.753",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\nhome_loc \u003d home_location.alias(\"h\")\\\n        .join(towers.alias(\"t\"), towers.site_id\u003d\u003dhome_location.site_id)\\\n        .select(\"t.site_id\", \"h.home_number\", \"t.Latitude\",\"t.longitude\")\nhome_loc.show()",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:15:42.529",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.755",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -605,17 +603,17 @@
         ]
       },
       "apps": [],
-      "jobName": "paragraph_1595038542528_430954187",
+      "jobName": "paragraph_1595266312754_-642850480",
       "id": "20200714-192806_1808482834",
-      "dateCreated": "2020-07-18 02:15:42.528",
+      "dateCreated": "2020-07-20 17:31:52.754",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\nhomeLocationPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_identification_feb/home_location_feb_0717_Ziyu\"\nhome_loc.coalesce(1).write.format(\"csv\").option(\u0027header\u0027, \u0027true\u0027).save(homeLocationPath)",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:16:56.224",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.756",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -638,17 +636,17 @@
         "msg": []
       },
       "apps": [],
-      "jobName": "paragraph_1595038542529_-1680355935",
+      "jobName": "paragraph_1595266312755_-1415567149",
       "id": "20200714-154437_1819872603",
-      "dateCreated": "2020-07-18 02:15:42.529",
+      "dateCreated": "2020-07-20 17:31:52.755",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n# get the count\nd \u003d [{\u0027original\u0027: feb.count(), \u0027afterfreq\u0027:home.count(), \u0027home\u0027:home4.count(),\u0027home_location\u0027:home_loc.count() }]\ncountdf \u003d spark.createDataFrame(d)",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-20 18:30:58.852",
+      "text": "%spark.pyspark\n# get the count\nd \u003d [{\u0027original\u0027: df.count(), \u0027afterfreq\u0027:home.count(), \u0027home\u0027:home4.count(),\u0027home_location\u0027:home_loc.count() }]\ncountdf \u003d spark.createDataFrame(d)",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.758",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -667,17 +665,17 @@
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1595038542529_2067011409",
+      "jobName": "paragraph_1595266312757_1993506139",
       "id": "20200716-215938_1854259191",
-      "dateCreated": "2020-07-18 02:15:42.529",
+      "dateCreated": "2020-07-20 17:31:52.757",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\ncountLocationPath \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_identification_feb/count_feb\"\ncountdf.coalesce(1).write.format(\"csv\").option(\u0027header\u0027, \u0027true\u0027).save(countLocationPath)",
-      "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:17:12.393",
+      "user": "innocent",
+      "dateUpdated": "2020-07-20 17:31:52.759",
       "config": {
         "editorSetting": {
           "language": "python",
@@ -696,16 +694,16 @@
         "forms": {}
       },
       "apps": [],
-      "jobName": "paragraph_1595038542529_1300333588",
+      "jobName": "paragraph_1595266312758_1423733537",
       "id": "20200716-215949_1149936468",
-      "dateCreated": "2020-07-18 02:15:42.529",
+      "dateCreated": "2020-07-20 17:31:52.758",
       "status": "READY",
       "errorMessage": "",
       "progressUpdateIntervalMs": 500
     }
   ],
-  "name": "MIT/home_identification_feb",
-  "id": "2FEHR5K5B",
+  "name": "MIT/production/home_identification_feb",
+  "id": "2FD1RVQSY",
   "noteParams": {},
   "noteForms": {},
   "angularObjects": {

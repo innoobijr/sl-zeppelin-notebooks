@@ -3,7 +3,7 @@
     {
       "text": "\r\n/**\r\n * title:OD_matrix\r\n * author: Yanchao LI\r\n * date: Jul 19\r\n * description: generate all the OD pairs and their frequency in a given month.\r\n * \r\n */",
       "user": "yanchao",
-      "dateUpdated": "2020-07-19 23:35:30.569",
+      "dateUpdated": "2020-07-20 05:34:02.652",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -22,16 +22,22 @@
         "forms": {}
       },
       "results": {
-        "code": "SUCCESS",
-        "msg": []
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "java.net.ConnectException: Connection refused (Connection refused)\n\tat java.net.PlainSocketImpl.socketConnect(Native Method)\n\tat java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)\n\tat java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)\n\tat java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)\n\tat java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)\n\tat java.net.Socket.connect(Socket.java:607)\n\tat org.apache.thrift.transport.TSocket.open(TSocket.java:182)\n\tat org.apache.zeppelin.interpreter.remote.ClientFactory.create(ClientFactory.java:51)\n\tat org.apache.zeppelin.interpreter.remote.ClientFactory.create(ClientFactory.java:37)\n\tat org.apache.commons.pool2.BasePooledObjectFactory.makeObject(BasePooledObjectFactory.java:60)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.create(GenericObjectPool.java:861)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:435)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:363)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.getClient(RemoteInterpreterProcess.java:62)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:133)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:228)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:449)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:315)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
       },
       "apps": [],
       "jobName": "paragraph_1595201491831_496584090",
       "id": "20200719-233131_1736715511",
       "dateCreated": "2020-07-19 23:31:31.831",
-      "dateStarted": "2020-07-19 23:33:22.085",
-      "dateFinished": "2020-07-19 23:33:22.299",
-      "status": "FINISHED",
+      "dateStarted": "2020-07-20 05:34:02.674",
+      "dateFinished": "2020-07-20 05:34:02.677",
+      "status": "ERROR",
+      "errorMessage": "java.net.ConnectException: Connection refused (Connection refused)\n\tat java.net.PlainSocketImpl.socketConnect(Native Method)\n\tat java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)\n\tat java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)\n\tat java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)\n\tat java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)\n\tat java.net.Socket.connect(Socket.java:607)\n\tat org.apache.thrift.transport.TSocket.open(TSocket.java:182)\n\tat org.apache.zeppelin.interpreter.remote.ClientFactory.create(ClientFactory.java:51)\n\tat org.apache.zeppelin.interpreter.remote.ClientFactory.create(ClientFactory.java:37)\n\tat org.apache.commons.pool2.BasePooledObjectFactory.makeObject(BasePooledObjectFactory.java:60)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.create(GenericObjectPool.java:861)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:435)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:363)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.getClient(RemoteInterpreterProcess.java:62)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:133)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:228)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:449)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:315)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n",
       "progressUpdateIntervalMs": 500
     },
     {
@@ -105,35 +111,41 @@
     {
       "text": "%spark.pyspark\n\ncolumn_names \u003d {\u0027subscriber\u0027:StringType(), \u0027site_id\u0027:StringType(), \u0027call_date\u0027:StringType(), \u0027STOP_ID\u0027:IntegerType(), \u0027start_time\u0027:StringType(), \u0027end_time\u0027:StringType(), \u0027frequency\u0027:IntegerType(), \u0027event_gap\u0027:IntegerType(), \u0027duration\u0027:IntegerType(), \u0027confidence\u0027: StringType()}\n\nfields\u003d[]\nfor header in column_names:\n    fields.append(StructField(header, column_names[header], False))\nschema \u003d StructType(fields)   #set up the dataframe strcuture\n\nraw \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops/april/*.csv\u0027, schema\u003dschema)",
       "user": "yanchao",
-      "dateUpdated": "2020-07-19 23:43:53.336",
+      "dateUpdated": "2020-07-20 05:27:31.464",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
         "enabled": true,
         "results": {},
         "editorSetting": {
-          "language": "scala",
+          "language": "python",
           "editOnDblClick": false,
           "completionKey": "TAB",
           "completionSupport": true
         },
-        "editorMode": "ace/mode/scala"
+        "editorMode": "ace/mode/python"
       },
       "settings": {
         "params": {},
         "forms": {}
       },
       "results": {
-        "code": "SUCCESS",
-        "msg": []
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "java.net.SocketException: Broken pipe (Write failed)\n\tat java.net.SocketOutputStream.socketWrite0(Native Method)\n\tat java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:111)\n\tat java.net.SocketOutputStream.write(SocketOutputStream.java:155)\n\tat java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82)\n\tat java.io.BufferedOutputStream.write(BufferedOutputStream.java:121)\n\tat org.apache.thrift.transport.TIOStreamTransport.write(TIOStreamTransport.java:145)\n\tat org.apache.thrift.protocol.TBinaryProtocol.writeString(TBinaryProtocol.java:202)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext$RemoteInterpreterContextStandardScheme.write(RemoteInterpreterContext.java:1228)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext$RemoteInterpreterContextStandardScheme.write(RemoteInterpreterContext.java:1074)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext.write(RemoteInterpreterContext.java:956)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args$interpret_argsStandardScheme.write(RemoteInterpreterService.java:6781)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args$interpret_argsStandardScheme.write(RemoteInterpreterService.java:6704)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args.write(RemoteInterpreterService.java:6631)\n\tat org.apache.thrift.TServiceClient.sendBase(TServiceClient.java:63)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.send_interpret(RemoteInterpreterService.java:268)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.interpret(RemoteInterpreterService.java:257)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:233)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:229)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:135)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:228)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:449)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:315)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
       },
       "apps": [],
       "jobName": "paragraph_1595201812091_-988191206",
       "id": "20200719-233652_1362502590",
       "dateCreated": "2020-07-19 23:36:52.091",
-      "dateStarted": "2020-07-19 23:43:53.346",
-      "dateFinished": "2020-07-19 23:43:54.592",
-      "status": "FINISHED",
+      "dateStarted": "2020-07-20 05:27:31.478",
+      "dateFinished": "2020-07-20 05:27:31.483",
+      "status": "ERROR",
+      "errorMessage": "java.net.SocketException: Broken pipe (Write failed)\n\tat java.net.SocketOutputStream.socketWrite0(Native Method)\n\tat java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:111)\n\tat java.net.SocketOutputStream.write(SocketOutputStream.java:155)\n\tat java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:82)\n\tat java.io.BufferedOutputStream.write(BufferedOutputStream.java:121)\n\tat org.apache.thrift.transport.TIOStreamTransport.write(TIOStreamTransport.java:145)\n\tat org.apache.thrift.protocol.TBinaryProtocol.writeString(TBinaryProtocol.java:202)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext$RemoteInterpreterContextStandardScheme.write(RemoteInterpreterContext.java:1228)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext$RemoteInterpreterContextStandardScheme.write(RemoteInterpreterContext.java:1074)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext.write(RemoteInterpreterContext.java:956)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args$interpret_argsStandardScheme.write(RemoteInterpreterService.java:6781)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args$interpret_argsStandardScheme.write(RemoteInterpreterService.java:6704)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args.write(RemoteInterpreterService.java:6631)\n\tat org.apache.thrift.TServiceClient.sendBase(TServiceClient.java:63)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.send_interpret(RemoteInterpreterService.java:268)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.interpret(RemoteInterpreterService.java:257)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:233)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:229)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:135)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:228)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:449)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:315)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n",
       "progressUpdateIntervalMs": 500
     },
     {
@@ -325,9 +337,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n\n# select sample time intervals, here is from 6:00 -11:59, Mon-Fri\n\nsample \u003d raw.where((\u00275 \u003c start_hour \u003c 11 \u0027 ) and (\u00275 \u003c end_hour \u003c 11\u0027 ) and (\u0027weekday \u003c 6 \u0027))",
+      "text": "%spark.pyspark\n\n# select sample time intervals, here is from 6:00 -11:59, Mon-Fri\n\nsample \u003d raw.where(\u00275 \u003c start_hour \u003c 11 \u0027  and \u00275 \u003c end_hour \u003c 11\u0027  and \u0027weekday \u003c 6 \u0027)",
       "user": "yanchao",
-      "dateUpdated": "2020-07-20 01:01:22.566",
+      "dateUpdated": "2020-07-20 05:17:22.763",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -346,16 +358,22 @@
         "forms": {}
       },
       "results": {
-        "code": "SUCCESS",
-        "msg": []
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "java.net.SocketException: Broken pipe (Write failed)\n\tat java.net.SocketOutputStream.socketWrite0(Native Method)\n\tat java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:111)\n\tat java.net.SocketOutputStream.write(SocketOutputStream.java:155)\n\tat java.io.BufferedOutputStream.write(BufferedOutputStream.java:122)\n\tat org.apache.thrift.transport.TIOStreamTransport.write(TIOStreamTransport.java:145)\n\tat org.apache.thrift.protocol.TBinaryProtocol.writeString(TBinaryProtocol.java:202)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext$RemoteInterpreterContextStandardScheme.write(RemoteInterpreterContext.java:1228)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext$RemoteInterpreterContextStandardScheme.write(RemoteInterpreterContext.java:1074)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext.write(RemoteInterpreterContext.java:956)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args$interpret_argsStandardScheme.write(RemoteInterpreterService.java:6781)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args$interpret_argsStandardScheme.write(RemoteInterpreterService.java:6704)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args.write(RemoteInterpreterService.java:6631)\n\tat org.apache.thrift.TServiceClient.sendBase(TServiceClient.java:63)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.send_interpret(RemoteInterpreterService.java:268)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.interpret(RemoteInterpreterService.java:257)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:233)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:229)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:135)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:228)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:449)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:315)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
       },
       "apps": [],
       "jobName": "paragraph_1595205307885_1575494444",
       "id": "20200720-003507_1992507301",
       "dateCreated": "2020-07-20 00:35:07.885",
-      "dateStarted": "2020-07-20 00:59:30.576",
-      "dateFinished": "2020-07-20 00:59:30.587",
-      "status": "FINISHED",
+      "dateStarted": "2020-07-20 05:17:22.775",
+      "dateFinished": "2020-07-20 05:17:22.799",
+      "status": "ERROR",
+      "errorMessage": "java.net.SocketException: Broken pipe (Write failed)\n\tat java.net.SocketOutputStream.socketWrite0(Native Method)\n\tat java.net.SocketOutputStream.socketWrite(SocketOutputStream.java:111)\n\tat java.net.SocketOutputStream.write(SocketOutputStream.java:155)\n\tat java.io.BufferedOutputStream.write(BufferedOutputStream.java:122)\n\tat org.apache.thrift.transport.TIOStreamTransport.write(TIOStreamTransport.java:145)\n\tat org.apache.thrift.protocol.TBinaryProtocol.writeString(TBinaryProtocol.java:202)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext$RemoteInterpreterContextStandardScheme.write(RemoteInterpreterContext.java:1228)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext$RemoteInterpreterContextStandardScheme.write(RemoteInterpreterContext.java:1074)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterContext.write(RemoteInterpreterContext.java:956)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args$interpret_argsStandardScheme.write(RemoteInterpreterService.java:6781)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args$interpret_argsStandardScheme.write(RemoteInterpreterService.java:6704)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$interpret_args.write(RemoteInterpreterService.java:6631)\n\tat org.apache.thrift.TServiceClient.sendBase(TServiceClient.java:63)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.send_interpret(RemoteInterpreterService.java:268)\n\tat org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService$Client.interpret(RemoteInterpreterService.java:257)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:233)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter$4.call(RemoteInterpreter.java:229)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:135)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:228)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:449)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:315)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n",
       "progressUpdateIntervalMs": 500
     },
     {
@@ -434,34 +452,6 @@
       "dateStarted": "2020-07-20 00:41:51.181",
       "dateFinished": "2020-07-20 00:41:51.193",
       "status": "ERROR",
-      "progressUpdateIntervalMs": 500
-    },
-    {
-      "text": "%spark.pyspark\nhome \u003d hometime\\\n        .groupBy(\u0027subscriber\u0027, \u0027site_id\u0027)\\\n        .agg(F.sum(\u0027frequency\u0027).alias(\u0027total_freq\u0027))\\\n        .where(\"total_freq \u003e\u003d 5\")",
-      "user": "yanchao",
-      "dateUpdated": "2020-07-20 00:41:13.775",
-      "config": {
-        "colWidth": 12.0,
-        "fontSize": 9.0,
-        "enabled": true,
-        "results": {},
-        "editorSetting": {
-          "language": "python",
-          "editOnDblClick": false,
-          "completionKey": "TAB",
-          "completionSupport": true
-        },
-        "editorMode": "ace/mode/python"
-      },
-      "settings": {
-        "params": {},
-        "forms": {}
-      },
-      "apps": [],
-      "jobName": "paragraph_1595204781045_-2008393983",
-      "id": "20200720-002621_1957044064",
-      "dateCreated": "2020-07-20 00:26:21.045",
-      "status": "READY",
       "progressUpdateIntervalMs": 500
     },
     {
@@ -553,7 +543,7 @@
       "progressUpdateIntervalMs": 500
     }
   ],
-  "name": "MIT/OD_matrix",
+  "name": "~Trash/MIT/OD_matrix",
   "id": "2FEMRJF8Y",
   "noteParams": {},
   "noteForms": {},

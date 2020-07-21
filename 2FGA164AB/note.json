@@ -1,0 +1,863 @@
+{
+  "paragraphs": [
+    {
+      "text": "/**\r\n * title:OD_matrix\r\n * author: Yanchao LI\r\n * date: Jul 19\r\n * description: generate all the OD pairs and their frequency in a given month.\r\n * \r\n */\r\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:12:20.557",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595223415534_502331552",
+      "id": "20200720-053655_429550952",
+      "dateCreated": "2020-07-20 05:36:55.534",
+      "dateStarted": "2020-07-20 23:12:20.594",
+      "dateFinished": "2020-07-20 23:12:20.768",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\r\n\r\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\r\nfrom pyspark.sql.functions import split, lower\r\nimport pyspark.sql.functions as function\r\n\r\nimport os\r\nfrom datetime import datetime\r\nimport matplotlib.pyplot as plt\r\nfrom pyspark.sql import SQLContext\r\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:12:20.794",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595223476751_589275597",
+      "id": "20200720-053756_1519320711",
+      "dateCreated": "2020-07-20 05:37:56.751",
+      "dateStarted": "2020-07-20 23:12:20.824",
+      "dateFinished": "2020-07-20 23:12:20.834",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\r\n\r\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\r\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\r\n\r\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\r\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\r\n\r\nsq \u003d SQLContext(sc)\r\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:12:20.923",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595223476479_841226196",
+      "id": "20200720-053756_952477491",
+      "dateCreated": "2020-07-20 05:37:56.479",
+      "dateStarted": "2020-07-20 23:12:20.952",
+      "dateFinished": "2020-07-20 23:12:20.975",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\r\n\r\ncolumn_names \u003d {\u0027subscriber\u0027:StringType(), \u0027site_id\u0027:StringType(), \u0027call_date\u0027:StringType(), \u0027STOP_ID\u0027:IntegerType(), \u0027start_time\u0027:StringType(), \u0027end_time\u0027:StringType(), \u0027frequency\u0027:IntegerType(), \u0027event_gap\u0027:IntegerType(), \u0027duration\u0027:IntegerType(), \u0027confidence\u0027: StringType()}\r\n\r\nfields\u003d[]\r\nfor header in column_names:\r\n    fields.append(StructField(header, column_names[header], False))\r\nschema \u003d StructType(fields)   #set up the dataframe strcuture\r\n\r\nraw \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops/april/*.csv\u0027, schema\u003dschema)",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:12:21.054",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595223475999_1447626110",
+      "id": "20200720-053755_142551738",
+      "dateCreated": "2020-07-20 05:37:55.999",
+      "dateStarted": "2020-07-20 23:12:21.081",
+      "dateFinished": "2020-07-20 23:12:24.696",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\r\n# a small function test\r\nfrom pyspark.sql.functions import udf\r\ndef weekend(weekday):\r\n    if weekday\u003c6:\r\n        return 0\r\n    else:\r\n        return 1\r\n        \r\nfunc_is_weekend \u003d udf(weekend, IntegerType())",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:12:24.793",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595223475783_1950135501",
+      "id": "20200720-053755_358441121",
+      "dateCreated": "2020-07-20 05:37:55.783",
+      "dateStarted": "2020-07-20 23:12:24.824",
+      "dateFinished": "2020-07-20 23:12:24.834",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:12:24.923",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595275061650_511173742",
+      "id": "20200720-195741_1752802639",
+      "dateCreated": "2020-07-20 19:57:41.651",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\r\n# pre_operation for raw data\r\n# sunday is 7, monday is 1,# weekend is 1, weekday is 0\r\n\r\npre_raw \u003d raw.withColumn(\u0027call_datetime\u0027, function.to_date(\u0027call_date\u0027))\\\r\n         .withColumn(\u0027hour\u0027, function.to_timestamp(\u0027start_time\u0027))\\\r\n         .withColumn(\u0027start_hour\u0027, function.hour(\u0027hour\u0027))\\\r\n         .withColumn(\u0027hour_2\u0027, function.to_timestamp(\u0027end_time\u0027))\\\r\n         .withColumn(\u0027end_hour\u0027,function.hour(\u0027hour_2\u0027))\\\r\n         .withColumn(\u0027weekday\u0027, function.date_format(\u0027start_time\u0027, \u0027u\u0027))\\\r\n         .drop(\u0027call_date\u0027, \u0027start_time\u0027, \u0027end_time\u0027)\r\n\r\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:12:24.989",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595223475199_1654077392",
+      "id": "20200720-053755_1991845753",
+      "dateCreated": "2020-07-20 05:37:55.199",
+      "dateStarted": "2020-07-20 23:12:25.017",
+      "dateFinished": "2020-07-20 23:12:25.074",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\npre_raw \u003d pre_raw.withColumn(\u0027weekday\u0027, pre_raw[\u0027weekday\u0027].cast(IntegerType()))",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:12:25.117",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595275224980_-1651571672",
+      "id": "20200720-200024_1471085467",
+      "dateCreated": "2020-07-20 20:00:24.980",
+      "dateStarted": "2020-07-20 23:12:25.141",
+      "dateFinished": "2020-07-20 23:12:25.151",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\npre_raw \u003d pre_raw.withColumn(\u0027is_weekend\u0027, func_is_weekend(pre_raw[\u0027weekday\u0027]))",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:12:25.240",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595275397741_1171014082",
+      "id": "20200720-200317_1802593221",
+      "dateCreated": "2020-07-20 20:03:17.741",
+      "dateStarted": "2020-07-20 23:12:25.264",
+      "dateFinished": "2020-07-20 23:12:25.290",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\npre_raw \u003d pre_raw.withColumn(\u0027start_hour\u0027, pre_raw[\u0027start_hour\u0027].cast(IntegerType()))\\\n         .withColumn(\u0027end_hour\u0027, pre_raw[\u0027end_hour\u0027].cast(IntegerType()))\n        ",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:12:25.364",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595275141451_779851651",
+      "id": "20200720-195901_744951993",
+      "dateCreated": "2020-07-20 19:59:01.451",
+      "dateStarted": "2020-07-20 23:12:25.394",
+      "dateFinished": "2020-07-20 23:12:25.413",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n# randomly select 10% weekdays to observe the OD.\n\nseed \u003d 2020\nwithReplacement \u003d False\nfraction \u003d 0.1\n\nwek_sample \u003d pre_raw.where(\u0027is_weekend \u003d\u003d 0\u0027)\\\n         .sample(withReplacement, fraction, seed)\n\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:12:25.493",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595223711762_-404514786",
+      "id": "20200720-054151_96572373",
+      "dateCreated": "2020-07-20 05:41:51.762",
+      "dateStarted": "2020-07-20 23:12:25.518",
+      "dateFinished": "2020-07-20 23:12:25.529",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nwek_sample.show (20)",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:12:25.617",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+-------------------+----------+-------------------+--------+-------+----------+\n|          subscriber|site_id|STOP_ID|frequency|event_gap|duration|         confidence|call_datetime|               hour|start_hour|             hour_2|end_hour|weekday|is_weekend|\n+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+-------------------+----------+-------------------+--------+-------+----------+\n|000330D968A0CC2E8...|   2046|     21|        3|     7515|   13030| 0.5767459708365311|   2020-04-13|2020-04-13 10:57:54|        10|2020-04-13 14:35:04|      14|      1|         0|\n|000AAB336924F3A30...|   1213|     23|       20|    27280|   41572| 0.6562109111902242|   2020-04-16|2020-04-16 08:50:29|         8|2020-04-16 20:23:21|      20|      4|         0|\n|000AAB336924F3A30...|   1213|     43|        6|    14027|   16817| 0.8340964500208122|   2020-04-28|2020-04-28 19:17:40|        19|2020-04-28 23:57:57|      23|      2|         0|\n|00204D3EDA8B6AFFC...|   2095|      1|        2|     5724|    6028| 0.9495686794956868|   2020-04-28|2020-04-28 07:38:27|         7|2020-04-28 09:18:55|       9|      2|         0|\n|00230F6FBE9B1B127...|   1425|      6|        3|    16452|   16575|  0.992579185520362|   2020-04-29|2020-04-29 08:53:09|         8|2020-04-29 13:29:24|      13|      3|         0|\n|0029FAD07998CF13A...|   1007|      6|        5|     3397|    4198| 0.8091948546927108|   2020-04-08|2020-04-08 10:44:55|        10|2020-04-08 11:54:53|      11|      3|         0|\n|0029FAD07998CF13A...|   1007|     12|        4|    11922|   24243|0.49177082044301446|   2020-04-22|2020-04-22 07:42:45|         7|2020-04-22 14:26:48|      14|      3|         0|\n|0029FAD07998CF13A...|   1220|     24|        6|    18234|   27091| 0.6730648554870621|   2020-04-30|2020-04-30 15:54:26|        15|2020-04-30 23:25:57|      23|      4|         0|\n|0029FAD07998CF13A...|   1220|     27|        6|    29910|   39209|  0.762835063378306|   2020-04-29|2020-04-29 09:05:33|         9|2020-04-29 19:59:02|      19|      3|         0|\n|002F9CD225C31C2B3...|   1206|      9|        6|    15164|   23737| 0.6388338880229179|   2020-04-08|2020-04-08 10:21:14|        10|2020-04-08 16:56:51|      16|      3|         0|\n|002F9CD225C31C2B3...|   1206|     17|        2|    11142|   11142|                1.0|   2020-04-03|2020-04-03 09:12:00|         9|2020-04-03 12:17:42|      12|      5|         0|\n|002FB131C3A3AD656...|   3475|      2|        5|     4871|    8141| 0.5983294435573026|   2020-04-02|2020-04-02 09:12:40|         9|2020-04-02 11:28:21|      11|      4|         0|\n|002FB131C3A3AD656...|   3475|     20|        6|     8613|   19298| 0.4463156803813867|   2020-04-03|2020-04-03 08:17:44|         8|2020-04-03 13:39:22|      13|      5|         0|\n|002FB131C3A3AD656...|   3536|     26|        2|    13412|   13519| 0.9920852134033582|   2020-04-29|2020-04-29 09:04:00|         9|2020-04-29 12:49:19|      12|      3|         0|\n|00387D389CC1140C9...|   1220|      1|        3|    17051|   27222| 0.6263683785173757|   2020-04-02|2020-04-02 07:32:04|         7|2020-04-02 15:05:46|      15|      4|         0|\n|00387D389CC1140C9...|   1220|      4|        3|    10779|   11121| 0.9692473698408417|   2020-04-30|2020-04-30 12:32:27|        12|2020-04-30 15:37:48|      15|      4|         0|\n|00387D389CC1140C9...|   1220|      6|        3|    18481|   24952| 0.7406620711766592|   2020-04-01|2020-04-01 15:04:07|        15|2020-04-01 21:59:59|      21|      3|         0|\n|003A04E0A9ED13AE9...|   2118|      9|        3|    17846|   18953| 0.9415923600485411|   2020-04-10|2020-04-10 14:48:06|        14|2020-04-10 20:03:59|      20|      5|         0|\n|003A04E0A9ED13AE9...|   2030|     17|        2|    20226|   20323| 0.9952270826157555|   2020-04-21|2020-04-21 15:36:05|        15|2020-04-21 21:14:48|      21|      2|         0|\n|003B348CF38F905D0...|   2217|      3|        3|     4618|    4725| 0.9773544973544973|   2020-04-17|2020-04-17 19:26:41|        19|2020-04-17 20:45:26|      20|      5|         0|\n+--------------------+-------+-------+---------+---------+--------+-------------------+-------------+-------------------+----------+-------------------+--------+-------+----------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595267688387_563094276",
+      "id": "20200720-175448_21820111",
+      "dateCreated": "2020-07-20 17:54:48.387",
+      "dateStarted": "2020-07-20 23:12:25.643",
+      "dateFinished": "2020-07-20 23:12:30.045",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:16:01.057",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595286961056_1802016445",
+      "id": "20200720-231601_162026566",
+      "dateCreated": "2020-07-20 23:16:01.056",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:16:01.241",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595286961240_126959399",
+      "id": "20200720-231601_2008926674",
+      "dateCreated": "2020-07-20 23:16:01.240",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:16:01.210",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595286961209_122155268",
+      "id": "20200720-231601_442937908",
+      "dateCreated": "2020-07-20 23:16:01.209",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:16:01.189",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595286961188_-316230766",
+      "id": "20200720-231601_1987082622",
+      "dateCreated": "2020-07-20 23:16:01.188",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:16:01.121",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595286961121_1200660179",
+      "id": "20200720-231601_1442050221",
+      "dateCreated": "2020-07-20 23:16:01.121",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:16:01.088",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595286961088_1066435219",
+      "id": "20200720-231601_1321966819",
+      "dateCreated": "2020-07-20 23:16:01.088",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:16:01.011",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595286961010_1355697010",
+      "id": "20200720-231601_393166012",
+      "dateCreated": "2020-07-20 23:16:01.010",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:16:00.945",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595286960944_610961270",
+      "id": "20200720-231600_2126488241",
+      "dateCreated": "2020-07-20 23:16:00.944",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nfrom pyspark.sql import Window\nfrom pyspark.sql.functions import col\nfrom pyspark.sql.functions import dense_rank, rank\n\n# window \u003d Window.partitionBy(\u0027subscriber\u0027,\u0027call_date\u0027)\\.orderBy(col(\u0027start_hour\u0027))\n\n# wek_od \u003d wek_sample.withColumn(\u0027origin\u0027, wek_sample[\u0027site_id\u0027].over(window))\n\nwek_od \u003d wek_sample.groupBy(\u0027subscriber\u0027,\u0027call_datetime\u0027,\u0027site_id\u0027).agg(function.first(\u0027start_hour\u0027))",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 23:12:30.063",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1595267720499_-18189780",
+      "id": "20200720-175520_1574721508",
+      "dateCreated": "2020-07-20 17:55:20.499",
+      "dateStarted": "2020-07-20 23:12:30.110",
+      "dateFinished": "2020-07-20 23:12:30.134",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\nwek_od.count()\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 21:36:21.505",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "9873311\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1595280543443_400245586",
+      "id": "20200720-212903_1948774367",
+      "dateCreated": "2020-07-20 21:29:03.443",
+      "dateStarted": "2020-07-20 21:36:21.531",
+      "dateFinished": "2020-07-20 21:55:18.187",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# generate OD pairs\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 21:21:20.833",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595267718939_441702172",
+      "id": "20200720-175518_606598468",
+      "dateCreated": "2020-07-20 17:55:18.939",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n# randomly select 2 days of weekends to observe the OD.\n\nseed \u003d 2020\nwithReplacement \u003d False\nfraction \u003d 0.25\n\nwnk_sample \u003d pre_raw.where(\u0027is_weekend \u003d\u003d 1\u0027)\\\n         .sample(withReplacement, fraction, seed)\n\nfrom pyspark.sql import Window\nfrom pyspark.sql.functions import col\nfrom pyspark.sql.functions import dense_rank, rank\n\nwnk_od \u003d wnk_sample.groupBy(\u0027subscriber\u0027,\u0027call_datetime\u0027,\u0027site_id\u0027).agg(function.first(\u0027start_hour\u0027))",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 21:19:27.414",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595223714585_-1982640659",
+      "id": "20200720-054154_1077783942",
+      "dateCreated": "2020-07-20 05:41:54.585",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nwnk_od.show(20)\nwnk_od.count()",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 21:29:03.372",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595274379414_1514515342",
+      "id": "20200720-194619_1388895751",
+      "dateCreated": "2020-07-20 19:46:19.414",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n# join lat, long with the newest tower site\n%spark.pyspark\ntowers \u003d sq.read.csv(\u0027s3n://sierra-leone-lake/blob/towers/combined_towers_district_07_11.csv\u0027, header \u003d \u0027true\u0027)\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 21:27:20.044",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595279996165_-2027137233",
+      "id": "20200720-211956_826706864",
+      "dateCreated": "2020-07-20 21:19:56.165",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nwek_od_loc \u003d wek_od_loc.alias(\u0027wek\u0027)\\\n        .join(towers.alias(\u0027tow\u0027), towers.site_id \u003d\u003d wek_od.site_id)\\\n        .select(\u0027tow.site_id\u0027, \u0027wek.subscriber\u0027,\u0027wek.\u0027call_datetime\u0027,\u0027tow.Latitude\u0027,\u0027tow.longtitude\u0027 )\n\nwek_od_loc.show()",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 21:34:15.306",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595280000422_-715175454",
+      "id": "20200720-212000_1196755719",
+      "dateCreated": "2020-07-20 21:20:00.422",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nwek_location_path \u003d \"s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/od_matrix/od_sample_0720_yanchao\"\nwek_od_loc.coalesce(1).write.format(\"csv\").option(\u0027header\u0027, \u0027true\u0027).save(wek_location_path)",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 21:35:55.479",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595280243023_1071104675",
+      "id": "20200720-212403_900735307",
+      "dateCreated": "2020-07-20 21:24:03.023",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 21:24:01.886",
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595280241885_918336930",
+      "id": "20200720-212401_478681893",
+      "dateCreated": "2020-07-20 21:24:01.885",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n\n# some reference codes \n\nafternoondf \u003d dftrips.where(\"start_hour \u003c\u003d 20 or start_hour \u003e\u003d 14\")\nafternoondf.show()\n\nw \u003d Window.partitionBy(\u0027subscriber\u0027,\u0027call_date\u0027)\\\n          \n home.withColumn(\u0027maxfreq\u0027, F.max(\u0027total_freq\u0027).over(w))\\\n        .where(F.col(\u0027total_freq\u0027) \u003d\u003d F.col(\u0027maxfreq\u0027))\\\n        \n\n\ndef user_od(sample):\n    unit_series \u003d sample.groupby(\u0027call_date\u0027).apply(unit_od).reset_index\n    unit \u003d spark.createDataFrame(unit_series).rename(columns\u003d{0:\u0027od_pairs\u0027}) () # 0 is the default column name\n    unit[\u0027ori\u0027] \u003d unit[\u0027od_pairs\u0027].apply(lambda x: x[0])\n    unit[\u0027dest\u0027] \u003d unit[\u0027od_pairs\u0027].apply(lambda x: x[-1])\n   \n    return unit\n    \n\nunit.printSchema()",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 21:17:21.467",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595223716105_-1387219385",
+      "id": "20200720-054156_469187687",
+      "dateCreated": "2020-07-20 05:41:56.105",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\n# use only one OD: consider the min/max of a given time as the time of origin and destination.\n\ndef unit_o(sample_start_hour):\n    return np.min\n\ndef unit_d(sample_end_hour):\n    return np.max\n\n\nfunc_unit_o \u003d udf(unit_o, ArrayType(IntegerType()))  \nfunc_unit_d \u003d udf(user_d, ArrayType(IntegerType()))\n\n",
+      "user": "yanchao",
+      "dateUpdated": "2020-07-20 18:22:31.050",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1595266079834_1050685992",
+      "id": "20200720-172759_1147749812",
+      "dateCreated": "2020-07-20 17:27:59.834",
+      "status": "READY",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "OD_matrix",
+  "id": "2FGA164AB",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

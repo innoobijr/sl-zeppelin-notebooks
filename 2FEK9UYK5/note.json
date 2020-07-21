@@ -2,8 +2,8 @@
   "paragraphs": [
     {
       "text": "%spark.pyspark\n/**\n * title: Work Identification \n * author: Ziyu Ran\n * Time： 2020/07/03\n * description: \n */",
-      "user": "anonymous",
-      "dateUpdated": "2020-07-13 21:15:35.586",
+      "user": "yuan",
+      "dateUpdated": "2020-07-21 00:57:08.761",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -21,21 +21,33 @@
         "params": {},
         "forms": {}
       },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "java.net.ConnectException: Connection refused (Connection refused)\n\tat java.net.PlainSocketImpl.socketConnect(Native Method)\n\tat java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)\n\tat java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)\n\tat java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)\n\tat java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)\n\tat java.net.Socket.connect(Socket.java:607)\n\tat org.apache.thrift.transport.TSocket.open(TSocket.java:182)\n\tat org.apache.zeppelin.interpreter.remote.ClientFactory.create(ClientFactory.java:51)\n\tat org.apache.zeppelin.interpreter.remote.ClientFactory.create(ClientFactory.java:37)\n\tat org.apache.commons.pool2.BasePooledObjectFactory.makeObject(BasePooledObjectFactory.java:60)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.create(GenericObjectPool.java:861)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:435)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:363)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.getClient(RemoteInterpreterProcess.java:62)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:133)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:228)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:449)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:315)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n"
+          }
+        ]
+      },
       "apps": [],
       "jobName": "paragraph_1594674366659_740465032",
       "id": "20200713-210606_600373912",
       "dateCreated": "2020-07-13 21:06:06.659",
-      "status": "READY",
+      "dateStarted": "2020-07-21 00:57:08.804",
+      "dateFinished": "2020-07-21 00:57:08.811",
+      "status": "ERROR",
+      "errorMessage": "java.net.ConnectException: Connection refused (Connection refused)\n\tat java.net.PlainSocketImpl.socketConnect(Native Method)\n\tat java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)\n\tat java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)\n\tat java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)\n\tat java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)\n\tat java.net.Socket.connect(Socket.java:607)\n\tat org.apache.thrift.transport.TSocket.open(TSocket.java:182)\n\tat org.apache.zeppelin.interpreter.remote.ClientFactory.create(ClientFactory.java:51)\n\tat org.apache.zeppelin.interpreter.remote.ClientFactory.create(ClientFactory.java:37)\n\tat org.apache.commons.pool2.BasePooledObjectFactory.makeObject(BasePooledObjectFactory.java:60)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.create(GenericObjectPool.java:861)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:435)\n\tat org.apache.commons.pool2.impl.GenericObjectPool.borrowObject(GenericObjectPool.java:363)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.getClient(RemoteInterpreterProcess.java:62)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcess.callRemoteFunction(RemoteInterpreterProcess.java:133)\n\tat org.apache.zeppelin.interpreter.remote.RemoteInterpreter.interpret(RemoteInterpreter.java:228)\n\tat org.apache.zeppelin.notebook.Paragraph.jobRun(Paragraph.java:449)\n\tat org.apache.zeppelin.scheduler.Job.run(Job.java:188)\n\tat org.apache.zeppelin.scheduler.RemoteScheduler$JobRunner.run(RemoteScheduler.java:315)\n\tat java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)\n\tat java.util.concurrent.FutureTask.run(FutureTask.java:266)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)\n\tat java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)\n\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)\n\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)\n\tat java.lang.Thread.run(Thread.java:748)\n",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%spark.pyspark\n\nimport os\nfrom datetime import datetime\nimport matplotlib.pyplot as plt\nfrom pyspark.sql import SQLContext\n\nfrom pyspark.sql.types import StructType, StructField, StringType, IntegerType\nfrom pyspark.sql.functions import split, lower\nimport pyspark.sql.functions as F",
       "user": "ziyu",
-      "dateUpdated": "2020-07-15 14:44:39.893",
+      "dateUpdated": "2020-07-20 19:19:13.038",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
-        "enabled": true,
+        "enabled": false,
         "results": {},
         "editorSetting": {
           "language": "python",
@@ -65,11 +77,11 @@
     {
       "text": "%spark.pyspark\n\nACCESS_KEY \u003d os.environ[\u0027AWS_ID\u0027]\nSECRET_KEY \u003d os.environ[\u0027AWS_SECRET\u0027]\n# Just some configuration for Spark to be able to use AWS S3\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsAccessKeyId\", ACCESS_KEY)\nsc._jsc.hadoopConfiguration().set(\"fs.s3n.awsSecretAccessKey\", SECRET_KEY)\n\nsq \u003d SQLContext(sc)",
       "user": "ziyu",
-      "dateUpdated": "2020-07-15 14:44:47.170",
+      "dateUpdated": "2020-07-20 19:19:09.226",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
-        "enabled": true,
+        "enabled": false,
         "results": {},
         "editorSetting": {
           "language": "python",
@@ -99,11 +111,11 @@
     {
       "text": "%spark.pyspark\n\nnames\u003d{\u0027subscriber\u0027:StringType(), \u0027site_id\u0027:StringType(), \u0027call_date\u0027:StringType(), \u0027STOP_ID\u0027:IntegerType(), \u0027start_time\u0027:StringType(), \u0027end_time\u0027:StringType(), \u0027frequency\u0027:IntegerType(), \u0027event_gap\u0027:IntegerType(), \u0027duration\u0027:IntegerType(), \u0027confidence\u0027: StringType()}\nfields\u003d[]\nfor header in names:\n    fields.append(StructField(header, names[header], False))\nschema \u003d StructType(fields)\n\ndf1 \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/stops/april/*.csv\u0027, schema\u003dschema)",
       "user": "ziyu",
-      "dateUpdated": "2020-07-18 02:31:58.842",
+      "dateUpdated": "2020-07-20 19:19:19.706",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
-        "enabled": true,
+        "enabled": false,
         "results": {},
         "editorSetting": {
           "language": "python",
@@ -133,11 +145,11 @@
     {
       "text": "%spark.pyspark\n\ndf1 \u003d df1.withColumn(\"call_datetime\", F.to_date(\"call_date\"))\\\n        .withColumn(\"start\", F.to_timestamp(\"start_time\"))\\\n        .withColumn(\"end\", F.to_timestamp(\"end_time\"))\\\n        .withColumn(\"start_hour\", F.hour(\"start\"))\\\n        .withColumn(\"weekday\", F.date_format(\"start\", \"u\"))\\\n        .drop(\u0027call_date\u0027, \u0027start_time\u0027, \u0027end_time\u0027) # Drop columns which we\u0027ll not use",
       "user": "ziyu",
-      "dateUpdated": "2020-07-16 21:25:41.927",
+      "dateUpdated": "2020-07-20 19:19:25.501",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
-        "enabled": true,
+        "enabled": false,
         "results": {},
         "editorSetting": {
           "language": "python",
@@ -170,9 +182,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\ndf1 \u003d df1.withColumn(\"start_hour\", df1[\"start_hour\"].cast(IntegerType()))\nworktime \u003d df1.where(\"start_hour\u003e9 and start_hour\u003c18 and weekday \u003c\u003d 5\")\nworktime.show()\n",
+      "text": "%spark.pyspark\n#df1 \u003d df1.withColumn(\"start_hour\", df1[\"start_hour\"].cast(IntegerType()))\nworktime \u003d april.where(\"start_hour\u003e9 and start_hour\u003c18 and weekday \u003c\u003d 5\")\n#worktime.show()\n",
       "user": "ziyu",
-      "dateUpdated": "2020-07-16 21:25:51.652",
+      "dateUpdated": "2020-07-20 19:19:43.713",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -282,9 +294,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\nwork4 \u003d work2.dropDuplicates([\"subscriber\"])\nwork4.show()",
+      "text": "%spark.pyspark\nwork4 \u003d work2.dropDuplicates([\"subscriber\"])\n#work4.show()",
       "user": "ziyu",
-      "dateUpdated": "2020-07-16 21:26:03.839",
+      "dateUpdated": "2020-07-20 19:19:47.831",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -321,9 +333,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\nwork4.count()",
+      "text": "%spark.pyspark\n#work4.count()",
       "user": "ziyu",
-      "dateUpdated": "2020-07-16 21:26:06.265",
+      "dateUpdated": "2020-07-20 19:19:49.729",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -399,9 +411,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n# home- work OD generate\nwork_read \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/work_identification/work_Iden_April_0716_Ziyu*.csv\u0027)\nhome_read \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_identification/home_identity_April_0716_Ziyu/*.csv\u0027)",
+      "text": "%spark.pyspark\n# home- work OD generate\nwork_read \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/work_identification/work_Iden_April_0716_Ziyu/*.csv\u0027)\nhome_read \u003d sq.read.option(\"header\", \"true\").csv(\u0027s3n://sierra-leone-lake/blob/AGGREGATED_CDRS/africell/home_identification/home_identity_April_0716_Ziyu/*.csv\u0027)",
       "user": "ziyu",
-      "dateUpdated": "2020-07-16 21:32:15.324",
+      "dateUpdated": "2020-07-20 18:51:07.563",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -435,11 +447,11 @@
     {
       "text": "%spark.pyspark\ntowers \u003d sq.read.csv(\"s3n://sierra-leone-lake/blob/TOWERS/africell/sites_2020-07-03.csv\", header\u003d\"true\")",
       "user": "ziyu",
-      "dateUpdated": "2020-07-16 21:37:36.395",
+      "dateUpdated": "2020-07-20 19:19:58.738",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
-        "enabled": true,
+        "enabled": false,
         "results": {},
         "editorSetting": {
           "language": "python",
@@ -563,9 +575,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\nhome_work.show()",
+      "text": "%spark.pyspark\n#home_work.show()",
       "user": "ziyu",
-      "dateUpdated": "2020-07-16 20:24:48.875",
+      "dateUpdated": "2020-07-20 19:20:04.428",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -636,9 +648,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\nhome_work_agg.show()",
+      "text": "%spark.pyspark\n#home_work_agg.show()",
       "user": "ziyu",
-      "dateUpdated": "2020-07-16 20:24:54.550",
+      "dateUpdated": "2020-07-20 19:20:09.401",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -777,9 +789,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\nhome_work_agg_place.show()",
+      "text": "%spark.pyspark\n#home_work_agg_place.show()",
       "user": "ziyu",
-      "dateUpdated": "2020-07-16 20:25:24.374",
+      "dateUpdated": "2020-07-20 19:20:18.542",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
@@ -952,9 +964,9 @@
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%spark.pyspark\n# get the count\nd \u003d [{\u0027original\u0027: df.count(), \u0027afterfreq\u0027:work.count(), \u0027work\u0027:work4.count(),\u0027work_location\u0027:work_loc.count(),\u0027home_work\u0027:home_work.count(),\u0027home_work_agg\u0027:home_work_agg.count()}]\ncountdf \u003d spark.createDataFrame(d)",
+      "text": "%spark.pyspark\n# get the count\nd \u003d [{\u0027original\u0027: april.count(), \u0027afterfreq\u0027:work.count(), \u0027work\u0027:work4.count(),\u0027work_location\u0027:work_loc.count(),\u0027home_work\u0027:home_work.count(),\u0027home_work_agg\u0027:home_work_agg.count()}]\ncountdf \u003d spark.createDataFrame(d)",
       "user": "ziyu",
-      "dateUpdated": "2020-07-16 22:02:55.460",
+      "dateUpdated": "2020-07-20 19:20:21.485",
       "config": {
         "colWidth": 12.0,
         "fontSize": 9.0,
